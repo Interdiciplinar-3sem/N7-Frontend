@@ -1,52 +1,63 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export function NavBar(){
     const [toggle, setToggle] = useState(false);
+
+    const navigate = useNavigate()
 
     const handdleToggle = () => {
         setToggle(!toggle)
         document.documentElement.style.overflow = !toggle ? "hidden" : "auto";
     }
 
+    const handdleNavigate = (path: string) => {
+        navigate(path);
+        if(toggle){
+            setToggle(false);
+            document.documentElement.style.overflow = "auto";
+        }
+    }
+
     return (
          <header>
-            <section className={`h-max bg-[#4C9AE4] text-white
+            <section className={`h-max bg-[#4C9AE4] text-white md:p-2
             ${toggle ? "hidden" : "block"} w-screen`}>
-            <nav className="flex p-3 justify-between 
+            <nav className="flex p-1 md:p-3 justify-between 
             xxs:grid xxs:grid-cols-2">
-                <div className="flex gap-2 text-center">
+                <div className="flex gap-2 md:gap-8 text-center">
                     <div className="bg-white p-2 text-black font-semibold">Logo</div>
                     <ul className="hidden items-center
-                        xxs:flex gap-2 ">
-                        <li>Text</li>
-                        <li>Text</li>
-                        <li>Text</li>
+                        xxs:flex text-xs xs:text-sm sm:text-lg gap-2 lg:ml-4 lg:gap-16">
+                        <li><button onClick={() => handdleNavigate("/")}>Home</button></li>
+                        <li><button onClick={() => handdleNavigate("/feed")}>feed</button></li>
+                        <li><button onClick={() => handdleNavigate("/perfil")}>perfil</button></li>
                     </ul>
                 </div>
                
-                <section className=" hidden
+                <section className=" hidden lg:pr-4
                     xxs:flex gap-2 justify-end">
-                    <button className="px-1 md:px-2 border border-white ">Login</button>
-                    <button className="px-1 text-black font-semibold bg-[#2CD76E]">Cadastro</button>
+                    <button onClick={() => handdleNavigate("/login")} className="px-1 md:px-2 border border-white ">Login</button>
+                    <button onClick={() => handdleNavigate("/cadastro")} className="px-1 text-black font-semibold bg-[#2CD76E]">Cadastro</button>
                 </section>
-                <button className="flex xxs:hidden"
+                <button className="flex items-center  xxs:hidden"
                 onClick={() => handdleToggle()}>
                     <Menu/>
                 </button>
             </nav>
         </section>
          { toggle && (
-                <section className={` bg-white w-screen h-screen flex flex-col items-center text-black`}>
+                <section className={` bg-[#4C9AE4] w-screen h-screen flex flex-col items-center text-black`}>
                     <button className="p-2 w-full justify-end flex "
                     onClick={() => setToggle(!toggle)}>
                         <X/>
                     </button>
-                    <ul className="flex flex-col flex-1
+                    <ul className="flex flex-col flex-1 text-white font-semibold text-center
                         gap-8 ">
-                        <li>Text</li>
-                        <li>Text</li>
-                        <li>Text</li>
+                        <li><button onClick={() => handdleNavigate("/")}>Home</button></li>
+                        <li><button onClick={() => handdleNavigate("/feed")}>feed</button></li>
+                        <li><button onClick={() => handdleNavigate("/perfil")}>perfil</button></li>
                     </ul>
                 </section>
                 )

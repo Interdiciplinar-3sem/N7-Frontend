@@ -1,3 +1,10 @@
+import { NavBar } from "../componentes/navBar";
+
 export function PaginaPerfil() {
-    return <div>Pagina Perfil</div>
+        return (
+        <main>
+            <NavBar />
+            <div>Pagina Perfil</div>
+        </main>
+    )
 }

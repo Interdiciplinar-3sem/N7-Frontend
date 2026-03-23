@@ -1,3 +1,11 @@
+import { NavBar } from "../componentes/navBar";
+
 export function PaginaLogin() {
-    return <div>Pagina Login</div>
+        return (
+            <main>
+                <NavBar />
+                <div>Pagina Login</div>
+            </main>
+        )
+
 }
