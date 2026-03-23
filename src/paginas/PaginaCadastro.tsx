@@ -1,3 +1,10 @@
+import { NavBar } from "../componentes/navBar"
+
 export function PaginaCadastro() {
-    return <div>Pagina Cadastro</div>
+    return (
+        <main>
+            <NavBar />
+            <div>Pagina Cadastro</div>
+        </main>
+    )
 }

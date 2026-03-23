@@ -1,3 +1,10 @@
+import { NavBar } from "../componentes/navBar";
+
 export function PaginaFeed() {
-    return <div>Pagina Feed</div>
+    return (
+        <main>
+            <NavBar />
+            <div>Pagina Feed</div>
+        </main>
+    )
 }

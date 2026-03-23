@@ -1,3 +1,11 @@
+import { NavBar } from "../componentes/navBar";
+
 export function PaginaPainel() {
-    return <div>Pagina Painel</div>
+        return (
+        <main>
+            <NavBar />
+            <div>Pagina Painel</div>
+        </main>
+    )
+    
 }
