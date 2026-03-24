@@ -7,6 +7,7 @@ export function LoginHero() {
             flex flex-col-reverse
             bg-[radial-gradient(circle_at_30%_40%,#6BAFEF_0%,#4C9AE4_40%,#3F86D1_100%)]
             sm:h-[50vh]
+            shadow-[0_12px_30px_rgba(76,154,228,0.35)]
             sm:flex-row
         ">
             <div className="
