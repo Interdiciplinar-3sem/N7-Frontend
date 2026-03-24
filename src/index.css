@@ -4,3 +4,7 @@
     --breakpoint-xs: 25rem;
     --breakpoint-xxs: 20rem;
 }
+
+* {
+    box-sizing: border-box;
+}

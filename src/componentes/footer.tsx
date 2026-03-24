@@ -3,29 +3,10 @@ import { Link } from "react-router";
 export function Footer() {
     return (
          <footer className="w-full bg-[#F5F5F5] flex flex-col justify-center px-2">
-            <div className="flex">
-                <img
-                    src="/foot.png"
-                    alt="Rodape da plataforma"
-                    className="block w-full max-w-114.25 h-auto"
-                />
-                <img
-                    src="/foot.png"
-                    alt="Rodape da plataforma"
-                    className="block w-full max-w-114.25 h-auto"
-                />
-                <img
-                    src="/foot.png"
-                    alt="Rodape da plataforma"
-                    className="block w-full max-w-114.25 h-auto"
-                />
-                <img
-                    src="/foot.png"
-                    alt="Rodape da plataforma"
-                    className="block w-full max-w-114.25 h-auto"
-                />  
-            
-            </div>
+            <div
+                className="w-full h-79 bg-[url('/foot.png')] bg-repeat-x bg-size-[auto_100%] bg-top-left"
+                aria-label="Rodape da plataforma"
+            />
                 <div className="w-full min-h-[25vh] bg-[#a2cce2] px-4 py-8 xs:px-6 sm:px-12 text-white">
                 <div className="grid grid-cols-1 gap-8 text-center xxs:grid-cols-2 xxs:text-left md:grid-cols-3">
                     <div className="flex flex-col gap-1 font-semibold text-lg xs:text-xl sm:text-2xl">
