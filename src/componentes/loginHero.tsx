@@ -1,4 +1,4 @@
-import { Form } from "./ui/form";
+import { FormLogin } from "./formLogin";
 
 export function LoginHero() {
     return (
@@ -14,7 +14,7 @@ export function LoginHero() {
                 flex flex-col flex-1 justify-center items-center p-1
                 sm:pl-4
                 md:gap-2
-                lg:justify-between lg:p-2
+                lg:p-2
                 xl:flex-col xl:items-center xl:justify-end xl:pr-20 xl:p-0 xl:gap-0
             ">
 
@@ -40,7 +40,7 @@ export function LoginHero() {
                 ">
                     Organize seus estudos, acompanhe seu progresso e <br /> gerencie sua jornada universitária em um só lugar.
                 </h1>
-                <Form />
+                <FormLogin />
             </div>
             <div className="
                 flex flex-1 justify-center items-center overflow-visible

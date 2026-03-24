@@ -1,7 +1,9 @@
+import { FormResumo } from "../componentes/formResumo";
+
 export function PaginaCriacaoResumo() {
     return (
-        <div>
-            <h1>Pagina de Criação de resumo</h1>
+        <div className="flex h-screen w-screen justify-center items-center pt-4">
+            <FormResumo />
         </div>
     )
 }

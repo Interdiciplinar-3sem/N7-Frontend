@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
-import { NavBar } from "./componentes/navBar";
+import { NavBar } from "../componentes/navBar";
 
-export function Layout() {
+export function LayoutDefault() {
     return (
         <main>
             <NavBar />
