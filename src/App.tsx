@@ -6,8 +6,9 @@ import { PaginaLogin } from './paginas/PaginaLogin'
 import { PaginaPerfil } from './paginas/PaginaPerfil'
 import { PaginaPainel } from './paginas/PaginaPainel'
 import { PaginaFeed } from './paginas/PaginaFeed'
-import { Layout } from './layout'
 import { PaginaCriacaoResumo } from './paginas/PaginaCriacaoResumo'
+import { LayoutDefault } from './layout/layoutDefault'
+import { LayoutNetwork } from './layout/layoutNetwork'
 
 const queryClient = new QueryClient()
 export function App() {
@@ -15,15 +16,17 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route element={<Layout />}>
+          <Route element={<LayoutDefault />}>
             <Route element={<PaginaInicial />} path='/' />
             <Route element={<PaginaCadastro />} path='/cadastro' />
             <Route element={<PaginaLogin />} path='/login' />
+          </Route>
+          <Route element={<LayoutNetwork />}>
             <Route element={<PaginaPerfil />} path='/perfil' />
             <Route element={<PaginaFeed />} path='/feed' />
-            <Route element={<PaginaPainel />} path='/painel' />
             <Route element={<PaginaCriacaoResumo />} path='/criacao/resumo' />
           </Route>
+          <Route element={<PaginaPainel />} path='/painel' />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
