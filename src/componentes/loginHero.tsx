@@ -11,7 +11,7 @@ export function LoginHero() {
             sm:flex-row
         ">
             <div className="
-                flex flex-col flex-1 justify-center items-center p-1
+                flex flex-col flex-1 justify-center items-center p-2
                 sm:pl-4
                 md:gap-2
                 lg:p-2

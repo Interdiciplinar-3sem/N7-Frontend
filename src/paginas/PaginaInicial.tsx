@@ -18,7 +18,7 @@ export function PaginaInicial() {
                         <h2 className="sm:text-4xl xs:text-2xl xxs:text-lg text-sm font-bold text-[#4C9AE4]"> a plataforma</h2>
                     </div>
                     <div className="
-                        p-1 xs:p-6 w-full flex-1 gap-2
+                        p-6 w-full flex-1 gap-2
                         sm:grid sm:grid-cols-2 sm:auto-rows-[minmax(300px,auto)] sm:gap-6
                         flex flex-col 
                         ">

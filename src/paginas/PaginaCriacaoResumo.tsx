@@ -2,7 +2,7 @@ import { FormResumo } from "../componentes/formResumo";
 
 export function PaginaCriacaoResumo() {
     return (
-        <div className="flex h-screen w-screen justify-center items-center pt-4">
+        <div className="flex min-h-screen w-full justify-center xs:items-center p-4">
             <FormResumo />
         </div>
     )

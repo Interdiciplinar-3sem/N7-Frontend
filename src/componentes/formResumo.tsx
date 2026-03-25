@@ -11,7 +11,7 @@ export function FormResumo() {
     return (
         <section className="px-3 xs:px-6 pb-12">
             <div
-                className="mx-auto w-full max-w-6xl rounded-3xl border border-[#DDEBFA] bg-white p-4 xs:p-6 sm:p-8 shadow-[0_20px_50px_rgba(76,154,228,0.16)] cursor-pointer"
+                className="mb-4 xs:mb-0 mx-auto max-w-6xl rounded-3xl border border-[#DDEBFA] bg-white p-4 xs:p-6 sm:p-8 shadow-[0_20px_50px_rgba(76,154,228,0.16)] cursor-pointer"
                 onClick={() => handdleNavigate()}
             >
                 <div className="space-y-2 text-center lg:text-left">
