@@ -3,7 +3,7 @@ import { Link } from "react-router";
 export function FormLogin() {
     return (
         <form className="
-            w-full max-w-lg p-4 m-1 flex flex-col gap-2 max-h-[35vh]
+            w-full max-w-lg p-4 m-1 flex flex-col gap-2 
             rounded-lg shadow-[0_10px_20px_rgba(0,0,0,0.04),0_20px_40px_rgba(0,0,0,0.06)]
             xs:bg-[#F1F5F9]
             sm:m-0

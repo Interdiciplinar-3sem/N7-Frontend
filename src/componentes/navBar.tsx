@@ -24,7 +24,7 @@ export function NavBar(){
          <header>
             <section className={`
                 h-max bg-[#4C9AE4] text-white w-screen
-                md:p-2
+                p-2
                 ${toggle ? "hidden" : "block"}
             `}>
             <nav className="
