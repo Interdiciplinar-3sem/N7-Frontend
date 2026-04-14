@@ -10,6 +10,8 @@ import { PaginaCriacaoResumo } from './paginas/PaginaCriacaoResumo'
 import { LayoutDefault } from './layout/layoutDefault'
 import { LayoutNetwork } from './layout/layoutNetwork'
 
+export default App;
+
 const queryClient = new QueryClient()
 export function App() {
   return (
