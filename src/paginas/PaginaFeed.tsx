@@ -78,8 +78,8 @@ export function PaginaFeed() {
         <main 
             className="
            
-            w-full min-h-screen p-4 mb-20 sm:mb-0
-            sm:grid lg:grid-cols-3 sm:grid-cols-2 flex flex-col sm:rid-flow-dense gap-3 grid-auto-rows-[180px]
+            w-full min-h-screen p-6 mb-20 sm:mb-0
+            sm:grid lg:grid-cols-3 sm:grid-cols-2 flex flex-col sm:grid-flow-dense gap-8 grid-auto-rows-[180px]
         ">
            
             {resumos.map((resumo, index) => {
