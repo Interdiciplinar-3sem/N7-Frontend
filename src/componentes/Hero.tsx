@@ -1,8 +1,10 @@
 import { Heart } from "lucide-react";
+import { useNavigate } from "react-router";
 
 
-export function 
-Hero() {
+export function  Hero() {
+    const navigate = useNavigate()
+
     return (
         <section className="
             relative overflow-visible
@@ -54,10 +56,11 @@ Hero() {
                     w-full p-2
                     md:max-w-2/3 md:p-0
                     ">
-                    <button className="text-start p-2 text-white border hover:bg-white hover:text-green-900 cursor-pointer transition-all
+                    <button onClick={() => navigate("/feed")} className="text-start p-2 text-white border hover:bg-white hover:text-green-900 cursor-pointer transition-all
                         text-xs
                         sm:text-sm
-                    ">Explorar Resumos</button>
+                    ">
+                        Explorar Resumos</button>
                 </div>
             </div>
 
@@ -74,7 +77,7 @@ Hero() {
                     lg:max-w-120
                     xl:max-w-136
                 ">
-                    <div className=" hidden
+                    <div className=" hidden animate-float [animation-delay:0s] [animation-duration:4s]
                         xs:flex absolute flex-col gap-2 
                         top-2 left-0 -translate-x-[10%]
                         md:top-6 md:translate-x-0
@@ -108,7 +111,7 @@ Hero() {
                         z-50
                     "/>
 
-                    <div className=" hidden
+                    <div className=" hidden animate-float  [animation-delay:0.2s] [animation-duration:6s]
                         xs:flex absolute flex-col
                         bottom-2 left-0 translate-x-0
                         md:bottom-6 md:translate-x-0
@@ -128,7 +131,7 @@ Hero() {
                         ">Resumos publicados</p>
                     </div>
 
-                    <div className=" hidden
+                    <div className=" hidden animate-float [animation-delay:2.4s] [animation-duration:3.5s]
                         xs:flex absolute top-1/2 right-0 -translate-y-1/2 bg-white shadow-2xl z-51
                         translate-x-0
                         md:translate-x-0
@@ -137,7 +140,7 @@ Hero() {
                         flex-col gap-2 rounded-2xl
                         p-2
                         md:p-2
-                        xl:p-4
+                        xl:p-4 
                     ">
                         <h2 className="font-bold flex 
                         text-xs

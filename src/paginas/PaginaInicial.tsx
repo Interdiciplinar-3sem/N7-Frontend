@@ -14,8 +14,8 @@ export function PaginaInicial() {
                 <Hero />
                 <section className="px-0 py-6 xs:p-6 w-screen min-h-[80vh] flex flex-col">
                     <div className="flex flex-col items-center xxs:items-start xxs:flex-row xxs:justify-center gap-2">
-                        <h2 className="sm:text-4xl xs:text-2xl xxs:text-lg text-sm font-bold">Como funciona</h2>
-                        <h2 className="sm:text-4xl xs:text-2xl xxs:text-lg text-sm font-bold text-[#4C9AE4]"> a plataforma</h2>
+                        <h2 className="lg:text-6xl sm:text-4xl xs:text-2xl xxs:text-lg text-sm font-bold">Como funciona</h2>
+                        <h2 className="lg:text-6xl sm:text-4xl xs:text-2xl xxs:text-lg text-sm font-bold text-[#4C9AE4]"> a plataforma</h2>
                     </div>
                     <div className="
                         p-6 w-full flex-1 gap-2
