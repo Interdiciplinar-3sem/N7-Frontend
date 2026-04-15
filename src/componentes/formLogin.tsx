@@ -7,6 +7,8 @@ export function FormLogin() {
             rounded-lg shadow-[0_10px_20px_rgba(0,0,0,0.04),0_20px_40px_rgba(0,0,0,0.06)]
             xs:bg-[#F1F5F9]
             sm:m-0
+            max-[720px]:max-w-md
+            max-[720px]:translate-y-0
             xl:translate-y-16
         ">
             <h1 className="text-2xl text-black font-bold xxs:text-4xl">Entrar</h1>

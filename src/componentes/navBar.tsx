@@ -33,7 +33,7 @@ export function NavBar(){
                 md:p-3
             ">
                 <div className="flex gap-2 md:gap-8 text-center">
-                    <div className="bg-white p-2 text-black font-semibold">Logo</div>
+                    <div className="text-white font-bold">Resumify</div>
                     <ul className="hidden items-center
                         gap-2 text-xs
                         xxs:flex
