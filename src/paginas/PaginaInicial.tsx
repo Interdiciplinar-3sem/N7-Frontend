@@ -1,5 +1,5 @@
 import { Pen, Search, Book, Heart } from "lucide-react";
-import { LoginHero } from "../componentes/loginHero";
+import { Hero } from "../componentes/Hero";
 import { Card } from "../componentes/ui/card";
 import { FormResumo } from "../componentes/formResumo";
 import { Footer } from "../componentes/footer";
@@ -11,7 +11,7 @@ export function PaginaInicial() {
                 flex flex-col w-screen h-auto xxs:gap-14
                 bg-[#F5F5F5]
             ">
-                <LoginHero />
+                <Hero />
                 <section className="px-0 py-6 xs:p-6 w-screen min-h-[80vh] flex flex-col">
                     <div className="flex flex-col items-center xxs:items-start xxs:flex-row xxs:justify-center gap-2">
                         <h2 className="sm:text-4xl xs:text-2xl xxs:text-lg text-sm font-bold">Como funciona</h2>

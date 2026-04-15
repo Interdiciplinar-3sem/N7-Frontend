@@ -8,3 +8,13 @@
 * {
     box-sizing: border-box;
 }
+
+/* cores de fundo para ajudar no ajuste da responsividade
+    bg-amber-200
+    xxs:bg-gray-900
+    xs:bg-pink-300
+    sm:bg-orange-400
+    md:bg-green-900
+    lg:bg-red-900
+    xl:bg-purple-900
+*/
