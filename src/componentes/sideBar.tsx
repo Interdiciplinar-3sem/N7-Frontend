@@ -35,43 +35,43 @@ export function SideBar(){
                     md:p-3 
                 ">
                     <div className={`flex sm:flex-col xxs:gap-6 md:gap-8 ${sideBar ? "items-start" : "items-center"}`}>
-                        <div className="bg-white p-2 text-black font-semibold h-[2vh] max-w-[2vh] xxs:h-auto xxs:max-w-[6vh] flex justify-center items-center">
-                            <button className="text-xs xxs:text-sm" onClick={() => handdleNavigate("/")}>N7</button>
+                        <div className="text-white font-bold h-[2vh] max-w-[2vh] xxs:h-auto xxs:max-w-[6vh] flex justify-center items-center">
+                            <button className="sm:hidden text-xs xxs:text-sm" onClick={() => handdleNavigate("/")}>Fy</button>
+                            <button className="hidden sm:block text-xs xxs:text-sm" onClick={() => handdleNavigate("/")}>ResumiFy</button>
                         </div>
                         <ul className={`
                             w-full
                             ${sideBar ? "sm:items-start sm:pl-1" : "items-center justify-center "}
                             gap-4 text-xs
                             flex sm:flex-col
-                            xs:text-sm
-                            sm:text-lg
+                            sm:text-sm 
                             `}>
-                            <li>
-                                <button className="hidden xxs:flex gap-2" onClick={() => handdleNavigate("/")}>
+                            <li className="hover:w-full">
+                                <button className="hidden xxs:flex gap-2 hover:bg-white hover:p-2 hover:text-black hover:scale-105 hover:font-bold transform transition-transform cursor-pointer hover:shadow-lg hover:w-full" onClick={() => handdleNavigate("/")}>
                                     <HomeIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                                     {sideBar &&
                                         <h3>Pagina Inicial</h3>
                                     }
                                 </button>
                             </li>
-                            <li>
-                                <button className=" flex gap-2" onClick={() => handdleNavigate("/criacao/resumo")}>
+                            <li className="hover:w-full">
+                                <button className="flex gap-2 hover:bg-white hover:p-2 hover:text-black  hover:scale-105 hover:font-bold transform cursor-pointer hover:shadow-lg hover:w-full" onClick={() => handdleNavigate("/criacao/resumo")}>
                                     <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                                     {sideBar &&
                                         <h3>Criar resumo</h3>
                                     }
                                 </button>
                             </li>
-                            <li>
-                                <button className="flex gap-2">
+                            <li className="hover:w-full">
+                                <button className="flex gap-2 hover:bg-white hover:p-2 hover:text-black hover:scale-105 hover:font-bold transform cursor-pointer hover:shadow-lg hover:w-full" onClick={() => handdleNavigate("/feed")}>
                                     <Search className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                                     {sideBar &&
                                         <h3>Procurar</h3>
                                     }
                                 </button>
                             </li>
-                            <li>
-                                <button className="flex gap-2" onClick={() => handdleNavigate("/feed")}>
+                            <li className="hover:w-full">
+                                <button className="flex gap-2 hover:bg-white hover:p-2 hover:text-black hover:scale-105 hover:font-bold transform cursor-pointer hover:shadow-lg hover:w-full" onClick={() => handdleNavigate("/feed")}>
                                     <Bookmark className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                                     {sideBar &&
                                         <h3>Feed</h3>
@@ -87,7 +87,7 @@ export function SideBar(){
                         lg:pr-4
                           ${sideBar ? "items-start p-0" : "items-center justify-center "}
                     `}>
-                        <div className="bg-white p-2 text-black font-semibold rounded-[100%] xxs:w-10 flex items-center justify-center">
+                        <div className="bg-white p-2 text-black font-semibold rounded-[100%] xxs:w-10 flex items-center justify-center hover:scale-105 hover:font-bold transform cursor-pointer">
                             <button onClick={() => handdleNavigate("/perfil")}>
                                 <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                             </button>
