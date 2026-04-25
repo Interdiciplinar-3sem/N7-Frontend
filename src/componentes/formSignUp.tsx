@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import z from "zod";
-import { useSignUp } from "../http/useSignUp";
+import { useSignUp } from "../http/auth/useSignUp";
 
 export function FormSignUp() {
 
@@ -10,7 +10,7 @@ export function FormSignUp() {
 
     const formSchema = z.object({
         nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
-        email: z.string().email("Email inválido"),
+        email: z.email("Email inválido"),
         senha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
         senhaConfirmacao: z.string(),
         semestre: z.string()
@@ -79,17 +79,17 @@ export function FormSignUp() {
                     {form.formState.errors.nome?.message}
                 </p>
             )}
-            <input className="p-1 bg-white rounded-sm shadow-sm" type="text" id="" placeholder="Nome"  {...form.register("nome")} required/>
+            <input className="p-1 bg-white rounded-sm shadow-sm" type="text" placeholder="Nome"  {...form.register("nome")} required/>
             <label className="text-black font-semibold">Email </label>
             {form.formState.errors.email && (
                 <p className="text-red-500 text-sm">
                     {form.formState.errors.email.message}
                 </p>
             )}
-            <input className="p-1 bg-white rounded-sm shadow-sm" type="text" id="" placeholder="Email"  {...form.register("email")} required/>
+            <input className="p-1 bg-white rounded-sm shadow-sm" type="text" placeholder="Email"  {...form.register("email")} required/>
             <label className="text-black font-semibold">Senha </label>
-            <input className="p-1 bg-white rounded-sm shadow-sm" type="password" id="" placeholder="Senha"  {...form.register("senha")} required/>
-            <input className="p-1 bg-white rounded-sm shadow-sm" type="password" id="" placeholder="Confirme a senha"  {...form.register("senhaConfirmacao")} required/>
+            <input className="p-1 bg-white rounded-sm shadow-sm" type="password" placeholder="Senha"  {...form.register("senha")} required/>
+            <input className="p-1 bg-white rounded-sm shadow-sm" type="password" placeholder="Confirme a senha"  {...form.register("senhaConfirmacao")} required/>
             {form.formState.errors.senha && (
                 <p className="text-red-500 text-sm">
                     {form.formState.errors.senha?.message}
