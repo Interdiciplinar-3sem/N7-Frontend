@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import type { RequestSignUpType } from "../types/requestSignUpType"
 import type { ResponseSignUpType } from "../types/responseSignUpType"
 import { authFecth } from "../authFetch"
