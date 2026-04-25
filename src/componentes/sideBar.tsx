@@ -1,6 +1,7 @@
 import { Bookmark, FilePlusIcon, HomeIcon, Search, User } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+import { ButtonLogOut } from "./buttonLogout";
 
 export function SideBar(){
     const [sideBar, setSideBar] = useState(false);
@@ -85,7 +86,7 @@ export function SideBar(){
                         gap-2
                         flex  ${sideBar ? "sm:flex sm:items-center" : "sm:flex-col"}
                         lg:pr-4
-                          ${sideBar ? "items-start p-0" : "items-center justify-center "}
+                        ${sideBar ? "items-start p-0 gap-4" : "items-center justify-center "}
                     `}>
                         <div className="bg-white p-2 text-black font-semibold rounded-[100%] xxs:w-10 flex items-center justify-center hover:scale-105 hover:font-bold transform cursor-pointer">
                             <button onClick={() => handdleNavigate("/perfil")}>
@@ -95,6 +96,7 @@ export function SideBar(){
                         {sideBar &&
                             <h3>User</h3>
                         }
+                        <ButtonLogOut />   
                     </section>
                     
                 </nav>

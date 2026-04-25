@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { PaginaInicial } from './paginas/PaginaInicial'
 import { PaginaCadastro } from './paginas/PaginaCadastro'
 import { PaginaLogin } from './paginas/PaginaLogin'
@@ -9,6 +9,7 @@ import { PaginaFeed } from './paginas/PaginaFeed'
 import { PaginaCriacaoResumo } from './paginas/PaginaCriacaoResumo'
 import { LayoutDefault } from './layout/layoutDefault'
 import { LayoutNetwork } from './layout/layoutNetwork'
+import { ProtectedRoute } from './guards/protecRoute'
 
 export default App;
 
@@ -23,12 +24,14 @@ export function App() {
             <Route element={<PaginaCadastro />} path='/cadastro' />
             <Route element={<PaginaLogin />} path='/login' />
           </Route>
-          <Route element={<LayoutNetwork />}>
-            <Route element={<PaginaPerfil />} path='/perfil' />
-            <Route element={<PaginaFeed />} path='/feed' />
-            <Route element={<PaginaCriacaoResumo />} path='/criacao/resumo' />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<LayoutNetwork />}>
+                <Route element={<PaginaPerfil />} path='/perfil' />
+                <Route element={<PaginaFeed />} path='/feed' />
+                <Route element={<PaginaCriacaoResumo />} path='/criacao/resumo' />
+              </Route>
+              <Route element={<PaginaPainel />} path='/painel' />
           </Route>
-          <Route element={<PaginaPainel />} path='/painel' />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

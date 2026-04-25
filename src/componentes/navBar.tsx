@@ -1,9 +1,14 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../http/auth/useAuth";
+import { ButtonLogOut } from "./buttonLogout";
 
 export function NavBar(){
     const [toggle, setToggle] = useState(false);
+    const { data, isLoading, isError } = useAuth();
+
+    const isAuthenticated = !isLoading && !isError && data?.status === true;
 
     const navigate = useNavigate()
 
@@ -46,14 +51,22 @@ export function NavBar(){
                     </ul>
                 </div>
                
-                <section className="
+                  <section className="
                     hidden gap-2 justify-end
                     xxs:flex
                     lg:pr-4
                 ">
-                    <button onClick={() => handdleNavigate("/login")} className="px-1 md:px-2 border border-white hover:bg-blue-100 hover:text-black hover:scale-105 ">Login</button>
-                    <button onClick={() => handdleNavigate("/cadastro")} className="px-1 text-black font-semibold bg-[#2CD76E] hover:bg-green-200 hover:scale-105">Criar</button>
+                                         {isAuthenticated ? (
+                                                <ButtonLogOut />
+                                            ) : (
+                                                <>
+                                                    <button onClick={() => handdleNavigate("/login")} className="px-1 md:px-2 border border-white hover:bg-blue-100 hover:text-black hover:scale-105 ">Login</button>
+                                                    <button onClick={() => handdleNavigate("/cadastro")} className="px-1 text-black font-semibold bg-[#2CD76E] hover:bg-green-200 hover:scale-105">Criar</button>
+                                                </>
+                                            )}
+                 
                 </section>
+              
                 <button className="flex items-center xxs:hidden"
                 onClick={() => handdleToggle()}>
                     <Menu/>
