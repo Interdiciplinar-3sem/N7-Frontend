@@ -8,4 +8,14 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      "/api": {
+        // target: "http://localhost:8080/",
+        target: "https://resumify-v1.onrender.com/",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '') ,
+      }
+    }
+  }
 })
