@@ -13,8 +13,6 @@ export function PaginaPerfil() {
         console.warn("useOutletContext não disponível:", e)
     }
 
-    const id = outletContext?.id
-
   return (
     <main className="w-full min-h-screen p-4">
       <Perfil />
