@@ -1,7 +1,7 @@
 import {tv, type VariantProps} from "tailwind-variants"
 
 const cardStyle = tv({
-    base: "p-6 rounded-3xl shadow-xl text-white flex flex-col justify-between transition-all hover:scale-[1.02]",
+    base: "p-6 rounded-3xl shadow-xl text-white flex flex-col justify-between transition-all hover:scale-[1.02] relative z-51",
     variants: {
         formato: {
             quadrado: "col-span-1 row-span-1",
