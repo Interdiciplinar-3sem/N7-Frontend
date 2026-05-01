@@ -1,7 +1,6 @@
 import { Bookmark, FilePlusIcon, HomeIcon, Search, User } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ButtonLogOut } from "./buttonLogout";
+import { useNavigate } from "react-router-dom"
 
 export function SideBar(){
     const [sideBar, setSideBar] = useState(false);
