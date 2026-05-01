@@ -8,7 +8,7 @@ type CardPerfilProps = {
     className?: string;
 }
 
-export function CardPerfil({nome, semestre, seguidores, foto, className}: CardPerfilProps) {
+export function CardPerfil({nome, semestre, seguidores, className}: CardPerfilProps) {
 
     return (
          <div className={twMerge("max-w-72 max-h-10 flex gap-4 relative z-51 hover:bg-white hover:p-2 hover:text-black hover:scale-105 hover:font-bold transform transition-transform cursor-pointer hover:shadow-lg hover:w-full", className)}>
