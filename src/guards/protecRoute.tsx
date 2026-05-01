@@ -13,10 +13,11 @@ export function ProtectedRoute() {
     if (isError || data?.status !== true) {
         return <Navigate to="/login" replace/>;
     }
+    console.log("teste:", data.id)
 
     return (
         <Suspense fallback={<FeedSkeleton />}>
-            <Outlet />
+            <Outlet context={{id: data.id}}/>
         </Suspense>
     )
 }
