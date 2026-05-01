@@ -5,7 +5,6 @@ import type { ResponseAuthType } from "../types/responseAuthType"
 
 export const useAuth = () => {
     return useQuery({
-
         queryKey: ["user-auth"],
         queryFn: async () => {
             const response = await authFecth(`${API_URL}/auth`, {
@@ -13,20 +12,21 @@ export const useAuth = () => {
             })
 
             if (response.status === 401 || response.status === 403) {
-                return { status: false }
+                return { status: false } as ResponseAuthType
             }
 
             if(!response.ok){
                 throw new Error("Usuario não autenticado!");
             }
 
-            const responseBody = await response.text()
-            if (!responseBody.trim()) {
-                return { status: true }
-            }
+            const contentType = response.headers.get("content-type") ?? ""
 
-            const result: ResponseAuthType = JSON.parse(responseBody);
-            return result;
+            if (contentType.includes("application/json")) {
+                const result = await response.json() as ResponseAuthType
+                return result
+            }
+            
+            return { status: true } as ResponseAuthType
         },
         staleTime: 1000 * 60 * 5,
         retry: false
