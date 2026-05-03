@@ -2,7 +2,12 @@ import { Bookmark, FilePlusIcon, HomeIcon, Search, User } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 
-export function SideBar(){
+type SideBarProps = {
+    setIsFormOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    isFormOpen: boolean
+}
+
+export function SideBar({setIsFormOpen, isFormOpen}: SideBarProps){
     const [sideBar, setSideBar] = useState(false);
 
     const navigate = useNavigate()
@@ -56,7 +61,7 @@ export function SideBar(){
                                 </button>
                             </li>
                             <li className="hover:w-full">
-                                <button className="flex gap-2 hover:bg-white hover:p-2 hover:text-black  hover:scale-105 hover:font-bold transform cursor-pointer hover:shadow-lg hover:w-full" onClick={() => handdleNavigate("/criacao/resumo")}>
+                                <button className="flex gap-2 hover:bg-white hover:p-2 hover:text-black  hover:scale-105 hover:font-bold transform cursor-pointer hover:shadow-lg hover:w-full" onClick={() => setIsFormOpen(!isFormOpen)}>
                                     <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                                     {sideBar &&
                                         <h3>Criar resumo</h3>
