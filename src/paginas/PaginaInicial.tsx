@@ -1,7 +1,6 @@
 import { Pen, Search, Book, Heart } from "lucide-react";
 import { Hero } from "../componentes/Hero";
 import { Card } from "../componentes/ui/card";
-import { FormResumo } from "../componentes/formResumo";
 import { Footer } from "../componentes/footer";
 
 export function PaginaInicial() {
@@ -28,7 +27,6 @@ export function PaginaInicial() {
                         <Card className="bg-[#BDEBFF]" icone={Book} titulo="Estude com seus colegas." texto="Aprenda junto com estudantes do seu curso e troque conhecimento."/>
                     </div>
                 </section>
-            <FormResumo />
             </main>
            <Footer />
         </>

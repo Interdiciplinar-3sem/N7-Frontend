@@ -10,6 +10,7 @@ import { PaginaCriacaoResumo } from './paginas/PaginaCriacaoResumo'
 import { LayoutDefault } from './layout/layoutDefault'
 import { LayoutNetwork } from './layout/layoutNetwork'
 import { ProtectedRoute } from './guards/protecRoute'
+import { ToastProvider } from './contexto/toastContext'
 
 export default App;
 
@@ -17,23 +18,25 @@ const queryClient = new QueryClient()
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<LayoutDefault />}>
-            <Route element={<PaginaInicial />} path='/' />
-            <Route element={<PaginaCadastro />} path='/cadastro' />
-            <Route element={<PaginaLogin />} path='/login' />
-          </Route>
-            <Route element={<ProtectedRoute />}>
-              <Route element={<LayoutNetwork />}>
-                <Route element={<PaginaPerfil />} path='/perfil' />
-                <Route element={<PaginaFeed />} path='/feed' />
-                <Route element={<PaginaCriacaoResumo />} path='/criacao/resumo' />
-              </Route>
-              <Route element={<PaginaPainel />} path='/painel' />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <ToastProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<LayoutDefault />}>
+              <Route element={<PaginaInicial />} path='/' />
+              <Route element={<PaginaCadastro />} path='/cadastro' />
+              <Route element={<PaginaLogin />} path='/login' />
+            </Route>
+              <Route element={<ProtectedRoute />}>
+                <Route element={<LayoutNetwork />}>
+                  <Route element={<PaginaPerfil />} path='/perfil' />
+                  <Route element={<PaginaFeed />} path='/feed' />
+                  <Route element={<PaginaCriacaoResumo />} path='/criacao/resumo' />
+                </Route>
+                <Route element={<PaginaPainel />} path='/painel' />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ToastProvider>
     </QueryClientProvider>
   )
 }
