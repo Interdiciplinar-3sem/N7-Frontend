@@ -19,7 +19,7 @@ export function CardPerfil({nome, semestre, seguidores, className}: CardPerfilPr
                 <h2 className="">{nome}</h2>
                 <h2 className="text-xs">semestre: {semestre}</h2>
             </div>
-                <div className="flex justify-end items-end p-2 text-xs">{seguidores}</div>
+            <div className="flex justify-end items-end p-2 text-xs">{seguidores}</div>
         </div>
     )
 }

@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 
 type SideBarProps = {
-    setIsFormOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    isFormOpen: boolean
+    setIsFormOpen?: React.Dispatch<React.SetStateAction<boolean>>,
+    isFormOpen?: boolean
 }
 
 export function SideBar({setIsFormOpen, isFormOpen}: SideBarProps){
@@ -22,25 +22,26 @@ export function SideBar({setIsFormOpen, isFormOpen}: SideBarProps){
 
     return (
          <header 
-            className={`
-                fixed bottom-0 left-0 right-0 z-51 sm:h-screen
+            className={` bg-white
+                z-80 hover:z-90
+                fixed bottom-0 left-0 right-0 sm:top-0 sm:bottom-0 sm:right-auto sm:h-screen md:bg-transparent
             `}>
             <section 
-            onMouseEnter={() => handdleMouseEnter()}
-            onMouseLeave={() => setSideBar(false)}
-            className={`
-                w-full 
-                sm:h-full sm:max-w-[10vh] text-black
-                p-1 xxs:p-2 shadow-[0_-6px_18px_rgba(0,0,0,0.18)] sm:shadow-none
-                ${sideBar && "sm:max-w-full sm:w-[25vh]"}
+                onMouseEnter={() => handdleMouseEnter()}
+                onMouseLeave={() => setSideBar(false)}
+                className={`
+                    w-full 
+                    sm:h-full sm:w-20 text-black
+                    p-1 xxs:p-2 shadow-[0_-6px_18px_rgba(0,0,0,0.18)] sm:shadow-none
+                    ${sideBar && "sm:w-64"}
             `}>
-                <nav className="
-                    max-w-48
+                <nav className=" bg-white
+                    w-full
                     h-full
                     flex sm:flex-col p-1 justify-between
-                    md:p-3 
+                    md:p-3
                 ">
-                    <div className={`flex sm:flex-col xxs:gap-6 md:gap-8 ${sideBar ? "items-start" : "items-center"}`}>
+                    <div className={`flex sm:flex-col xxs:gap-6 md:gap-8 ${sideBar ? "pl-2" : "items-center"}`}>
                         <div className="text-black font-bold h-[2vh] max-w-[2vh] xxs:h-auto xxs:max-w-[6vh] flex justify-center items-center">
                             <button className="sm:hidden text-xs xxs:text-sm" onClick={() => handdleNavigate("/")}>Fy</button>
                             <button className="hidden sm:block text-xs xxs:text-sm" onClick={() => handdleNavigate("/")}>ResumiFy</button>
@@ -52,32 +53,32 @@ export function SideBar({setIsFormOpen, isFormOpen}: SideBarProps){
                             flex sm:flex-col
                             sm:text-sm 
                             `}>
-                            <li className="hover:w-full">
-                                <button className="hidden xxs:flex gap-2 hover:bg-white hover:p-2 hover:text-black hover:scale-105 hover:font-bold transform transition-transform cursor-pointer hover:shadow-lg hover:w-full" onClick={() => handdleNavigate("/")}>
+                            <li className="sm:hover:w-full">
+                                <button className="hidden xxs:flex gap-2 sm:hover:bg-white sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform transition-transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full" onClick={() => handdleNavigate("/")}>
                                     <HomeIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                                     {sideBar &&
                                         <h3>Pagina Inicial</h3>
                                     }
                                 </button>
                             </li>
-                            <li className="hover:w-full">
-                                <button className="flex gap-2 hover:bg-white hover:p-2 hover:text-black  hover:scale-105 hover:font-bold transform cursor-pointer hover:shadow-lg hover:w-full" onClick={() => setIsFormOpen(!isFormOpen)}>
+                            <li className="sm:hover:w-full">
+                                <button className="flex gap-2 sm:hover:bg-white sm:hover:p-2 sm:hover:text-black  sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full" onClick={() => setIsFormOpen?.(!(isFormOpen ?? false))}>
                                     <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                                     {sideBar &&
                                         <h3>Criar resumo</h3>
                                     }
                                 </button>
                             </li>
-                            <li className="hover:w-full">
-                                <button className="flex gap-2 hover:bg-white hover:p-2 hover:text-black hover:scale-105 hover:font-bold transform cursor-pointer hover:shadow-lg hover:w-full" onClick={() => handdleNavigate("/feed")}>
+                            <li className="sm:hover:w-full">
+                                <button className="flex gap-2 sm:hover:bg-white sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full" onClick={() => handdleNavigate("/feed")}>
                                     <Search className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                                     {sideBar &&
                                         <h3>Procurar</h3>
                                     }
                                 </button>
                             </li>
-                            <li className="hover:w-full">
-                                <button className="flex gap-2 hover:bg-white hover:p-2 hover:text-black hover:scale-105 hover:font-bold transform cursor-pointer hover:shadow-lg hover:w-full" onClick={() => handdleNavigate("/feed")}>
+                            <li className="sm:hover:w-full">
+                                <button className="flex gap-2 sm:hover:bg-white sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full" onClick={() => handdleNavigate("/feed")}>
                                     <Bookmark className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                                     {sideBar &&
                                         <h3>Feed</h3>
@@ -92,11 +93,11 @@ export function SideBar({setIsFormOpen, isFormOpen}: SideBarProps){
                         flex  ${sideBar ? "sm:flex sm:items-center" : "sm:flex-col"}
                         lg:pr-4
                         ${sideBar ? "items-start p-0 gap-4" : "items-center justify-center p-2"}
-                        hover:bg-white hover:p-2 hover:text-black hover:scale-105 hover:font-bold transform transition-transform cursor-pointer hover:shadow-lg hover:w-full
+                        sm:hover:bg-white sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform transition-transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full
                     `}
                     onClick={() => handdleNavigate("/perfil")}
                     >
-                        <div className="bg-white p-2 text-black font-semibold rounded-[100%] xxs:w-10 flex items-center justify-center hover:scale-105 hover:font-bold transform cursor-pointer">
+                        <div className="bg-white p-2 text-black font-semibold rounded-[100%] xxs:w-10 flex items-center justify-center sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer">
                                 <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                         </div>
                         {sideBar &&

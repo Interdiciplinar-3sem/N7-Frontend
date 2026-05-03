@@ -1,7 +1,7 @@
 export type RequestSignUpType = {
         nome: string;
-        email: String;
-        senha: String;
+        email: string;
+        senha: string;
         senhaConfirmacao: String;
         semestre: number;
 }
