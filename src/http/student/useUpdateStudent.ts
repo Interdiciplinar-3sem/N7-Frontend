@@ -36,6 +36,7 @@ export const useUpdateStudent = (id: string) => {
             try {
                  return (await JSON.parse(bodyResponse)) as ResponseUpdateStudentType
             } catch (error) {
+                console.log(error)
                 throw new Error("Não foi possivel atualizar o perfil - Resposta servidor invalida")
             }
         }

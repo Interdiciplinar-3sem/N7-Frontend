@@ -38,7 +38,7 @@ export function FormResumo({setIsFormOpen}: FormResumoProps) {
             setIsFormOpen(false);
          console.log(data)
         } catch (error) {
-         
+            console.log(error)
         }
     }
 
@@ -48,7 +48,7 @@ export function FormResumo({setIsFormOpen}: FormResumoProps) {
 
     return (
        <form onSubmit={form.handleSubmit(handdleForm)}
-            className="rounded-2xl bg-[#F6FAFF] p-4 sm:p-6 border border-[#D9E8F8] space-y-5 absolute z-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            className="fixed z-100 top-1/2 left-1/2 w-[92vw] max-w-2xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-[#D9E8F8] bg-[#F6FAFF] p-4 sm:p-6 space-y-5">
             <div className="space-y-2">
                 <label className="text-base sm:text-lg font-semibold text-[#22486E]" htmlFor="titulo">Titulo</label>
                 <input
@@ -96,7 +96,7 @@ export function FormResumo({setIsFormOpen}: FormResumoProps) {
                     <p className="text-red-500 text-sm">{form.formState.errors.conteudo.message}</p>
                 )}
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 sm:flex-row flex-col">
                 <button type="button" className="bg-[#F7EBA1] flex items-center justify-between px-3 gap-4 min-w-28 rounded-xl py-2 text-sm font-medium text-[#554A12] cursor-not-allowed opacity-60">
                     <span>Cor</span>
                     <span>V</span>
@@ -106,13 +106,13 @@ export function FormResumo({setIsFormOpen}: FormResumoProps) {
                     <span>V</span>
                 </button>
             </div>
-            <div className="flex flex-wrap gap-3 pt-1">
+            <div className="flex flex-wrap gap-3 pt-1 sm:flex-row flex-col ">
                 <button type="reset" className="rounded-xl bg-gray-500 text-white px-4 py-2 text-sm font-semibold hover:brightness-95 transition">Reiniciar</button>
                 <button type="submit" className="rounded-xl bg-[#2E77C2] text-white px-5 py-2 text-sm font-semibold hover:brightness-95 transition">
                  
                     {isPending ? "Carregando..." : "Criar resumo"}
                 </button>
-                <button onClick={() => handdleCloseBtn()} className="rounded-xl bg-[#9E1A1A] text-white px-5 py-2 text-sm font-semibold hover:brightness-95 transition ml-auto">Fechar</button>
+                <button type="button" onClick={() => handdleCloseBtn()} className="rounded-xl bg-[#9E1A1A] text-white px-5 py-2 text-sm font-semibold hover:brightness-95 transition sm:ml-auto">Fechar</button>
             </div>
         </form>
     )

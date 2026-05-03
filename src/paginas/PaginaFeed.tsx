@@ -103,10 +103,11 @@ export function PaginaFeed() {
     ]
 
     return (
-        <main className="w-full h-full flex justify-around p-16">
+        <main className="w-full h-full flex justify-around pt-16">
             <section className="
-                w-2/3 min-h-screen p-6 mb-20 sm:mb-0
+                lg:w-2/3 min-h-screen p-6 mb-20 sm:mb-0
                 sm:grid sm:grid-cols-2 flex flex-col sm:grid-flow-dense gap-8 grid-auto-rows-[180px] 
+                
             ">
                 {resumos.map((resumo, index) => {
                     let formato:'quadrado' | 'horizontal' | 'vertical' = "quadrado";
@@ -122,7 +123,7 @@ export function PaginaFeed() {
                 })}
             </section>
 
-            <section className={`min-w-96 flex flex-col gap-6 `}>
+            <section className={`hidden min-w-72 xl:w-96 lg:flex lg:flex-col gap-6`}>
                 <CardPerfil className="" nome="SeuNome" seguidores={30} semestre={2}/>
 
                 <h2>Seguindo: </h2>

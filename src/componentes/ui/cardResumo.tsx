@@ -31,8 +31,8 @@ export function CardResumo({titulo, texto, className, formato, cor }: CardProps)
     return (
         <div className={cardStyle({formato, cor, className})}>
             <div className="h-full flex flex-col ">
-                <h2 className="text-lg font-medium opacity-90">{titulo}</h2>
-                <p className="text-2xl mt-1 ">{texto}</p>
+                <h2 className="text-2xl font-medium opacity-90">{titulo}</h2>
+                <p className="text-lg mt-1 ">{texto}</p>
             </div>
         </div>
     )

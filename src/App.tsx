@@ -6,7 +6,6 @@ import { PaginaLogin } from './paginas/PaginaLogin'
 import { PaginaPerfil } from './paginas/PaginaPerfil'
 import { PaginaPainel } from './paginas/PaginaPainel'
 import { PaginaFeed } from './paginas/PaginaFeed'
-import { PaginaCriacaoResumo } from './paginas/PaginaCriacaoResumo'
 import { LayoutDefault } from './layout/layoutDefault'
 import { LayoutNetwork } from './layout/layoutNetwork'
 import { ProtectedRoute } from './guards/protecRoute'
@@ -30,7 +29,6 @@ export function App() {
                 <Route element={<LayoutNetwork />}>
                   <Route element={<PaginaPerfil />} path='/perfil' />
                   <Route element={<PaginaFeed />} path='/feed' />
-                  <Route element={<PaginaCriacaoResumo />} path='/criacao/resumo' />
                 </Route>
                 <Route element={<PaginaPainel />} path='/painel' />
             </Route>
