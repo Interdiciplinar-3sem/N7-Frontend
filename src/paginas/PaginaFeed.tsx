@@ -123,7 +123,7 @@ export function PaginaFeed() {
                 })}
             </section>
 
-            <section className={`hidden min-w-72 xl:w-96 lg:flex lg:flex-col gap-6`}>
+            <section className={`hidden min-w-72 xl:w-96 lg:flex lg:flex-col gap-3`}>
                 <CardPerfil className="" nome="SeuNome" seguidores={30} semestre={2}/>
 
                 <h2>Seguindo: </h2>

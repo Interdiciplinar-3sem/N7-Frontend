@@ -11,12 +11,12 @@ type CardPerfilProps = {
 export function CardPerfil({nome, semestre, seguidores, className}: CardPerfilProps) {
 
     return (
-         <div className={twMerge("max-w-72 max-h-10 flex gap-4 relative z-51 hover:bg-white hover:p-2 hover:text-black hover:scale-105 hover:font-bold transform transition-transform cursor-pointer hover:shadow-lg hover:w-full", className)}>
+         <div className={twMerge("group bg-[#F8FAFC] opacity-90 shadow-lg max-w-72 max-h-20 flex gap-4 relative z-51 p-4 rounded-lg hover:bg-[#DAE8FF] hover:scale-105 overflow-hidden transform transition-transform cursor-pointer hover:shadow-lg", className)}>
             <div className="flex justify-center items-center">
                 <div className="h-5 w-5 rounded-full bg-gray-300 p-2"></div>
             </div>
             <div className="flex flex-col justify-center flex-1">
-                <h2 className="">{nome}</h2>
+                <h2 className="group-hover:font-bold">{nome}</h2>
                 <h2 className="text-xs">semestre: {semestre}</h2>
             </div>
             <div className="flex justify-end items-end p-2 text-xs">{seguidores}</div>
