@@ -10,6 +10,7 @@ import { LayoutDefault } from './layout/layoutDefault'
 import { LayoutNetwork } from './layout/layoutNetwork'
 import { ProtectedRoute } from './guards/protecRoute'
 import { ToastProvider } from './contexto/toastContext'
+import { PaginaBuscaMobile } from './paginas/PaginaBuscaMobile'
 
 export default App;
 
@@ -30,6 +31,7 @@ export function App() {
                   <Route element={<PaginaPerfil />} path='/perfil' />
                   <Route element={<PaginaFeed />} path='/feed' />
                 </Route>
+                <Route element={<PaginaBuscaMobile />} path='/busca' />
                 <Route element={<PaginaPainel />} path='/painel' />
             </Route>
           </Routes>
