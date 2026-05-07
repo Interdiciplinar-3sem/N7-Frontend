@@ -3,11 +3,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 
 type SideBarProps = {
-    setIsFormOpen?: React.Dispatch<React.SetStateAction<boolean>>,
-    isFormOpen?: boolean
+    setIsOptionsFormOpen?: React.Dispatch<React.SetStateAction<boolean>>,
+    isOptionsFormOpen?: boolean
 }
 
-export function SideBar({setIsFormOpen, isFormOpen}: SideBarProps){
+export function SideBar({setIsOptionsFormOpen, isOptionsFormOpen}: SideBarProps){
     const [sideBar, setSideBar] = useState(false);
     const [searchBar, setSearchBar] = useState(false);
 
@@ -99,7 +99,7 @@ export function SideBar({setIsFormOpen, isFormOpen}: SideBarProps){
                                 </button>
                             </li>
                             <li className="m:hover:w-full">
-                                <button className="flex gap-2 sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black  sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full transition-all" onClick={() => setIsFormOpen?.(!(isFormOpen ?? false))}>
+                                <button className="flex gap-2 sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black  sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full transition-all" onClick={() => setIsOptionsFormOpen?.(!(isOptionsFormOpen ?? false))}>
                                     <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
                                     {sideBar &&
                                         <h3>Criar resumo</h3>
