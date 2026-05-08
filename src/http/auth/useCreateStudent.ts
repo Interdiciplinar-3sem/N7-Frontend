@@ -1,11 +1,12 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import type { RequestSignUpType } from "../types/requestSignUpType"
 import type { ResponseSignUpType } from "../types/responseSignUpType"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import { useNavigate } from "react-router-dom"
 
-export const useSignUp = () => {
+export const useCreateStudent = () => {
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
 
     return useMutation({
@@ -34,7 +35,12 @@ export const useSignUp = () => {
             return result;
         },
         onSuccess: async () => {
-            navigate("/login", { replace: true })
+            if(["cadastro"].includes(window.location.pathname)){ 
+                navigate("/login", { replace: true })
+            }
+
+            await queryClient.invalidateQueries({ queryKey: ["get-users"] });
+           
         }
     })
 }

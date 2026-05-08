@@ -2,11 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import z from "zod";
-import { useSignUp } from "../http/auth/useSignUp";
+import { useCreateStudent } from "../http/auth/useCreateStudent";
+
 
 export function FormSignUp() {
 
-    const {mutateAsync: signUp} = useSignUp();
+    const {mutateAsync: signUp} = useCreateStudent();
 
     const formSchema = z.object({
         nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
@@ -14,7 +15,7 @@ export function FormSignUp() {
         senha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
         senhaConfirmacao: z.string(),
         semestre: z.string()
-    }).refine(data => data.senha === data.senhaConfirmacao, {
+    }).refine(data => data.senha === data.senhaConfirmacao, {   
         message: "Senhas não conferem",
         path: ["senha"]
     })

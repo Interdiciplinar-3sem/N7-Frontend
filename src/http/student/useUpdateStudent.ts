@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query"
-import { authFecth } from "../authFetch"
-import { API_URL } from "../api"
-import type { RequestUpdateStudentType } from "../types/requestUpdateStudentType"
-import type { ResponseUpdateStudentType } from "../types/responseUpdateStudent"
+import { authFecth } from "../../authFetch"
+import { API_URL } from "../../api"
+import type { RequestUpdateStudentType } from "../../types/requestUpdateStudentType"
+import type { ResponseUpdateStudentType } from "../../types/responseUpdateStudent"
 
 export const useUpdateStudent = (id: string) => {
     return useMutation({

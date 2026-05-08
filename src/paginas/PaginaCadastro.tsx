@@ -1,4 +1,4 @@
-import { FormSignUp } from "../componentes/formSignUp";
+import { FormSignUp } from "../componentes/formUserStudent";
 
 export function PaginaCadastro() {
     return (

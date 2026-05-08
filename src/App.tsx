@@ -11,6 +11,8 @@ import { LayoutNetwork } from './layout/layoutNetwork'
 import { ProtectedRoute } from './guards/protecRoute'
 import { ToastProvider } from './contexto/toastContext'
 import { PaginaBuscaMobile } from './paginas/PaginaBuscaMobile'
+import { LayoutAdmin } from './layout/layoutAdmin'
+import { PaginaUserPainel } from './paginas/admin/PaginaUserPainel'
 
 export default App;
 
@@ -32,7 +34,10 @@ export function App() {
                   <Route element={<PaginaFeed />} path='/feed' />
                 </Route>
                 <Route element={<PaginaBuscaMobile />} path='/busca' />
-                <Route element={<PaginaPainel />} path='/painel' />
+                <Route element={<LayoutAdmin />} path='/painel'>
+                  <Route element={<PaginaPainel />} index/>
+                  <Route element={<PaginaUserPainel />} path='/painel/user' />
+                </Route>
             </Route>
           </Routes>
         </BrowserRouter>
