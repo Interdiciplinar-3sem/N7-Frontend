@@ -13,6 +13,11 @@ import { ToastProvider } from './contexto/toastContext'
 import { PaginaBuscaMobile } from './paginas/PaginaBuscaMobile'
 import { LayoutAdmin } from './layout/layoutAdmin'
 import { PaginaUserPainel } from './paginas/admin/PaginaUserPainel'
+import { PaginaResumos } from './paginas/admin/PaginaResumos'
+import { PaginaCursos } from './paginas/admin/PaginaCursos'
+import { PaginaMaterias } from './paginas/admin/PaginaMaterias'
+import { PaginaTags } from './paginas/admin/PaginaTags'
+import { PaginaSelos } from './paginas/admin/PaginaSelos'
 
 export default App;
 
@@ -33,12 +38,18 @@ export function App() {
                   <Route element={<PaginaPerfil />} path='/perfil' />
                   <Route element={<PaginaFeed />} path='/feed' />
                 </Route>
-                <Route element={<PaginaBuscaMobile />} path='/busca' />
+               
+            </Route>
+             <Route element={<PaginaBuscaMobile />} path='/busca' />
                 <Route element={<LayoutAdmin />} path='/painel'>
                   <Route element={<PaginaPainel />} index/>
                   <Route element={<PaginaUserPainel />} path='/painel/user' />
+                  <Route element={<PaginaResumos />} path='/painel/resumos' />
+                  <Route element={<PaginaCursos />} path='/painel/cursos' />
+                  <Route element={<PaginaMaterias />} path='/painel/materias' />
+                  <Route element={<PaginaTags />} path='/painel/tags' />
+                  <Route element={<PaginaSelos />} path='/painel/selos' />
                 </Route>
-            </Route>
           </Routes>
         </BrowserRouter>
       </ToastProvider>
