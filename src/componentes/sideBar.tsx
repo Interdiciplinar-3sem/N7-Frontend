@@ -163,8 +163,7 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
                         sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform transition-transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full
                     `}
                     onClick={() => {
-                        const profile = bottomLinks[0];
-                        if(profile){ profile.onClick?.(); if(profile.to) handdleNavigate(profile.to); }
+                        handdleNavigate("/perfil"); 
                     }}
                     >
                         <div className="bg-white p-2 text-black font-semibold rounded-[100%] xxs:w-10 flex items-center justify-center sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer">

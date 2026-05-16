@@ -1,10 +1,11 @@
 import { useMutation } from "@tanstack/react-query"
+import { authFecth } from "../authFetch";
 
 export const useDeleteSummary = (id: string) => {
     return useMutation({
         mutationKey: ["delete-summary"],
         mutationFn: async () => {
-            const response = await fetch(`/resumos:${id}`, {
+            const response = await authFecth(`/resumos/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"
@@ -12,7 +13,7 @@ export const useDeleteSummary = (id: string) => {
             })
 
             if(!response.ok){
-                throw new Error("Erro ao atualizar resumo!"); //precisa cobrir mais excessões posteriormente
+                throw new Error("Erro ao deletar resumo!"); //precisa cobrir mais excessões posteriormente
             }
 
             const responseBody = await response.text();

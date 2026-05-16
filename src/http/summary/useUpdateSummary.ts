@@ -1,12 +1,13 @@
 import { useMutation } from "@tanstack/react-query"
 import type { RequestUpdateSummaryType } from "../types/requestUpdateSummaryType"
 import type { ResponseUpdateSummaryType } from "../types/responseUpdateSummaryType"
+import { authFecth } from "../authFetch"
 
 export const useUpdateSummary = () => {
     return useMutation({
         mutationKey: ["put-summary"],
         mutationFn: async (data: RequestUpdateSummaryType): Promise<ResponseUpdateSummaryType> => {
-            const response = await fetch("/resumos", {
+            const response = await authFecth("/resumos", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
