@@ -1,17 +1,19 @@
-import { useMutation } from "@tanstack/react-query"
-import type { RequestSignUpType } from "../types/requestSignUpType"
-import type { ResponseSignUpType } from "../types/responseSignUpType"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import { useNavigate } from "react-router-dom"
+import type { RequestCreateAdmType } from "../types/requestCreateAdm"
 
-export const useSignUp = () => {
+export const useCreateAdm = () => {
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
 
     return useMutation({
-        mutationKey: ["post-user"],
-        mutationFn: async (data: RequestSignUpType): Promise<ResponseSignUpType> => {
-            const response = await authFecth(`${API_URL}/user`, {
+        mutationKey: ["post-adm"],
+        mutationFn: async (data: RequestCreateAdmType) => {
+
+            console.log(data)
+            const response = await authFecth(`${API_URL}/user/adm`, {
                 method: "POST",
                 body: JSON.stringify(data)
             })
@@ -27,14 +29,19 @@ export const useSignUp = () => {
             if(!response.ok){ throw new Error(`Erro ao criar usuario! Status: ${response.status}`) }
 
             const responseBody = await response.text()
-            const result: ResponseSignUpType = responseBody.trim()
+            const result = responseBody.trim()
                 ? JSON.parse(responseBody)
                 : { message: "Usuario criado com sucesso", id: "" }
 
             return result;
         },
         onSuccess: async () => {
-            navigate("/login", { replace: true })
+            if(["cadastro"].includes(window.location.pathname)){ 
+                navigate("/login", { replace: true })
+            }
+
+            await queryClient.invalidateQueries({ queryKey: ["get-users"] });
+           
         }
     })
 }

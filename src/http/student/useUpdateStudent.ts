@@ -1,14 +1,16 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { RequestUpdateStudentType } from "../types/requestUpdateStudentType"
 import type { ResponseUpdateStudentType } from "../types/responseUpdateStudent"
 
 export const useUpdateStudent = (id: string) => {
+    const queryClient = useQueryClient()
+
     return useMutation({
-        mutationKey: ["update-student", id], //preciso passar um dado unique aqui
+        mutationKey: ["update-student", id],
         mutationFn: async (data: RequestUpdateStudentType) => {
-            const response = await authFecth(`${API_URL}/${id}`, {
+            const response = await authFecth(`${API_URL}/student/${id}`, {
                 body: JSON.stringify(data),
                 method: "PUT"
             })
@@ -30,15 +32,19 @@ export const useUpdateStudent = (id: string) => {
             const bodyResponse = await response.text()
 
             if(!bodyResponse.trim()){
-                throw new Error("Não foi possivel atualizar o perfil - Resposta servidor vazia")
+                return {} as ResponseUpdateStudentType
             }
 
             try {
-                 return (await JSON.parse(bodyResponse)) as ResponseUpdateStudentType
-            } catch (error) {
-                console.log(error)
-                throw new Error("Não foi possivel atualizar o perfil - Resposta servidor invalida")
+                return JSON.parse(bodyResponse) as ResponseUpdateStudentType
+            } catch {
+                console.warn("Resposta do servidor não é JSON válido ao atualizar aluno; retornando vazio:", bodyResponse)
+                return {} as ResponseUpdateStudentType
             }
-        }
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["get-users"] })
+            await queryClient.invalidateQueries({ queryKey: ["get-users-desactivated"] })
+        },
     })
 }

@@ -17,7 +17,7 @@ export function ProtectedRoute() {
 
     return (
         <Suspense fallback={<FeedSkeleton />}>
-            <Outlet context={{id: data.id}}/>
+            <Outlet context={{id: data.id, role: data.role }}/>
         </Suspense>
     )
 }

@@ -1,13 +1,25 @@
-import { Bookmark, FilePlusIcon, HomeIcon, Search, User } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Bookmark, FilePlusIcon, HomeIcon, Search, ToolCase, User } from "lucide-react";
 import { useNavigate } from "react-router-dom"
 
-type SideBarProps = {
-    setIsOptionsFormOpen?: React.Dispatch<React.SetStateAction<boolean>>,
-    isOptionsFormOpen?: boolean
+type LinkItem = {
+    key?: string;
+    label?: string;
+    to?: string;
+    icon?: React.ReactNode;
+    onClick?: () => void;
+    position?: "top" | "bottom";
 }
 
-export function SideBar({setIsOptionsFormOpen, isOptionsFormOpen}: SideBarProps){
+type SideBarProps = {
+    role?: string;
+    setIsOptionsFormOpen?: React.Dispatch<React.SetStateAction<boolean>>,
+    isOptionsFormOpen?: boolean,
+    links?: LinkItem[]
+}
+
+export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: SideBarProps){
+    console.log("role:", role)
     const [sideBar, setSideBar] = useState(false);
     const [searchBar, setSearchBar] = useState(false);
 
@@ -27,6 +39,18 @@ export function SideBar({setIsOptionsFormOpen, isOptionsFormOpen}: SideBarProps)
             handdleNavigate("/busca");
         }
     }
+
+    const defaultLinks: LinkItem[] = [  
+        { key: "search", label: "Pesquisar...", icon: <Search className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, onClick: handdleSearchBar, position: "top" },
+        { key: "home", label: "Pagina ", to: "/", icon: <HomeIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" },
+        { key: "create", label: "Criar resumo", icon: <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, onClick: () => setIsOptionsFormOpen?.(!(isOptionsFormOpen ?? false)), position: "top" },
+        { key: "feed", label: "Feed", to: "/feed", icon: <Bookmark className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" },
+        { key: "profile", label: "User", to: "/perfil", icon: <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "bottom" }
+    ];
+
+    const allLinks = links ?? defaultLinks;
+    const topLinks = allLinks.filter(l => l.position !== "bottom");
+    const bottomLinks = allLinks.filter(l => l.position === "bottom");
 
     return (
          <header 
@@ -62,59 +86,72 @@ export function SideBar({setIsOptionsFormOpen, isOptionsFormOpen}: SideBarProps)
                             flex sm:flex-col
                             sm:text-sm
                             `}>
-                            <li className={`flex gap-2 py-1 grou
-                                ${!searchBar && "sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full transition-all"}
-                            `}>
-                                <button className="cursor-pointer" onClick={() => handdleSearchBar()}>
-                                    <Search className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
-                                </button>
-                                
-                                <input
-                                    type="text"
-                                    placeholder="Pesquisar..."
-                                    className={`text-sm bg-[#F8F8F6] border-white/50 shadow-sm placeholder-white/60 text-black rounded-md px-2 py-1 outline-none w-full transition-opacity duration-200 ${
-                                        searchBar && sideBar ? "block opacity-100 delay-100" : " hidden opacity-0"
-                                    }`}
-                                />
+                            {topLinks.map((item) => (
+                                <li
+                                    key={item.key ?? item.label}
+                                    onClick={item.key !== "search" ? () => { item.onClick?.(); if(item.to) handdleNavigate(item.to); } : undefined}
+                                    className={`flex gap-2 py-1 grou
+                                    ${!(item.key === "search" && searchBar) && "sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full transition-all"}
+                                `}
+                                >
+                                    {item.key === "search" ? (
+                                        <button className="cursor-pointer" onClick={() => { item.onClick?.(); if(item.to) handdleNavigate(item.to); }}>
+                                            {item.icon}
+                                        </button>
+                                    ) : (
+                                        <div className="cursor-pointer">
+                                            {item.icon}
+                                        </div>
+                                    )}
 
-                                <button type="button" className={` border border-white/50 shadow-sm text-xs bg-[#F8F8F6] text-black rounded-md p-2 max-w-15 flex items-center justify-center transition-opacity duration-200
-                                    ${ searchBar && sideBar ? "block opacity-100 delay-100" : " hidden opacity-0"}
-                                `}>
-                                    Pesquisar
-                                </button>
+                                    {item.key === "search" && (
+                                        <>
+                                            <input
+                                                type="text"
+                                                placeholder="Pesquisar..."
+                                                className={`text-sm bg-[#F8F8F6] border-white/50 shadow-sm placeholder-white/60 text-black rounded-md px-2 py-1 outline-none w-full transition-opacity duration-200 ${
+                                                    searchBar && sideBar ? "block opacity-100 delay-100" : " hidden opacity-0"
+                                                }`}
+                                            />
 
-                                {sideBar && !searchBar &&
-                                    <button className="cursor-pointer" onClick={() => handdleSearchBar()}>
-                                        <h3>Pesquisar...</h3>
-                                    </button>
-                                }
-                                
-                            </li>
-                            <li className="hidden xxs:flex sm:hover:w-full">
-                                <button className="hidden xxs:flex gap-2 sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full transition-all" onClick={() => handdleNavigate("/")}>
-                                    <HomeIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
-                                    {sideBar &&
-                                        <h3>Pagina Inicial</h3>
+                                            <button type="button" className={` border border-white/50 shadow-sm text-xs bg-[#F8F8F6] text-black rounded-md p-2 max-w-15 flex items-center justify-center transition-opacity duration-200
+                                                ${ searchBar && sideBar ? "block opacity-100 delay-100" : " hidden opacity-0"}
+                                            `}>
+                                                Pesquisar
+                                            </button>
+
+                                            {sideBar && !searchBar &&
+                                                <button className="cursor-pointer" onClick={() => handdleSearchBar()}>
+                                                    <h3>{item.label ?? ""}</h3>
+                                                </button>
+                                            }
+                                        </>
+                                    )}
+
+                                    {item.key !== "search" && sideBar && item.label && (
+                                        <h3>{item.label}</h3>
+                                    )}
+                                </li>
+                            ))}
+                            {role === "ADM" && (
+                                <li
+        
+                                    onClick={() => handdleNavigate("/painel")}
+                                    className={`flex gap-2 py-1 group sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full transition-all"}
+                                `}
+                                >
+                                     <div className="cursor-pointer">
+                                        {<ToolCase />}
+                                    </div>
+
+                                    {sideBar && !searchBar &&
+                                        <button className="cursor-pointer" onClick={() => handdleSearchBar()}>
+                                            <h3>Painel ADM</h3>
+                                        </button>
                                     }
-                                </button>
-                            </li>
-                            <li className="m:hover:w-full">
-                                <button className="flex gap-2 sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black  sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full transition-all" onClick={() => setIsOptionsFormOpen?.(!(isOptionsFormOpen ?? false))}>
-                                    <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
-                                    {sideBar &&
-                                        <h3>Criar resumo</h3>
-                                    }
-                                </button>
-                            </li>
-                            
-                            <li className="sm:hover:w-full">
-                                <button className="flex gap-2 sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full transition-all" onClick={() => handdleNavigate("/feed")}>
-                                    <Bookmark className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
-                                    {sideBar &&
-                                        <h3>Feed</h3>
-                                    }
-                                </button>
-                            </li>
+
+                                </li>  
+                            )}
                         </ul>
                     </div>
                     
@@ -125,13 +162,16 @@ export function SideBar({setIsOptionsFormOpen, isOptionsFormOpen}: SideBarProps)
                         ${sideBar ? "items-start p-0 gap-4" : "items-center justify-center p-2"}
                         sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform transition-transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full
                     `}
-                    onClick={() => handdleNavigate("/perfil")}
+                    onClick={() => {
+                        const profile = bottomLinks[0];
+                        if(profile){ profile.onClick?.(); if(profile.to) handdleNavigate(profile.to); }
+                    }}
                     >
                         <div className="bg-white p-2 text-black font-semibold rounded-[100%] xxs:w-10 flex items-center justify-center sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer">
-                                <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>
+                                {bottomLinks[0]?.icon ?? <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>}
                         </div>
                         {sideBar &&
-                            <h3>User</h3>
+                            <h3>{bottomLinks[0]?.label ?? "User"}</h3>
                         } 
                     </section>
                     

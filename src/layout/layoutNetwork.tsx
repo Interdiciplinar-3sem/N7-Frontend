@@ -32,7 +32,7 @@ export function LayoutNetwork() {
 
     return (
         <main className="flex min-h-screen w-full gap-2 ">
-            <SideBar isOptionsFormOpen={isOptionsFormOpen} setIsOptionsFormOpen={setIsOptionsFormOpen}/>
+            <SideBar role={parentContext.role} isOptionsFormOpen={isOptionsFormOpen} setIsOptionsFormOpen={setIsOptionsFormOpen}/>
             <div className="w-full sm:ml-20 p-2 sm:p-1">
                 { isOptionsFormOpen && (
                         <>
