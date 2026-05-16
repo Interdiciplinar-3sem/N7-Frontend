@@ -39,6 +39,7 @@ export function PaginaMaterias() {
             rowKey={(row) => row.id}
             tableTitle="Lista de matérias"
             emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhuma matéria encontrada</div>}
+            dataDesactivated={[]}
         />
     )
 }

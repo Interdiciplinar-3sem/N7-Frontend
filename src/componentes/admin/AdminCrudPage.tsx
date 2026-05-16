@@ -1,6 +1,8 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Table, { type Column } from "../ui/Table";
 import { CardStatics } from "../ui/cardStatics";
+import { ArrowLeftRight } from "lucide-react";
+import { ToggleText } from "../ui/toggleText";
 
 export type AdminStatCard = {
     title: string;
@@ -14,6 +16,7 @@ type AdminCrudPageProps<T> = {
     stats: AdminStatCard[];
     columns: Column<T>[];
     data: T[];
+    dataDesactivated: T[];
     rowKey: (row: T) => string | number;
     tableTitle: string;
     emptyPlaceholder?: ReactNode;
@@ -29,6 +32,7 @@ export function AdminCrudPage<T>({
     stats,
     columns,
     data,
+    dataDesactivated,
     rowKey,
     tableTitle,
     emptyPlaceholder,
@@ -37,6 +41,8 @@ export function AdminCrudPage<T>({
     children,
     showTable = true,
 }: AdminCrudPageProps<T>) {
+    const [isToggled, setIsToggled] = useState(false);
+    const [desactivated, setDesactivated] = useState(false);
     const hasPrimaryAction = Boolean(primaryActionLabel);
 
     return (
@@ -75,13 +81,25 @@ export function AdminCrudPage<T>({
                 {showTable && (
                     <div className="col-span-12 row-span-6 mt-4 bg-gray-50 p-4 rounded-lg">
                         <div className="w-full flex justify-between items-center gap-4 flex-wrap">
-                            <h4 className="font-semibold mb-2">{tableTitle}</h4>
+                            <h4 className="font-semibold mb-2">{
+                                !desactivated ? `Lista de ${tableTitle}` : `Lista de ${tableTitle} desativados`
+                            }</h4>
+
+                            <button className="w-full sm:w-auto px-3 py-2 rounded-md relative" 
+                                onMouseEnter={() => setIsToggled(true)}
+                                onMouseLeave={() => setIsToggled(false)}
+                                onClick={() => setDesactivated(!desactivated)}
+                            >
+                                <ToggleText className="-left-5 -top-6" text={desactivated ? "ativados" : "desativados"} active={isToggled} />
+                                <ArrowLeftRight className="text-blue-500"/>
+                             
+                            </button>
                         </div>
 
                         <div className="w-full">
                             <Table
                                 columns={columns}
-                                data={data}
+                                data={desactivated ? dataDesactivated : data}
                                 rowKey={rowKey}
                                 emptyPlaceholder={emptyPlaceholder}
                             />

@@ -39,6 +39,7 @@ export function PaginaCursos() {
             rowKey={(row) => row.id}
             tableTitle="Lista de cursos"
             emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum curso encontrado</div>}
+            dataDesactivated={[]}
         />
     )
 }

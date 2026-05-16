@@ -62,6 +62,7 @@ export function PaginaResumos() {
             rowKey={(row) => row.id}
             tableTitle="Lista de resumos"
             emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum resumo encontrado</div>}
+            dataDesactivated={[]}
         />
     )
 }

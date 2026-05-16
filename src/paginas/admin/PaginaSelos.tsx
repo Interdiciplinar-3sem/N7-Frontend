@@ -39,6 +39,7 @@ export function PaginaSelos() {
             rowKey={(row) => row.id}
             tableTitle="Lista de selos"
             emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum selo encontrado</div>}
+            dataDesactivated={[]}
         />
     )
 }

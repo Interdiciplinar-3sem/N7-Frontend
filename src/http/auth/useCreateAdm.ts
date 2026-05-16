@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import type { ResponseSignUpType } from "../types/responseSignUpType"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import { useNavigate } from "react-router-dom"

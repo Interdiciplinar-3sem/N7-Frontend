@@ -37,6 +37,7 @@ export function PaginaTags() {
             rowKey={(row) => row.id}
             tableTitle="Lista de tags"
             emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhuma tag encontrada</div>}
+            dataDesactivated={[]}
         />
     )
 }

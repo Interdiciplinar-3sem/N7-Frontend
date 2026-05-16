@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { SideBar } from "../componentes/sideBar";
-import { Bookmark, User, Home, BookCopy,  PenBox, BookImage, BookOpenIcon, Tag, Badge} from "lucide-react";
+import { Bookmark, User, Home, BookCopy,  PenBox, BookOpenIcon, Tag, Badge} from "lucide-react";
 
 export function LayoutAdmin() {
     
