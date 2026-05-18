@@ -1,15 +1,19 @@
 import { useState } from "react";
 import { AdminCrudPage } from "../../componentes/admin/AdminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
-import { useGetSummary } from "../../http/summary/useGetSummary";
+import { useGetAllSummary } from "../../http/summary/useGetAllSummary";
 import type { ResponseGetSummaryType } from "../../http/types/responseGetSummary";
 import { useUpdateStatusSummary } from "../../http/summary/useUpdateStatusSummary";
+import { useGetSummaryDesactivated } from "../../http/summary/useGetSummaryDesactivated";
+import { ViweSummary } from "../../componentes/ViweSummary";
 
 export function PaginaResumos() {
-    const {data} = useGetSummary();
+    const {data} = useGetAllSummary();
+    const {data: dataDesactivated} = useGetSummaryDesactivated();
     const {mutateAsync: updateStatusSummary} = useUpdateStatusSummary();
-    const [updateSummaryActive, setUpdateSummaryActive] = useState(false);
-    const [updateSummaryId, setUpdateSummaryId] = useState<string | null>(null);
+    const [updateSummaryId, setUpdateSummaryId] = useState<string | null>(null)
+    const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+    const [selectedSummaryId, setSelectedSummaryId] = useState<string | null>(null);
 
     const columns: Column<ResponseGetSummaryType>[] = [
         { key: "studentId", header: "ID estudante" },
@@ -20,28 +24,37 @@ export function PaginaResumos() {
         { key: "actions", header: "Ações", width: "180px", align: "center",
             render: (row) => {
                 return(
-                    <div>
+                    <div className="flex gap-2 justify-center">
                         <button
                                 onClick={() => handdleUpdateSummary(row.summaryId)}
                                 className="px-2 py-1 bg-yellow-500 text-white rounded-sm"
                                 disabled={updateSummaryId === row.summaryId}
                             >
-                                { updateSummaryActive ? "   ativar" : "destivar" }
-                            </button>
+                            {row.summaryId === updateSummaryId 
+                                ? "Atualizando..."
+                                : (!row.ativo ? "ativar" : "destivar")
+                            }
+                        </button>
+                        <button
+                                onClick={() => {
+                                    setSelectedSummaryId(row.summaryId)
+                                    setIsSummaryOpen(true)
+                                }}
+                                className="px-2 py-1 bg-green-500/50 text-white rounded-sm"
+                            >
+                            Ver mais
+                        </button>
                     </div>
                 )
             }
         }
     ]
-
     const handdleUpdateSummary = async (summaryId: string) => {
         setUpdateSummaryId(summaryId);
-        setUpdateSummaryActive(true);
 
         try {
-            await updateStatusSummary(updateSummaryId ?? summaryId);
+            await updateStatusSummary(summaryId);
         } finally {
-            setUpdateSummaryActive(false);
             setUpdateSummaryId(null);
         }
     }
@@ -49,19 +62,30 @@ export function PaginaResumos() {
     const totalResumos = data?.length ?? 0;
 
     return (
-        <AdminCrudPage
+        <>
+            <AdminCrudPage
             title="Resumos"
-            description="Gerencie os resumos publicados no sistema"
-            primaryActionLabel="Novo resumo"
-            stats={[
-                { title: "Total de resumos", value: totalResumos.toString(), cor: "azul" },
-            ]}
-            columns={columns}
-            data={data ?? []}
-            rowKey={(row) => row.summaryId}
-            tableTitle="Lista de resumos"
-            emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum resumo encontrado</div>}
-            dataDesactivated={[]}
-        />
+                description="Gerencie os resumos publicados no sistema"
+                stats={[
+                    { title: "Total de resumos", value: totalResumos.toString(), cor: "azul" },
+                ]}
+                columns={columns}
+                data={data ?? []}
+                dataDesactivated={dataDesactivated ?? []}
+                rowKey={(row) => row.summaryId}
+                tableTitle="Lista de resumos"
+                emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum resumo encontrado</div>}
+            />
+
+            {isSummaryOpen && (
+                <ViweSummary
+                    id={selectedSummaryId ?? ""}
+                    onClose={() => {
+                        setIsSummaryOpen(false)
+                        setSelectedSummaryId(null)
+                    }}
+                />
+            )}
+        </>
     )
 }

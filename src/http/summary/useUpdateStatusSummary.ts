@@ -1,11 +1,14 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
+import { API_URL } from "../api"
 
 export const useUpdateStatusSummary = () => {
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationKey: ["put-status-summary"],
         mutationFn: async (id: string): Promise<{ message: string }> => {
-            const response = await authFecth(`/resumos/atualizar_status/${id}`, {
+            const response = await authFecth(`${API_URL}/resumos/atualizar_status/${id}`, {
                 method: "PATCH",
             })
 
@@ -14,9 +17,22 @@ export const useUpdateStatusSummary = () => {
             }
 
             const responseBody = await response.text();
-            const result = responseBody.trim()
-                ? JSON.parse(responseBody) : { message: "Sucesso ao atualizar status do resumo!"};
-            return result;
+
+            if (!responseBody.trim()) {
+                return { message: "Sucesso ao atualizar status do resumo!" };
+            }
+
+            try {
+                return JSON.parse(responseBody);
+            } catch {
+                return { message: responseBody };
+            }
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["get-summary"] });
+            await queryClient.invalidateQueries({ queryKey: ["get-summary-desactivated"] });
+            await queryClient.refetchQueries({ queryKey: ["get-summary"], type: "active" });
+            await queryClient.refetchQueries({ queryKey: ["get-summary-desactivated"], type: "active" });
         }
     })
 }

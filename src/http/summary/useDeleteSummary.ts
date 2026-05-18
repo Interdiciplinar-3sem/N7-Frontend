@@ -1,11 +1,12 @@
 import { useMutation } from "@tanstack/react-query"
 import { authFecth } from "../authFetch";
+import { API_URL } from "../api";
 
 export const useDeleteSummary = (id: string) => {
     return useMutation({
         mutationKey: ["delete-summary"],
         mutationFn: async () => {
-            const response = await authFecth(`/resumos/${id}`, {
+            const response = await authFecth(`${API_URL}/resumos/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"

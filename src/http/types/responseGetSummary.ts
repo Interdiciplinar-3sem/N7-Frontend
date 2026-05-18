@@ -4,4 +4,5 @@ export type ResponseGetSummaryType = {
     titulo: string,
     conteudo: string,
     reports?: number
+    ativo: boolean
 }

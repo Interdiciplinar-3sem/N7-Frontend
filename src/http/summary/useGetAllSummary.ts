@@ -3,7 +3,7 @@ import type { ResponseGetSummaryType } from "../types/responseGetSummary";
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 
-export const useGetSummary = () => {
+export const useGetAllSummary = () => {
     return useQuery({
         queryKey: ["get-summary"],
         queryFn: async (): Promise<ResponseGetSummaryType[]> => {
@@ -21,7 +21,8 @@ export const useGetSummary = () => {
                 summaryId: item.summaryId,
                 titulo: item.titulo,
                 conteudo: item.conteudo.slice(0, 100) + (item.conteudo.length > 100 ? "..." : ""),
-                reports: item.reports ?? 0
+                reports: item.reports ?? 0,
+                ativo: item.ativo
             }))
             return data;
         },
