@@ -5,10 +5,11 @@ import { ADMform } from "../../componentes/admin/admForm";
 import { X } from "lucide-react";
 import { AdminCrudPage } from "../../componentes/admin/AdminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
-import { useUpdateActiveStudent } from "../../http/admin/StudentUpdateStatus";
+import { useUpdateActiveStudent } from "../../http/student/StudentUpdateStatus";
 import { useGetUserDesactivated } from "../../http/user/useGetUserDesactivated";
 import { StudentEditForm } from "../../componentes/admin/StudentEditForm";
 import type { ResponseGetUserType } from "../../http/types/responseGetUserType";
+import { Overlay } from "../../componentes/overlay";
 
 type UserRow = ResponseGetUserType & {
     ativo?: boolean
@@ -94,104 +95,111 @@ export function PaginaUserPainel() {
     }
     
     return (
-        <AdminCrudPage
-            title="Admin Dashboard"
-            description="Gerencie usuários e recursos do sistema"
-            stats={[
-                { title: "Total de usuários", value: totalUsers.toString(), cor: "azul" },
-                { title: "Estudantes", value: totalStudent?.estudantes.toString() ?? "0", cor: "verde" },
-                { title: "ADM", value: totalAdmin?.adm.toString() ?? "0", cor: "amarelo" },
-                { title: "Professores", value: "0", cor: "vermelho" },
-                { title: "Usuarios Desativados", value: totalUserDesactivated?.toString() ?? "0", cor: "vermelho" },
-            ]}
-            columns={columns}
-            data={data ?? []}
-            dataDesactivated={desactivatedData ?? []}
-            rowKey={(r) => r.userId}
-            tableTitle="usuários"
-            emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum usuário encontrado</div>}
-            primaryActionLabel="Novo Usuário"
-            onPrimaryAction={() => setIsPostForm(true)}
-            showTable={!isPostForm}
-        >
+        <>
+            <AdminCrudPage
+                title="Admin Dashboard"
+                description="Gerencie usuários e recursos do sistema"
+                stats={[
+                    { title: "Total de usuários", value: totalUsers.toString(), cor: "azul" },
+                    { title: "Estudantes", value: totalStudent?.estudantes.toString() ?? "0", cor: "verde" },
+                    { title: "ADM", value: totalAdmin?.adm.toString() ?? "0", cor: "amarelo" },
+                    { title: "Professores", value: "0", cor: "vermelho" },
+                    { title: "Usuarios Desativados", value: totalUserDesactivated?.toString() ?? "0", cor: "vermelho" },
+                ]}
+                columns={columns}
+                data={data ?? []}
+                dataDesactivated={desactivatedData ?? []}
+                rowKey={(r) => r.userId}
+                tableTitle="usuários"
+                emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum usuário encontrado</div>}
+                primaryActionLabel="Novo Usuário"
+                onPrimaryAction={() => setIsPostForm(true)}
+            />
+
             {isEditForm && editingUserId && editingStudent && (
-                <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                    <div className="flex justify-end mb-4">
-                        <button
-                            className="p-1 bg-gray-300 text-gray-700 rounded-md"
-                            onClick={() => {
+                <>
+                    <Overlay />
+                    <div className="fixed z-100 top-1/2 left-1/2 w-[92vw] max-w-3xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-2xl">
+                        <div className="flex justify-end mb-4">
+                            <button
+                                className="p-1 bg-gray-300 text-gray-700 rounded-md"
+                                onClick={() => {
+                                    setIsEditForm(false)
+                                    setEditingUserId(null)
+                                    setEditingStudent(null)
+                                }}
+                            >
+                                <X size={16} />
+                            </button>
+                        </div>
+
+                        <StudentEditForm
+                            studentId={editingStudent.studentId || editingUserId}
+                            onClose={() => {
                                 setIsEditForm(false)
                                 setEditingUserId(null)
                                 setEditingStudent(null)
                             }}
-                        >
-                            <X size={16} />
-                        </button>
+                        />
                     </div>
-
-                    <StudentEditForm
-                        studentId={editingStudent.studentId || editingUserId}
-                        onClose={() => {
-                            setIsEditForm(false)
-                            setEditingUserId(null)
-                            setEditingStudent(null)
-                        }}
-                    />
-                </div>
+                </>
             )}
 
             {isPostForm && (
-                <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="flex flex-col items-center w-full h-full relative p-4">
-                        <button
-                            className="ml-auto mb-4 p-1 bg-gray-300 text-gray-700 rounded-md"
-                            onClick={() => {
-                                setIsPostForm(false)
-                                setUserRole("")
-                            }}
-                        >
-                            <X size={16} />
-                        </button>
-                        <h4 className="font-semibold mb-2">Formulário de criação de usuário</h4>
+                <>
+                    <Overlay />
+                    <div className="fixed z-100 top-1/2 left-1/2 w-[94vw] max-w-4xl max-h-[92vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-gray-200 bg-gray-50 p-4 shadow-2xl">
+                        <div className="flex flex-col items-center w-full h-full relative p-4">
+                            <button
+                                className="ml-auto mb-4 p-1 bg-gray-300 text-gray-700 rounded-md"
+                                onClick={() => {
+                                    setIsPostForm(false)
+                                    setUserRole("")
+                                }}
+                            >
+                                <X size={16} />
+                            </button>
+                            <h4 className="font-semibold mb-2">Formulário de criação de usuário</h4>
 
-                        {userRole === "" && (
-                            <div className="flex justify-between h-full w-full gap-8 p-4 max-h-40">
-                                <div className="w-full h-full flex-1 bg-red-900/50 rounded-2xl shadow-2xl flex justify-center items-center">
-                                    <button className="px-3 py-2 text-white rounded-md" onClick={() => setUserRole("ALUNO")}>
-                                        Criar aluno
-                                    </button>
+                            {userRole === "" && (
+                                <div className="flex flex-col sm:flex-row justify-between h-full w-full gap-4 p-4 max-h-40">
+                                    <div className="w-full h-full flex-1 bg-red-900/50 rounded-2xl shadow-2xl flex justify-center items-center">
+                                        <button className="px-3 py-2 text-white rounded-md" onClick={() => setUserRole("ALUNO")}>
+                                            Criar aluno
+                                        </button>
+                                    </div>
+                                    <div className="flex-1 bg-green-900/50 rounded-2xl shadow-2xl flex justify-center items-center">
+                                        <button className="w-full h-full px-3 py-2 text-white rounded-md" onClick={() => setUserRole("ADM")}>
+                                            Criar ADM
+                                        </button>
+                                    </div>
+
+                                    <div className="flex-1 bg-blue-900/50 rounded-2xl shadow-2xl flex justify-center items-center">
+                                        <button className="w-full h-full px-3 py-2 text-white rounded-md" onClick={() => setUserRole("PROFESSOR")}>
+                                            Criar professor
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="flex-1 bg-green-900/50 rounded-2xl shadow-2xl flex justify-center items-center">
-                                    <button className="w-full h-full px-3 py-2 text-white rounded-md" onClick={() => setUserRole("ADM")}>
-                                        Criar ADM
-                                    </button>
+                            )}
+
+                            {userRole === "ALUNO" && (
+                                <StudentForm setIsPostForm={setIsPostForm} setUserRole={setUserRole} />
+                            )}
+
+                            {userRole === "ADM" && (
+                                <div className="w-full">
+                                    <ADMform setIsPostForm={setIsPostForm} setUserRole={setUserRole} />
                                 </div>
-
-                                <div className="flex-1 bg-blue-900/50 rounded-2xl shadow-2xl flex justify-center items-center">
-                                    <button className="w-full h-full px-3 py-2 text-white rounded-md" onClick={() => setUserRole("PROFESSOR")}>
-                                        Criar professor
-                                    </button>
+                            )}
+                            {userRole === "PROFESSOR" && (
+                                <div>
+                                    Em breve
                                 </div>
-                            </div>
-                        )}
-
-                        {userRole === "ALUNO" && (
-                            <StudentForm setIsPostForm={setIsPostForm} setUserRole={setUserRole} />
-                        )}
-
-                        {userRole === "ADM" && (
-                            <div>
-                                <ADMform setIsPostForm={setIsPostForm} setUserRole={setUserRole} />
-                            </div>
-                        )}
-                        {userRole === "PROFESSOR" && (
-                            <div>
-                                form professor
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
-                </div>
+                </>
             )}
-        </AdminCrudPage>
+        </>
     )
 }

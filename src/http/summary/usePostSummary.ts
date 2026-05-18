@@ -1,10 +1,11 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { RequestCreateSummaryType } from "../types/requestCreateSummaryType"
 import type { ResponseCreateSummaryType } from "../types/responseCreateSummaryType"
 
 export const useSummaryPost = () => {
+    const queryClient = useQueryClient();
 
     return useMutation({
         mutationKey: ["post-summary"],
@@ -31,5 +32,11 @@ export const useSummaryPost = () => {
 
             return result;
         },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["get-summary"] });
+            await queryClient.invalidateQueries({ queryKey: ["get-summary-desactivated"] });
+            await queryClient.refetchQueries({ queryKey: ["get-summary"], type: "active" });
+            await queryClient.refetchQueries({ queryKey: ["get-summary-desactivated"], type: "active" });
+        }
     })
 }
