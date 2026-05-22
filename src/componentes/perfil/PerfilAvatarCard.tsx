@@ -1,22 +1,19 @@
-import { type ChangeEvent, type MutableRefObject } from 'react'
 import type { PerfilUser } from './types'
 
 type PerfilAvatarCardProps = {
   user: PerfilUser
   openFotoMenu: boolean
   onToggleFotoMenu: () => void
-  onChoosePhoto: (event: ChangeEvent<HTMLInputElement>) => void
+  onOpenAvatarPicker: () => void
   onRemovePhoto: () => void
-  fileInputRef: MutableRefObject<HTMLInputElement | null>
 }
 
 export function PerfilAvatarCard({
   user,
   openFotoMenu,
   onToggleFotoMenu,
-  onChoosePhoto,
-  onRemovePhoto,
-  fileInputRef
+  onOpenAvatarPicker,
+  onRemovePhoto
 }: PerfilAvatarCardProps) {
   return (
     <div className="foto-area flex flex-col items-center relative">
@@ -32,7 +29,7 @@ export function PerfilAvatarCard({
             pointer-events-none
           "
           style={{
-            backgroundImage: user.foto ? `url(${user.foto})` : 'none'
+            backgroundImage: user.avatar?.url ? `url(${user.avatar.url})` : 'none'
           }}
         />
 
@@ -61,14 +58,6 @@ export function PerfilAvatarCard({
           📷
         </button>
 
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          className="hidden"
-          onChange={onChoosePhoto}
-        />
-
         {openFotoMenu && (
           <div
             className="
@@ -89,7 +78,10 @@ export function PerfilAvatarCard({
           >
             <button
               type="button"
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => {
+                onToggleFotoMenu()
+                onOpenAvatarPicker()
+              }}
               className="
                 px-3
                 py-2
@@ -100,10 +92,10 @@ export function PerfilAvatarCard({
                 transition-all
               "
             >
-              Escolher foto
+              Escolher avatar
             </button>
 
-            {user.foto && (
+            {user.avatar && (
               <button
                 type="button"
                 onClick={onRemovePhoto}
@@ -117,7 +109,7 @@ export function PerfilAvatarCard({
                   transition-all
                 "
               >
-                Remover foto
+                Remover avatar
               </button>
             )}
           </div>

@@ -4,7 +4,7 @@ type PerfilEditFormModalProps = {
   isOpen: boolean
   user: PerfilUser
   onClose: () => void
-  onSubmit: (formData: FormData) => void
+  onSubmit: (formData: FormData) => Promise<void> | void
 }
 
 export function PerfilEditFormModal({

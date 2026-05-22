@@ -3,11 +3,21 @@ export type ResponseGetStudentType = {
         nome: string;
         semestre: number;
         bio: string | null;
-        foto: string | null;
+        avatar: {
+                id: number;
+                title: string;
+                male: string | null;
+                url: string;
+                description: string;
+        } | null;
         pontuação?: number;
-        cursoAtual?: {
+        course?: {
                 id: number;
                 name: string;
-                descricao: string;
+                descricao: string | null;
+                university: {
+                        id: number;
+                        name: string;
+                };
         }
 }

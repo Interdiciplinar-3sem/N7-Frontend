@@ -45,6 +45,7 @@ export const useUpdateStudent = (id: string) => {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ["get-users"] })
             await queryClient.invalidateQueries({ queryKey: ["get-users-desactivated"] })
+            await queryClient.invalidateQueries({ queryKey: ["get-student", id] })
         },
     })
 }

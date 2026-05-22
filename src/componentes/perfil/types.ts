@@ -5,7 +5,13 @@ export type PerfilUser = {
   descricao: string
   seguidores: number
   seguindo: number
-  foto: string
+  avatar: {
+    id: number
+    title: string
+    male: string | null
+    url: string
+    description: string
+  } | null
 }
 
 export type PerfilResumo = {

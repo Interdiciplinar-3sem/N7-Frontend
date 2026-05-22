@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import z from "zod";
 import { useCreateStudent } from "../http/auth/useCreateStudent";
 
@@ -8,6 +9,7 @@ import { useCreateStudent } from "../http/auth/useCreateStudent";
 export function FormSignUp() {
 
     const {mutateAsync: signUp} = useCreateStudent();
+    const navigate = useNavigate();
 
     const formSchema = z.object({
         nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
@@ -50,7 +52,8 @@ export function FormSignUp() {
                 senhaConfirmacao: data.senhaConfirmacao,
                 semestre: Number(data.semestre)
             })
-            
+
+            navigate("/feed", { replace: true })
         } catch (error) {
             const parsed = JSON.parse((error as Error).message)
             if (parsed.status === 409) {
@@ -96,8 +99,8 @@ export function FormSignUp() {
                     {form.formState.errors.senha?.message}
                 </p>
             )}
-             <select className="bg-white text-black text-center font-semibold shadow-sm"  {...form.register("semestre")}>
-                <option value="" disabled selected hidden>
+                 <select className="bg-white text-black text-center font-semibold shadow-sm"  {...form.register("semestre")}>
+                     <option value="" disabled hidden>
                     Semestre
                 </option>
                 <option value="1">1</option>

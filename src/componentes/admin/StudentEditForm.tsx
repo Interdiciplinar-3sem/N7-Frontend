@@ -22,10 +22,6 @@ const formSchema = z.object({
     bio: z.preprocess(
         (val) => (typeof val === "string" && val.trim() === "" ? undefined : val),
         z.string().optional()
-    ),
-    foto: z.preprocess(
-        (val) => (typeof val === "string" && val.trim() === "" ? undefined : val),
-        z.string().optional()
     )
 })
 
@@ -37,15 +33,13 @@ export function StudentEditForm({ studentId, onClose }: StudentEditFormProps) {
         nome?: string
         semestre?: string
         bio?: string
-        foto?: string
     }
 
     const form = useForm<FormValues>({
         defaultValues: {
             nome: "",
             semestre: "1",
-            bio: "",
-            foto: ""
+            bio: ""
         },
         // @ts-expect-error - zod optional fields resolver compatibility
         resolver: zodResolver(formSchema),
@@ -58,8 +52,7 @@ export function StudentEditForm({ studentId, onClose }: StudentEditFormProps) {
             form.reset({
                 nome: studentData.nome ?? "",
                 semestre: studentData.semestre?.toString() ?? "1",
-                bio: studentData.bio ?? "",
-                foto: studentData.foto ?? ""
+                bio: studentData.bio ?? ""
             }, { keepDirty: false, keepValues: false })
         }
         // form intentionally excluded from dependencies to prevent loop reset
@@ -72,7 +65,6 @@ export function StudentEditForm({ studentId, onClose }: StudentEditFormProps) {
         if (data.nome !== undefined) payload.nome = data.nome
         if (data.semestre !== undefined && data.semestre !== "") payload.semestre = Number(data.semestre)
         if (data.bio !== undefined) payload.bio = data.bio
-        if (data.foto !== undefined) payload.foto = data.foto
 
         if (Object.keys(payload).length === 0) {
             onClose()
@@ -150,14 +142,8 @@ export function StudentEditForm({ studentId, onClose }: StudentEditFormProps) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label className="text-sm font-semibold text-gray-700">Foto</label>
-                        <input
-                            className="p-2 border border-gray-200 bg-gray-50 rounded-md text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            type="text"
-                            placeholder="Cole a URL da foto"
-                            {...form.register("foto")}
-                        />
-                        {form.formState.errors.foto && <span className="text-xs text-red-500">{form.formState.errors.foto.message}</span>}
+                        <label className="text-sm font-semibold text-gray-700">Avatar</label>
+                        <p className="text-xs text-gray-500">O avatar é carregado pelo perfil e não é editado neste formulário.</p>
                     </div>
 
                     <button
