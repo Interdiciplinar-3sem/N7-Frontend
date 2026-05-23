@@ -27,18 +27,6 @@ export function PerfilAvatarPickerModal({
     return null
   }
 
-  const visibleAvatars = avatars.filter((avatar) => {
-    if (selectedGender === 'all') {
-      return true
-    }
-
-    if (selectedGender === 'male') {
-      return avatar.group === 'male'
-    }
-
-    return avatar.group === 'female'
-  })
-
   return (
     <div
       className="fixed inset-0 z-80 flex items-center justify-center bg-black/60 p-4"
@@ -69,7 +57,7 @@ export function PerfilAvatarPickerModal({
         </div>
 
         <div className="mt-6 grid max-h-[60vh] grid-cols-2 gap-4 overflow-y-auto pr-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {visibleAvatars.map((avatar) => (
+          {avatars.map((avatar) => (
             <button
               key={avatar.id}
               type="button"

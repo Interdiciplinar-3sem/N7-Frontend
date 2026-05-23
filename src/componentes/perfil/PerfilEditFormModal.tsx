@@ -26,7 +26,7 @@ export function PerfilEditFormModal({
         flex
         items-center
         justify-center
-        z-70
+        z-100
         p-4
       "
       onClick={onClose}

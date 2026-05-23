@@ -6,11 +6,11 @@ import { PerfilEditFormModal } from '../componentes/perfil/PerfilEditFormModal'
 import { PerfilInfo } from '../componentes/perfil/PerfilInfo'
 import { PerfilResumosSection } from '../componentes/perfil/PerfilResumosSection'
 import { PerfilTurmasSection } from '../componentes/perfil/PerfilTurmasSection'
-import type { PerfilResumo, PerfilTurma, PerfilUser } from '../componentes/perfil/types'
+import type { PerfilTurma, PerfilUser } from '../componentes/perfil/types'
+import { ViweSummary } from '../componentes/ViweSummary'
 import { useGetStudent } from '../http/student/useGetStudent'
-import { useOutletContext } from 'react-router'
+import { useNavigate, useOutletContext } from 'react-router'
 import { useUpdateStudent } from '../http/student/useUpdateStudent'
-import { useUpdateStudentAvatar } from '../http/student/useUpdateStudentAvatar'
 
 type AvatarGender = 'all' | 'male' | 'female'
 
@@ -49,10 +49,15 @@ const avatarOptions: AvatarOption[] = [
 
 export function PaginaPerfil() {
   const parentContext = useOutletContext<any | undefined>()
+  const navigate = useNavigate();
+
+  if(parentContext?.role !== 'ALUNO') {
+    navigate('/feed');
+  }
+
   const studentId = String(parentContext?.id ?? '')
   const { data: studentData, isPending } = useGetStudent(studentId)
   const { mutateAsync: updateStudent } = useUpdateStudent(studentId)
-  const { mutateAsync: updateStudentAvatar } = useUpdateStudentAvatar(studentId)
 
   const [user, setUser] = useState<PerfilUser>({
     nome: '',
@@ -70,11 +75,21 @@ export function PaginaPerfil() {
   const [showForm, setShowForm] = useState(false)
   const [showResumos, setShowResumos] = useState(false)
   const [showTurmas, setShowTurmas] = useState(false)
+  const [isOptionsFormOpen, setIsOptionsFormOpen] = useState(false)
+  const [selectedResumoId, setSelectedResumoId] = useState<string | null>(null)
+
+  useEffect(() => {
+    parentContext?.setIsOptionsFormOpen?.(isOptionsFormOpen)
+  }, [isOptionsFormOpen, parentContext?.setIsOptionsFormOpen])
+
+  useEffect(() => {
+    if (typeof parentContext?.isOptionsFormOpen === 'boolean') {
+      setIsOptionsFormOpen(parentContext.isOptionsFormOpen)
+    }
+  }, [parentContext?.isOptionsFormOpen])
 
   const isOwnProfile = true
   const isFollowing = false
-
-  const [resumos, setResumos] = useState<PerfilResumo[]>([])
 
   const [turmas] = useState<PerfilTurma[]>([
     {
@@ -107,10 +122,7 @@ export function PaginaPerfil() {
     })
   }, [studentData])
 
-  function excluirResumo(id: number) {
-    setResumos((prev) => prev.filter((resumo) => resumo.id !== id))
-  }
-
+ 
   const filteredAvatars = useMemo(() => {
     if (selectedGender === 'all') {
       return avatarOptions
@@ -124,7 +136,12 @@ export function PaginaPerfil() {
   }, [selectedGender])
 
   const handleSelectAvatar = async (avatar: AvatarOption) => {
-    await updateStudentAvatar({ avatarId: avatar.id })
+
+    console.log('Avatar selecionado:', avatar);
+    console.log('ID do estudante:', studentId);
+    await updateStudent({
+      avatarUrl: avatar.url
+    })
 
     setUser((prev) => ({
       ...prev,
@@ -154,18 +171,8 @@ export function PaginaPerfil() {
             <PerfilAvatarCard
               user={user}
               openFotoMenu={openFotoMenu}
-              onToggleFotoMenu={() => setOpenFotoMenu((prev) => !prev)}
               onOpenAvatarPicker={() => {
                 setOpenAvatarPicker(true)
-                setOpenFotoMenu(false)
-              }}
-              onRemovePhoto={() => {
-                setUser((prev) => ({
-                  ...prev,
-                  avatar: null
-                }))
-                setOpenAvatarPicker(false)
-                setOpenFotoMenu(false)
               }}
             />
 
@@ -177,18 +184,27 @@ export function PaginaPerfil() {
               onToggleForm={() => setShowForm((prev) => !prev)}
               onToggleResumos={() => setShowResumos((prev) => !prev)}
               onToggleTurmas={() => setShowTurmas((prev) => !prev)}
+              onToggleCreateResumo={() => setIsOptionsFormOpen((prev) => !prev)}
             />
+
+            
           </div>
           )}
 
           {showResumos && (
             <PerfilResumosSection
-              resumos={resumos}
-              onDeleteResumo={excluirResumo}
+              onOpenResumo={(summaryId) => setSelectedResumoId(summaryId)}
             />
           )}
 
           {showTurmas && <PerfilTurmasSection turmas={turmas} />}
+
+          {selectedResumoId && (
+            <ViweSummary
+              id={selectedResumoId}
+              onClose={() => setSelectedResumoId(null)}
+            />
+          )}
 
           <PerfilEditFormModal
             isOpen={showForm}

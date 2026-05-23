@@ -5,7 +5,7 @@ import type { RequestUpdateStudentType } from "../types/requestUpdateStudentType
 import type { ResponseUpdateStudentType } from "../types/responseUpdateStudent"
 
 export const useUpdateStudent = (id: string) => {
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
 
     return useMutation({
         mutationKey: ["update-student", id],

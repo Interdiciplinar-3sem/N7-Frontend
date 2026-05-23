@@ -9,6 +9,15 @@ export function LayoutNetwork() {
     const parentContext = useOutletContext<any | undefined>()
     const [isOptionsFormOpen, setIsOptionsFormOpen] = useState(false);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const outletContext = {
+        ...(parentContext ?? {}),
+        isOptionsFormOpen,
+        setIsOptionsFormOpen
+    };
+    const closeAllModals = () => {
+        setIsFormOpen(false);
+        setIsOptionsFormOpen(false);
+    };
 
     useEffect(() => {
         const body = document.body;
@@ -37,18 +46,18 @@ export function LayoutNetwork() {
                 { isOptionsFormOpen && (
                         <>
                             <OptionsResumo setIsFormOpen={setIsFormOpen} setIsOptionsFormOpen={setIsOptionsFormOpen}/>
-                            <Overlay />
+                            <Overlay onClose={closeAllModals} />
                         </>
                     )
                 }
                 { isFormOpen && (
                         <>
                             <FormResumo setIsFormOpen={setIsFormOpen}/>
-                            <Overlay />
+                            <Overlay onClose={closeAllModals} />
                         </>
                     )
                 }
-                <Outlet context={parentContext} />
+                <Outlet context={outletContext} />
             </div>
         </main>
     )

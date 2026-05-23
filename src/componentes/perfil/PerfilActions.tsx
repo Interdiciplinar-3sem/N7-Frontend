@@ -1,5 +1,5 @@
 import { Botao } from '../ui/Botao'
-import { ButtonLogOut } from '../buttonLogout'
+import { ButtonLogOut } from '../buttonLogout' 
 
 type PerfilActionsProps = {
   isOwnProfile: boolean
@@ -7,6 +7,7 @@ type PerfilActionsProps = {
   onToggleForm: () => void
   onToggleResumos: () => void
   onToggleTurmas: () => void
+  onToggleCreateResumo: () => void
 }
 
 export function PerfilActions({
@@ -14,7 +15,8 @@ export function PerfilActions({
   isFollowing,
   onToggleForm,
   onToggleResumos,
-  onToggleTurmas
+  onToggleTurmas,
+  onToggleCreateResumo
 }: PerfilActionsProps) {
   return (
     <div className="flex flex-col gap-3 mt-10 md:mt-0 pointer-events-auto pb-6 md:pb-0">
@@ -44,6 +46,14 @@ export function PerfilActions({
         corHover="hover:bg-pink-400"
       >
         Minhas Turmas
+      </Botao>
+
+      <Botao
+        onClick={onToggleCreateResumo}
+        cor="bg-blue-600"
+        corHover="hover:bg-blue-700 hover:shadow-md"
+      >
+        Criar resumo
       </Botao>
 
       <ButtonLogOut />
