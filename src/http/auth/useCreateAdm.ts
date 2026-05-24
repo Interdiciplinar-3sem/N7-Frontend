@@ -12,7 +12,6 @@ export const useCreateAdm = () => {
         mutationKey: ["post-adm"],
         mutationFn: async (data: RequestCreateAdmType) => {
 
-            console.log(data)
             const response = await authFecth(`${API_URL}/user/adm`, {
                 method: "POST",
                 body: JSON.stringify(data)

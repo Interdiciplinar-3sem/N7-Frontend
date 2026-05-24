@@ -5,5 +5,7 @@ export type ResponseGetSummaryType = {
     conteudo: string,
     reports?: number,
     ativo: boolean,
-    totalCurtidas?: number
+    totalCurtidas?: number,
+    studentUrl?: string,
+    studentNome?: string,
 }
