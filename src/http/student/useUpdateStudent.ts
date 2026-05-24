@@ -46,6 +46,8 @@ export const useUpdateStudent = (id: string) => {
             await queryClient.invalidateQueries({ queryKey: ["get-users"] })
             await queryClient.invalidateQueries({ queryKey: ["get-users-desactivated"] })
             await queryClient.invalidateQueries({ queryKey: ["get-student", id] })
+            await queryClient.invalidateQueries({ queryKey: ["get-feed", id] })
+            await queryClient.invalidateQueries({ queryKey: ["get-ranking", id] })
         },
     })
 }
