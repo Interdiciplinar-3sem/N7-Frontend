@@ -1,4 +1,4 @@
-import { AdminCrudPage } from "../../componentes/admin/AdminCrudPage";
+import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
 
 type MateriaRow = {

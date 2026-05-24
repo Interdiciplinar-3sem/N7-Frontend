@@ -1,15 +1,17 @@
 import { Outlet, useOutletContext } from "react-router-dom";
 import { SideBar } from "../componentes/sideBar";
 import { useEffect, useState } from "react";
-import { FormResumo } from "../componentes/formResumo";
+import { FormResumo } from "../componentes/forms/formResumo";
 import { Overlay } from "../componentes/overlay";
-import { OptionsResumo } from "../componentes/optionsResumo";
+import { OptionsResumo } from "../componentes/forms/optionsResumo";
+import type { ContextPropsType, ContextPropsTypeNetwork } from "../types/contextPropsType";
 
 export function LayoutNetwork() {
-    const parentContext = useOutletContext<any | undefined>()
+    const parentContext = useOutletContext<ContextPropsType>()
+
     const [isOptionsFormOpen, setIsOptionsFormOpen] = useState(false);
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const outletContext = {
+    const outletContext: ContextPropsTypeNetwork = {
         ...(parentContext ?? {}),
         isOptionsFormOpen,
         setIsOptionsFormOpen

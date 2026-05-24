@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { Suspense } from "react";
 import { useAuth } from "../http/auth/useAuth";
-import { FeedSkeleton } from "../componentes/FeedSkeleton";
+import { FeedSkeleton } from "../componentes/Skeleton/FeedSkeleton";
 
 export function ProtectedRoute() {
     const { isLoading, isError, data } = useAuth();
@@ -13,8 +13,6 @@ export function ProtectedRoute() {
     if (isError || data?.status !== true) {
         return <Navigate to="/login" replace/>;
     }
-    console.log("teste:", data.id)
-
     return (
         <Suspense fallback={<FeedSkeleton />}>
             <Outlet context={{id: data.id, role: data.role }}/>

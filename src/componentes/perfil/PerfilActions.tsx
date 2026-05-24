@@ -5,8 +5,6 @@ type PerfilActionsProps = {
   isOwnProfile: boolean
   isFollowing: boolean
   onToggleForm: () => void
-  onToggleResumos: () => void
-  onToggleTurmas: () => void
   onToggleCreateResumo: () => void
 }
 
@@ -14,8 +12,6 @@ export function PerfilActions({
   isOwnProfile,
   isFollowing,
   onToggleForm,
-  onToggleResumos,
-  onToggleTurmas,
   onToggleCreateResumo
 }: PerfilActionsProps) {
   return (
@@ -30,22 +26,6 @@ export function PerfilActions({
         corHover="hover:bg-green-500"
       >
         Editar Perfil
-      </Botao>
-
-      <Botao
-        onClick={onToggleResumos}
-        cor="bg-yellow-300"
-        corHover="hover:bg-yellow-400"
-      >
-        Meus Resumos
-      </Botao>
-
-      <Botao
-        onClick={onToggleTurmas}
-        cor="bg-pink-300"
-        corHover="hover:bg-pink-400"
-      >
-        Minhas Turmas
       </Botao>
 
       <Botao

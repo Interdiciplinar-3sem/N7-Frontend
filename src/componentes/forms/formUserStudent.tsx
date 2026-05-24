@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import z from "zod";
-import { useCreateStudent } from "../http/auth/useCreateStudent";
+import { useCreateStudent } from "../../http/auth/useCreateStudent";
 
 
 export function FormSignUp() {
