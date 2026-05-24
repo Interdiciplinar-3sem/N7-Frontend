@@ -9,7 +9,7 @@ export const useGetSummaryPrivacy = (id: string) => {
     return useQuery({
         queryKey: ["summary-privacy", id],
         queryFn: async () => {
-            const response = await authFecth(`${API_URL}/summary/privacy/${id}`)
+            const response = await authFecth(`${API_URL}/resumos/${id}/visibilidade`)
 
             if (response.status === 404) {
                 const errorBody = await response.json().catch(() => ({ message: "Não encontrado" }))

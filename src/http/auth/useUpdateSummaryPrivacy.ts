@@ -8,7 +8,7 @@ export const useUpdateSummaryPrivacy = (id: string) => {
     return useMutation({
         mutationKey: ["update-summary-privacy", id], //preciso passar um dado unique aqui
         mutationFn: async (data: RequestUpdateSummaryPrivacyType) => {
-            const response = await authFecth(`${API_URL}/summary/privacy/${id}`, {
+            const response = await authFecth(`${API_URL}/resumos/${id}/visibilidade`, {
                 body: JSON.stringify(data),
                 method: "PUT"
             })
