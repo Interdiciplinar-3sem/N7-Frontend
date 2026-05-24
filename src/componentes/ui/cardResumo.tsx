@@ -1,4 +1,4 @@
-import { Clock3, Heart, User } from "lucide-react";
+import { Clock3, Heart } from "lucide-react";
 import {tv, type VariantProps} from "tailwind-variants"
 
 const cardStyle = tv({

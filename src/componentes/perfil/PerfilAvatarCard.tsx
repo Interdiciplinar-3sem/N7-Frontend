@@ -1,4 +1,4 @@
-import { Camera, X } from 'lucide-react'
+import { Camera } from 'lucide-react'
 import type { PerfilUser } from './types'
 
 type PerfilAvatarCardProps = {
