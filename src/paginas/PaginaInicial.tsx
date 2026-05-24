@@ -1,7 +1,7 @@
 import { Pen, Search, Book, Heart } from "lucide-react";
-import { Hero } from "../componentes/Hero";
+import { Hero } from "../componentes/Static/Hero";
 import { Card } from "../componentes/ui/card";
-import { Footer } from "../componentes/footer";
+import { Footer } from "../componentes/Static/footer";
 
 export function PaginaInicial() {
     return (

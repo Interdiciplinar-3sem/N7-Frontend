@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AdminCrudPage } from "../../componentes/admin/AdminCrudPage";
+import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
 import { useGetAllSummary } from "../../http/summary/useGetAllSummary";
 import type { ResponseGetSummaryType } from "../../http/types/responseGetSummary";

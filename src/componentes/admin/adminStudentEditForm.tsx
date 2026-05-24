@@ -55,8 +55,6 @@ export function StudentEditForm({ studentId, onClose }: StudentEditFormProps) {
                 bio: studentData.bio ?? ""
             }, { keepDirty: false, keepValues: false })
         }
-        // form intentionally excluded from dependencies to prevent loop reset
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [studentData])
 
     const handleEditStudent = async (data: z.infer<typeof formSchema>) => {

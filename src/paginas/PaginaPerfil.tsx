@@ -11,6 +11,7 @@ import { ViweSummary } from '../componentes/ViweSummary'
 import { useGetStudent } from '../http/student/useGetStudent'
 import { useNavigate, useOutletContext } from 'react-router'
 import { useUpdateStudent } from '../http/student/useUpdateStudent'
+import type { ContextPropsTypeNetwork } from '../types/contextPropsType'
 
 type AvatarGender = 'all' | 'male' | 'female'
 
@@ -48,7 +49,7 @@ const avatarOptions: AvatarOption[] = [
 ]
 
 export function PaginaPerfil() {
-  const parentContext = useOutletContext<any | undefined>()
+  const parentContext = useOutletContext<ContextPropsTypeNetwork>()
   const navigate = useNavigate();
 
   if(parentContext?.role !== 'ALUNO') {
@@ -73,8 +74,6 @@ export function PaginaPerfil() {
   const [openAvatarPicker, setOpenAvatarPicker] = useState(false)
   const [selectedGender, setSelectedGender] = useState<AvatarGender>('all')
   const [showForm, setShowForm] = useState(false)
-  const [showResumos, setShowResumos] = useState(false)
-  const [showTurmas, setShowTurmas] = useState(false)
   const [isOptionsFormOpen, setIsOptionsFormOpen] = useState(false)
   const [selectedResumoId, setSelectedResumoId] = useState<string | null>(null)
 
@@ -137,11 +136,14 @@ export function PaginaPerfil() {
 
   const handleSelectAvatar = async (avatar: AvatarOption) => {
 
-    console.log('Avatar selecionado:', avatar);
-    console.log('ID do estudante:', studentId);
-    await updateStudent({
-      avatarUrl: avatar.url
-    })
+   try {
+     await updateStudent({
+        avatarUrl: avatar.url
+      })
+   } catch (error) {
+      console.error('Erro ao atualizar avatar:', error)
+      return
+   }
 
     setUser((prev) => ({
       ...prev,
@@ -182,8 +184,6 @@ export function PaginaPerfil() {
               isOwnProfile={isOwnProfile}
               isFollowing={isFollowing}
               onToggleForm={() => setShowForm((prev) => !prev)}
-              onToggleResumos={() => setShowResumos((prev) => !prev)}
-              onToggleTurmas={() => setShowTurmas((prev) => !prev)}
               onToggleCreateResumo={() => setIsOptionsFormOpen((prev) => !prev)}
             />
 
@@ -191,13 +191,11 @@ export function PaginaPerfil() {
           </div>
           )}
 
-          {showResumos && (
-            <PerfilResumosSection
-              onOpenResumo={(summaryId) => setSelectedResumoId(summaryId)}
-            />
-          )}
-
-          {showTurmas && <PerfilTurmasSection turmas={turmas} />}
+          <PerfilResumosSection
+            onOpenResumo={(summaryId) => setSelectedResumoId(summaryId)}
+          />
+          
+          <PerfilTurmasSection turmas={turmas} />
 
           {selectedResumoId && (
             <ViweSummary

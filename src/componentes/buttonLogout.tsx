@@ -5,7 +5,11 @@ export function ButtonLogOut() {
     const { mutateAsync: logout, isPending } = useLogout();
 
     const handdleLogOut = async () => {
-        await logout();
+        try {
+            await logout();
+        } catch (error) {
+            console.error("Erro ao fazer logout:", error);
+        }
     }
 
     return (

@@ -1,13 +1,13 @@
 import { useGetUser } from "../../http/user/useGetUser"
 import { useState } from "react"
-import { StudentForm } from "../../componentes/admin/studentForm";
+import { StudentForm } from "../../componentes/admin/adminStudentForm";
 import { ADMform } from "../../componentes/admin/admForm";
 import { X } from "lucide-react";
-import { AdminCrudPage } from "../../componentes/admin/AdminCrudPage";
+import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
 import { useUpdateActiveStudent } from "../../http/student/StudentUpdateStatus";
 import { useGetUserDesactivated } from "../../http/user/useGetUserDesactivated";
-import { StudentEditForm } from "../../componentes/admin/StudentEditForm";
+import { StudentEditForm } from "../../componentes/admin/adminStudentEditForm";
 import type { ResponseGetUserType } from "../../http/types/responseGetUserType";
 import { Overlay } from "../../componentes/overlay";
 
