@@ -1,22 +1,15 @@
-import { type ChangeEvent, type MutableRefObject } from 'react'
+import { Camera } from 'lucide-react'
 import type { PerfilUser } from './types'
 
 type PerfilAvatarCardProps = {
   user: PerfilUser
   openFotoMenu: boolean
-  onToggleFotoMenu: () => void
-  onChoosePhoto: (event: ChangeEvent<HTMLInputElement>) => void
-  onRemovePhoto: () => void
-  fileInputRef: MutableRefObject<HTMLInputElement | null>
+  onOpenAvatarPicker: () => void
 }
 
 export function PerfilAvatarCard({
   user,
-  openFotoMenu,
-  onToggleFotoMenu,
-  onChoosePhoto,
-  onRemovePhoto,
-  fileInputRef
+  onOpenAvatarPicker,
 }: PerfilAvatarCardProps) {
   return (
     <div className="foto-area flex flex-col items-center relative">
@@ -32,13 +25,13 @@ export function PerfilAvatarCard({
             pointer-events-none
           "
           style={{
-            backgroundImage: user.foto ? `url(${user.foto})` : 'none'
+            backgroundImage: user.avatar?.url ? `url(${user.avatar.url})` : 'none'
           }}
         />
 
         <button
           type="button"
-          onClick={onToggleFotoMenu}
+          onClick={onOpenAvatarPicker}
           className="
             absolute
             bottom-0
@@ -57,71 +50,11 @@ export function PerfilAvatarCard({
             z-70
             touch-manipulation
           "
-        >
-          📷
+        >  
+          <Camera  
+            size={18} className="text-gray-500"
+          />
         </button>
-
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          className="hidden"
-          onChange={onChoosePhoto}
-        />
-
-        {openFotoMenu && (
-          <div
-            className="
-              absolute
-              top-[110%]
-              left-1/2
-              -translate-x-1/2
-              bg-white
-              rounded-xl
-              p-3
-              flex
-              flex-col
-              gap-2
-              shadow-2xl
-              z-1100
-              min-w-40
-            "
-          >
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="
-                px-3
-                py-2
-                rounded-md
-                bg-blue-500
-                text-white
-                hover:bg-blue-600
-                transition-all
-              "
-            >
-              Escolher foto
-            </button>
-
-            {user.foto && (
-              <button
-                type="button"
-                onClick={onRemovePhoto}
-                className="
-                  px-3
-                  py-2
-                  rounded-md
-                  bg-red-500
-                  text-white
-                  hover:bg-red-600
-                  transition-all
-                "
-              >
-                Remover foto
-              </button>
-            )}
-          </div>
-        )}
       </div>
 
       <div className="mt-6 flex gap-6 justify-center text-zinc-500">

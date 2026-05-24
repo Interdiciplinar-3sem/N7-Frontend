@@ -5,7 +5,7 @@ import type { RequestUpdateStudentType } from "../types/requestUpdateStudentType
 import type { ResponseUpdateStudentType } from "../types/responseUpdateStudent"
 
 export const useUpdateStudent = (id: string) => {
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
 
     return useMutation({
         mutationKey: ["update-student", id],
@@ -45,6 +45,9 @@ export const useUpdateStudent = (id: string) => {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ["get-users"] })
             await queryClient.invalidateQueries({ queryKey: ["get-users-desactivated"] })
+            await queryClient.invalidateQueries({ queryKey: ["get-student", id] })
+            await queryClient.invalidateQueries({ queryKey: ["get-feed", id] })
+            await queryClient.invalidateQueries({ queryKey: ["get-ranking", id] })
         },
     })
 }

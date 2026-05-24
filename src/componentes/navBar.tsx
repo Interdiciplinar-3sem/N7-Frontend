@@ -47,7 +47,6 @@ export function NavBar(){
                         lg:ml-4 lg:gap-16">
                         <li className="hover:scale-105 hover:font-bold transform" ><button onClick={() => handdleNavigate("/")}>Home</button></li>
                         <li className="hover:scale-105 hover:font-bold transform"><button onClick={() => handdleNavigate("/feed")}>feed</button></li>
-                        <li className="hover:scale-105 hover:font-bold transform"><button onClick={() => handdleNavigate("/perfil")}>perfil</button></li>
                     </ul>
                 </div>
                
@@ -56,14 +55,14 @@ export function NavBar(){
                     xxs:flex
                     lg:pr-4
                 ">
-                                         {isAuthenticated ? (
-                                                <ButtonLogOut />
-                                            ) : (
-                                                <>
-                                                    <button onClick={() => handdleNavigate("/login")} className="px-1 md:px-2 border border-white hover:bg-blue-100 hover:text-black hover:scale-105 ">Login</button>
-                                                    <button onClick={() => handdleNavigate("/cadastro")} className="px-1 text-black font-semibold bg-[#2CD76E] hover:bg-green-200 hover:scale-105">Criar</button>
-                                                </>
-                                            )}
+                    {isAuthenticated ? (
+                        <ButtonLogOut />
+                    ) : (
+                        <>
+                            <button onClick={() => handdleNavigate("/login")} className="px-1 md:px-2 border border-white hover:bg-blue-100 hover:text-black hover:scale-105 ">Login</button>
+                            <button onClick={() => handdleNavigate("/cadastro")} className="px-1 text-black font-semibold bg-[#2CD76E] hover:bg-green-200 hover:scale-105">Criar</button>
+                        </>
+                    )}
                  
                 </section>
               

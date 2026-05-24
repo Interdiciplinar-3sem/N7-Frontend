@@ -21,7 +21,15 @@ import { PaginaSelos } from './paginas/admin/PaginaSelos'
 
 export default App;
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  },
+})
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -38,7 +46,6 @@ export function App() {
                   <Route element={<PaginaPerfil />} path='/perfil' />
                   <Route element={<PaginaFeed />} path='/feed' />
                 </Route>
-               
             </Route>
              <Route element={<PaginaBuscaMobile />} path='/busca' />
                 <Route element={<LayoutAdmin />} path='/painel'>

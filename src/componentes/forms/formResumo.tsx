@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { useSummaryPost } from "../http/summary/usePostSummary";
-import { useToast } from "../contexto/toastContext";
+import { useSummaryPost } from "../../http/summary/usePostSummary";
+import { useToast } from "../../contexto/toastContext";
 
 type FormResumoProps = {
     setIsFormOpen: React.Dispatch<React.SetStateAction<boolean>>,
@@ -36,7 +36,6 @@ export function FormResumo({setIsFormOpen}: FormResumoProps) {
 
             showSuccess("Resumo criado com sucesso!");
             setIsFormOpen(false);
-         console.log(data)
         } catch (error) {
             console.log(error)
         }

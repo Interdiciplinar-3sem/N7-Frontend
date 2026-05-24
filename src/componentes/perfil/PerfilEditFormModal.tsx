@@ -4,7 +4,7 @@ type PerfilEditFormModalProps = {
   isOpen: boolean
   user: PerfilUser
   onClose: () => void
-  onSubmit: (formData: FormData) => void
+  onSubmit: (formData: FormData) => Promise<void> | void
 }
 
 export function PerfilEditFormModal({
@@ -26,7 +26,7 @@ export function PerfilEditFormModal({
         flex
         items-center
         justify-center
-        z-70
+        z-100
         p-4
       "
       onClick={onClose}

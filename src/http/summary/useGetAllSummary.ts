@@ -7,7 +7,7 @@ export const useGetAllSummary = () => {
     return useQuery({
         queryKey: ["get-summary"],
         queryFn: async (): Promise<ResponseGetSummaryType[]> => {
-            const response = await authFecth(`${API_URL}/resumos/ativos`)
+            const response = await authFecth(`${API_URL}/resumos`)
             if(!response.ok){
                 throw new Error("Erro ao buscar resumo!");
             }
@@ -20,9 +20,12 @@ export const useGetAllSummary = () => {
                 studentId: item.studentId,
                 summaryId: item.summaryId,
                 titulo: item.titulo,
-                conteudo: item.conteudo.slice(0, 100) + (item.conteudo.length > 100 ? "..." : ""),
+                conteudo: item.conteudo,
                 reports: item.reports ?? 0,
-                ativo: item.ativo
+                ativo: item.ativo,
+                studentUrl: item.studentUrl ?? "/avatares/default.svg",
+                studentNome: item.studentNome,
+                totalCurtidas: item.totalCurtidas ?? 0
             }))
             return data;
         },

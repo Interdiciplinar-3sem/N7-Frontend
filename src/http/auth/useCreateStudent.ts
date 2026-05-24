@@ -3,11 +3,9 @@ import type { RequestSignUpType } from "../types/requestSignUpType"
 import type { ResponseSignUpType } from "../types/responseSignUpType"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
-import { useNavigate } from "react-router-dom"
 
 export const useCreateStudent = () => {
     const queryClient = useQueryClient();
-    const navigate = useNavigate();
 
     return useMutation({
         mutationKey: ["post-user"],
@@ -35,12 +33,7 @@ export const useCreateStudent = () => {
             return result;
         },
         onSuccess: async () => {
-            if(["cadastro"].includes(window.location.pathname)){ 
-                navigate("/login", { replace: true })
-            }
-
-            await queryClient.invalidateQueries({ queryKey: ["get-users"] });
-           
+            await queryClient.invalidateQueries({ queryKey: ["get-users"] });           
         }
     })
 }

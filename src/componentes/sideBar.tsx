@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Bookmark, FilePlusIcon, HomeIcon, Search, ToolCase, User } from "lucide-react";
 import { useNavigate } from "react-router-dom"
+import { ButtonLogOut } from "./buttonLogout";
 
 type LinkItem = {
     key?: string;
@@ -19,7 +20,6 @@ type SideBarProps = {
 }
 
 export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: SideBarProps){
-    console.log("role:", role)
     const [sideBar, setSideBar] = useState(false);
     const [searchBar, setSearchBar] = useState(false);
 
@@ -154,25 +154,32 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
                             )}
                         </ul>
                     </div>
-                    
-                    <section className={`
-                        gap-2
-                        flex  ${sideBar ? "sm:flex sm:items-center" : "sm:flex-col"}
-                        lg:pr-4
-                        ${sideBar ? "items-start p-0 gap-4" : "items-center justify-center p-2"}
-                        sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform transition-transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full
-                    `}
-                    onClick={() => {
-                        handdleNavigate("/perfil"); 
-                    }}
-                    >
-                        <div className="bg-white p-2 text-black font-semibold rounded-[100%] xxs:w-10 flex items-center justify-center sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer">
-                                {bottomLinks[0]?.icon ?? <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>}
+
+                     {role === "ALUNO" && (
+                        <section className={`
+                            gap-2
+                            flex  ${sideBar ? "sm:flex sm:items-center" : "sm:flex-col"}
+                            lg:pr-4
+                            ${sideBar ? "items-start p-0 gap-4" : "items-center justify-center p-2"}
+                            sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform transition-transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full
+                        `}
+                        onClick={() => {
+                            handdleNavigate("/perfil"); 
+                        }}
+                        >
+                            <div className="bg-white p-2 text-black font-semibold rounded-[100%] xxs:w-10 flex items-center justify-center sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer">
+                                    {bottomLinks[0]?.icon ?? <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>}
+                            </div>
+                            {sideBar &&
+                                <h3>{bottomLinks[0]?.label ?? "User"}</h3>
+                            } 
+                        </section>
+                     )}
+                     {role === "ADM" && (
+                        <div className={`flex items-center ${sideBar ? "justify-start" : "justify-center"} px-1`}>
+                            <ButtonLogOut />
                         </div>
-                        {sideBar &&
-                            <h3>{bottomLinks[0]?.label ?? "User"}</h3>
-                        } 
-                    </section>
+                     )}
                     
                 </nav>
             </section>
