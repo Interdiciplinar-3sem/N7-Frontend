@@ -6,6 +6,7 @@ import { PaginaLogin } from './paginas/PaginaLogin'
 import { PaginaPerfil } from './paginas/PaginaPerfil'
 import { PaginaPainel } from './paginas/PaginaPainel'
 import { PaginaFeed } from './paginas/PaginaFeed'
+
 import { LayoutDefault } from './layout/layoutDefault'
 import { LayoutNetwork } from './layout/layoutNetwork'
 import { ProtectedRoute } from './guards/protecRoute'
@@ -18,6 +19,7 @@ import { PaginaCursos } from './paginas/admin/PaginaCursos'
 import { PaginaMaterias } from './paginas/admin/PaginaMaterias'
 import { PaginaTags } from './paginas/admin/PaginaTags'
 import { PaginaSelos } from './paginas/admin/PaginaSelos'
+import { PaginaStudents } from './paginas/PaginaSeguindo'
 
 export default App;
 
@@ -44,7 +46,9 @@ export function App() {
               <Route element={<ProtectedRoute />}>
                 <Route element={<LayoutNetwork />}>
                   <Route element={<PaginaPerfil />} path='/perfil' />
+                  <Route element={<PaginaPerfil />} path='/perfil/:studentId' />
                   <Route element={<PaginaFeed />} path='/feed' />
+                  <Route element={<PaginaStudents />} path='/feed/students' />
                 </Route>
             </Route>
              <Route element={<PaginaBuscaMobile />} path='/busca' />

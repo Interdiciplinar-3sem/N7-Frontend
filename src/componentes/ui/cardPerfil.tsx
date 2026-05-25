@@ -1,19 +1,43 @@
+import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge"
 
 type CardPerfilProps = {
-    foto?: string; // url
+    studentId: string;
     nome: string;
     semestre: number;
     seguidores: number;
+    url?: string;
     className?: string;
 }
 
-export function CardPerfil({nome, semestre, seguidores, className}: CardPerfilProps) {
+export function CardPerfil({studentId, nome, semestre, seguidores, url, className}: CardPerfilProps) {
+    const navigate = useNavigate();
+
+    const handleRedirect = () => {
+        console.log(studentId)
+        navigate(`/perfil/${studentId}`);   
+    }
 
     return (
-         <div className={twMerge("group bg-[#F8FAFC] opacity-90 shadow-lg max-w-72 max-h-20 flex gap-4 relative z-51 p-4 rounded-lg hover:bg-[#DAE8FF] hover:scale-105 overflow-hidden transform transition-transform cursor-pointer hover:shadow-lg", className)}>
+         <div 
+            onClick={handleRedirect}
+            className={twMerge("group bg-[#F8FAFC] opacity-90 shadow-lg max-w-72 max-h-20 flex gap-4 relative z-51 p-4 rounded-lg hover:bg-[#DAE8FF] hover:scale-105 overflow-hidden transform transition-transform cursor-pointer hover:shadow-lg", className)}
+        >
             <div className="flex justify-center items-center">
-                <div className="h-5 w-5 rounded-full bg-gray-300 p-2"></div>
+                 <div
+                    className="
+                        min-w-10
+                        min-h-10
+                        rounded-full
+                        bg-cover
+                        bg-center
+                        bg-zinc-300
+                        pointer-events-none
+                    "
+                    style={{
+                        backgroundImage: url ? `url(${url})` : 'none'
+                    }}
+                />
             </div>
             <div className="flex flex-col justify-center flex-1">
                 <h2 className="group-hover:font-bold">{nome}</h2>

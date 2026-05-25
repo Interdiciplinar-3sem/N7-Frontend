@@ -3,12 +3,12 @@ import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { ResponseGetStudentType } from "../types/responseGetStudentType"
 
-export const useGetStudent = (id: string) => {
+export const useGetStudentMe = (id: string) => {
 
     return useQuery({
-        queryKey: ["get-student", id],
+        queryKey: ["get-student-me", id],
         queryFn: async () => {
-            const response = await authFecth(`${API_URL}/student/${id}`)
+            const response = await authFecth(`${API_URL}/student/me`)
 
             if (response.status === 401) {
                 const errorBody = await response.json().catch(() => ({ message: "Não autorizado" }))
@@ -37,6 +37,6 @@ export const useGetStudent = (id: string) => {
             }
         },
         retry: false,
-        staleTime: 1000 * 60 * 5,
+        refetchOnWindowFocus: true
     })
 }
