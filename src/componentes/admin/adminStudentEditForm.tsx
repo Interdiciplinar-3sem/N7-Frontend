@@ -27,7 +27,7 @@ const formSchema = z.object({
 
 export function StudentEditForm({ studentId, onClose }: StudentEditFormProps) {
     const { mutateAsync: updateStudent } = useUpdateStudent(studentId)
-    const { data: studentData, isPending: isLoadingStudent } = useGetStudent(studentId, { forceFresh: true })
+    const { data: studentData, isPending: isLoadingStudent } = useGetStudent(studentId)
 
     type FormValues = {
         nome?: string

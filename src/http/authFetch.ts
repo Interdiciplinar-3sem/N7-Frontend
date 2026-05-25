@@ -1,5 +1,3 @@
-import { useAuth } from "./auth/useAuth";
-
 interface FecthOptions extends RequestInit {
     headers?: Record<string, string>;
 }

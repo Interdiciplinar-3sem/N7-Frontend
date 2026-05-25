@@ -96,7 +96,7 @@ export function PaginaFeed() {
             </section>
 
             <section className={`hidden min-w-72 xl:w-96 lg:flex lg:flex-col gap-3`}>
-                <CardPerfil className="" studentId="current-user-id" nome="SeuNome" seguidores={30} semestre={2}/>
+                {/* <CardPerfil className="" studentId="" nome="SeuNome" seguidores={30} semestre={2}/> */}
 
                 <div className="flex items-center justify-between gap-3">
                     <h2>Seguindo:</h2>

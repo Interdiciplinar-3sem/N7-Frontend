@@ -1,4 +1,4 @@
-import { Clock3, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import {tv, type VariantProps} from "tailwind-variants"
 
 const cardStyle = tv({
@@ -82,10 +82,6 @@ export function CardResumo({titulo, texto, imageUrl, studentName, className, for
                                 }}
                             />
                             <span className="font-medium">{studentName || "usuario"}</span>
-                             <div className="flex items-center gap-1.5">
-                            <Clock3 size={15} />
-                            <span className="font-medium">3 dias</span>
-                        </div>
                         </div>
                     </div>
                     <span className="rounded-md bg-white/60 px-2 py-1 text-xs font-semibold text-slate-800">
