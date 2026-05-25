@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
-import type { ResponseGetStudentType } from "../types/responseGetStudentType"
+import type { ResponseGetFollowingType } from "../types/responseGetFollwingType"
 
-export const useGetStudent = (id: string) => {
+export const useGetFollowing = (id: string) => {
 
     return useQuery({
-        queryKey: ["get-student", id],
+        queryKey: ["get-following", id],
         queryFn: async () => {
-            const response = await authFecth(`${API_URL}/student/${id}`)
+            const response = await authFecth(`${API_URL}/follow/following/me`)
 
             if (response.status === 401) {
                 const errorBody = await response.json().catch(() => ({ message: "Não autorizado" }))
@@ -21,7 +21,7 @@ export const useGetStudent = (id: string) => {
             const contentType = response.headers.get("content-type") ?? ""
 
             if(contentType.includes("application/json")){
-                return (await response.json()) as ResponseGetStudentType
+                return (await response.json()) as ResponseGetFollowingType[]
             }
 
             const responseBody = await response.text();
@@ -31,12 +31,13 @@ export const useGetStudent = (id: string) => {
             }
 
             try {
-                return JSON.parse(responseBody) as ResponseGetStudentType
+                return JSON.parse(responseBody) as ResponseGetFollowingType[]
             } catch {
                 throw new Error("A resposta do servidor não é um JSON válido")
             }
         },
         retry: false,
+        refetchOnMount: false,
         staleTime: 1000 * 60 * 5,
     })
 }

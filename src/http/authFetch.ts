@@ -1,19 +1,21 @@
+import { useAuth } from "./auth/useAuth";
+
 interface FecthOptions extends RequestInit {
     headers?: Record<string, string>;
 }
 
-export function authFecth(input: RequestInfo, options: FecthOptions = {}): Promise<Response>{
+export async function authFecth(input: RequestInfo, options: FecthOptions = {}): Promise<Response> {
+    const headers: Record<string, string> = options.headers ? { ...options.headers } : {}
 
-    const headers: Record<string, string> = options.headers ? {...options.headers} : {}
-
-    if(options.body && !headers["Content-Type"]){
+    if (options.body && !headers["Content-Type"]) {
         headers["Content-Type"] = "application/json";
     }
 
-    return fetch(input, {
+    const response = await fetch(input, {
         ...options,
-        headers: headers,
+        headers,
         credentials: "include"
     })
 
+    return response
 }

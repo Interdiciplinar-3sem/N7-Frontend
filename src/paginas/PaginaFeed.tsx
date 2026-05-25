@@ -6,40 +6,18 @@ import type { ContextPropsType } from "../types/contextPropsType";
 import { useGetFeed } from "../http/feed/useGetFeed";
 import { useGetAllSummary } from "../http/summary/useGetAllSummary";
 import { useGetRanking } from "../http/feed/useGetRanking";
+import { useGetFollowing } from "../http/follow/useGetFollowing";
+import { Link } from "react-router-dom";
 
 export function PaginaFeed() {
-    const seguindo = [
-        {
-            id: "1",
-            nome: 'Fulano',
-            semestre: 4,
-            seguidores: 900,
-        },
-        {
-            id: "2",
-            nome: 'Cliclano',
-            semestre: 6,
-            seguidores: 400,
-        },
-        {
-            id: "3",
-            nome: 'Fulano',
-            semestre: 4,
-            seguidores: 900,
-        },
-        {
-            id: "4",
-            nome: 'Cliclano',
-            semestre: 6,
-            seguidores: 400,
-        }
-    ]
-
     const parentContext = useOutletContext<ContextPropsType>();
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
     const {data: resumosFeed} = useGetFeed(parentContext.id);
     const {data: resumosRanking} = useGetRanking(parentContext.id);
     const {data: resumos} = useGetAllSummary();
+    const {data: following} = useGetFollowing(parentContext.id);
+
+    console.log("resumosFeed:", resumosFeed)
 
     const resumosArray = activeTab === "explorar" ? resumos : activeTab === "seguindo" ? resumosFeed : resumosRanking;
     
@@ -118,15 +96,26 @@ export function PaginaFeed() {
             </section>
 
             <section className={`hidden min-w-72 xl:w-96 lg:flex lg:flex-col gap-3`}>
-                <CardPerfil className="" nome="SeuNome" seguidores={30} semestre={2}/>
+                <CardPerfil className="" studentId="current-user-id" nome="SeuNome" seguidores={30} semestre={2}/>
 
-                <h2>Seguindo: </h2>
-                {seguindo.map((s) => {
+                <div className="flex items-center justify-between gap-3">
+                    <h2>Seguindo:</h2>
+                </div>
+                {following?.map((s) => {
 
                     return (
-                        <CardPerfil key={s.id} className="" nome={s.nome} seguidores={s.seguidores} semestre={s.semestre}/>
+                        <CardPerfil key={s.studentId} studentId={s.studentId} className="" nome={s.name} seguidores={s.seguidores} semestre={s.semestre} url={s.studentUrl}/>
                     )
                 })}
+                <div className="flex items-center justify-start gap-3">
+                    <Link
+                    to="/feed/students"
+                    className="w-72 rounded-full border text-center border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 hover:text-zinc-900"
+                    >
+                        ver +
+                    </Link>
+                </div>
+                 
 
                 <div className="min-h-20 min-w-20 relative z-51 flex gap-1 text-xs">
                     

@@ -19,5 +19,7 @@ export type ResponseGetStudentType = {
                         id: number;
                         name: string;
                 };
-        }
+        };
+        setSeguidoPeloCurrentUser?: boolean;
+        setSeguindoCurrentUser?: boolean;
 }

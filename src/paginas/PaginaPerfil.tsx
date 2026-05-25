@@ -9,56 +9,35 @@ import { PerfilTurmasSection } from '../componentes/perfil/PerfilTurmasSection'
 import type { PerfilTurma, PerfilUser } from '../componentes/perfil/types'
 import { ViweSummary } from '../componentes/ViweSummary'
 import { useGetStudent } from '../http/student/useGetStudent'
-import { useNavigate, useOutletContext } from 'react-router'
+import { useNavigate, useOutletContext, useParams } from 'react-router'
 import { useUpdateStudent } from '../http/student/useUpdateStudent'
 import type { ContextPropsTypeNetwork } from '../types/contextPropsType'
-
-type AvatarGender = 'all' | 'male' | 'female'
-
-type AvatarOption = {
-  id: number
-  title: string
-  group: 'male' | 'female' | 'neutral'
-  url: string
-  description: string
-}
-
-const avatarOptions: AvatarOption[] = [
-  { id: 0, title: 'default', group: 'neutral', url: '/avatares/default.svg', description: 'Avatar padrão' },
-  { id: 1, title: 'male-1', group: 'male', url: '/avatares/male-1.svg', description: 'Avatar masculino 1' },
-  { id: 2, title: 'male-2', group: 'male', url: '/avatares/male-2.svg', description: 'Avatar masculino 2' },
-  { id: 3, title: 'male-3', group: 'male', url: '/avatares/male-3.svg', description: 'Avatar masculino 3' },
-  { id: 4, title: 'male-4', group: 'male', url: '/avatares/male-4.svg', description: 'Avatar masculino 4' },
-  { id: 5, title: 'male-5', group: 'male', url: '/avatares/male-5.svg', description: 'Avatar masculino 5' },
-  { id: 6, title: 'male-6', group: 'male', url: '/avatares/male-6.svg', description: 'Avatar masculino 6' },
-  { id: 7, title: 'male-7', group: 'male', url: '/avatares/male-7.svg', description: 'Avatar masculino 7' },
-  { id: 8, title: 'male-8', group: 'male', url: '/avatares/male-8.svg', description: 'Avatar masculino 8' },
-  { id: 9, title: 'female-1', group: 'female', url: '/avatares/female-1.svg', description: 'Avatar feminino 1' },
-  { id: 10, title: 'female-2', group: 'female', url: '/avatares/female-2.svg', description: 'Avatar feminino 2' },
-  { id: 11, title: 'female-3', group: 'female', url: '/avatares/female-3.svg', description: 'Avatar feminino 3' },
-  { id: 12, title: 'female-4', group: 'female', url: '/avatares/female-4.svg', description: 'Avatar feminino 4' },
-  { id: 13, title: 'female-5', group: 'female', url: '/avatares/female-5.svg', description: 'Avatar feminino 5' },
-  { id: 14, title: 'female-6', group: 'female', url: '/avatares/female-6.svg', description: 'Avatar feminino 6' },
-  { id: 15, title: 'female-7', group: 'female', url: '/avatares/female-7.svg', description: 'Avatar feminino 7' },
-  { id: 16, title: 'female-8', group: 'female', url: '/avatares/female-8.svg', description: 'Avatar feminino 8' },
-  { id: 17, title: 'female-9', group: 'female', url: '/avatares/female-9.svg', description: 'Avatar feminino 9' },
-  { id: 18, title: 'female-10', group: 'female', url: '/avatares/female-10.svg', description: 'Avatar feminino 10' },
-  { id: 19, title: 'female-11', group: 'female', url: '/avatares/female-11.svg', description: 'Avatar feminino 11' },
-  { id: 20, title: 'female-12', group: 'female', url: '/avatares/female-12.svg', description: 'Avatar feminino 12' },
-  { id: 21, title: 'female-13', group: 'female', url: '/avatares/female-13.svg', description: 'Avatar feminino 13' }
-]
+import { avatarOptions, type AvatarGender, type AvatarOption } from '../types/AvatarTypes'
+import { useGetStudentMe } from '../http/student/useGetStudentMe'
 
 export function PaginaPerfil() {
   const parentContext = useOutletContext<ContextPropsTypeNetwork>()
   const navigate = useNavigate();
+  const { studentId: routeId } = useParams<{ studentId?: string }>();
 
-  if(parentContext?.role !== 'ALUNO') {
-    navigate('/feed');
-  }
+  useEffect(() => {
+    if (parentContext?.role !== 'ALUNO') {
+      navigate('/feed');
+    }
+  }, [parentContext?.role, navigate]);
 
-  const studentId = String(parentContext?.id ?? '')
-  const { data: studentData, isPending } = useGetStudent(studentId)
-  const { mutateAsync: updateStudent } = useUpdateStudent(studentId)
+  const viewerStudentId = String(parentContext?.studentId ?? '')
+  const profileStudentId = routeId ?? viewerStudentId
+  const isOwnProfile = profileStudentId === viewerStudentId
+  const { data: studentData, isPending } = isOwnProfile ? useGetStudentMe(viewerStudentId) : useGetStudent(profileStudentId)
+
+  const { mutateAsync: updateStudent } = useUpdateStudent(viewerStudentId)
+  const [openFotoMenu, setOpenFotoMenu] = useState(false)
+  const [openAvatarPicker, setOpenAvatarPicker] = useState(false)
+  const [selectedGender, setSelectedGender] = useState<AvatarGender>('all')
+  const [showForm, setShowForm] = useState(false)
+  const [isOptionsFormOpen, setIsOptionsFormOpen] = useState(false)
+  const [selectedResumoId, setSelectedResumoId] = useState<string | null>(null)
 
   const [user, setUser] = useState<PerfilUser>({
     nome: '',
@@ -70,12 +49,6 @@ export function PaginaPerfil() {
     avatar: null
   })
 
-  const [openFotoMenu, setOpenFotoMenu] = useState(false)
-  const [openAvatarPicker, setOpenAvatarPicker] = useState(false)
-  const [selectedGender, setSelectedGender] = useState<AvatarGender>('all')
-  const [showForm, setShowForm] = useState(false)
-  const [isOptionsFormOpen, setIsOptionsFormOpen] = useState(false)
-  const [selectedResumoId, setSelectedResumoId] = useState<string | null>(null)
 
   useEffect(() => {
     parentContext?.setIsOptionsFormOpen?.(isOptionsFormOpen)
@@ -87,7 +60,6 @@ export function PaginaPerfil() {
     }
   }, [parentContext?.isOptionsFormOpen])
 
-  const isOwnProfile = true
   const isFollowing = false
 
   const [turmas] = useState<PerfilTurma[]>([
@@ -192,6 +164,8 @@ export function PaginaPerfil() {
           )}
 
           <PerfilResumosSection
+            isOwnProfile={isOwnProfile}
+            studentId={profileStudentId}
             onOpenResumo={(summaryId) => setSelectedResumoId(summaryId)}
           />
           
@@ -204,41 +178,45 @@ export function PaginaPerfil() {
             />
           )}
 
-          <PerfilEditFormModal
-            isOpen={showForm}
-            user={user}
-            onClose={() => setShowForm(false)}
-            onSubmit={async (formData) => {
-              await updateStudent({
-                nome: (formData.get('nome') as string) || undefined,
-                  bio: (formData.get('descricao') as string) || undefined
-              })
+          {!isOwnProfile && (
+            <>
+              <PerfilEditFormModal
+                isOpen={showForm}
+                user={user}
+                onClose={() => setShowForm(false)}
+                onSubmit={async (formData) => {
+                  await updateStudent({
+                    nome: (formData.get('nome') as string) || undefined,
+                      bio: (formData.get('descricao') as string) || undefined
+                  })
 
-              const nome = (formData.get('nome') as string) || user.nome
-              const curso = (formData.get('curso') as string) || user.curso
-              const faculdade = (formData.get('faculdade') as string) || user.faculdade
-              const descricao = (formData.get('descricao') as string) || user.descricao
+                  const nome = (formData.get('nome') as string) || user.nome
+                  const curso = (formData.get('curso') as string) || user.curso
+                  const faculdade = (formData.get('faculdade') as string) || user.faculdade
+                  const descricao = (formData.get('descricao') as string) || user.descricao
 
-              setUser((prev) => ({
-                ...prev,
-                nome,
-                curso,
-                faculdade,
-                descricao
-              }))
+                  setUser((prev) => ({
+                    ...prev,
+                    nome,
+                    curso,
+                    faculdade,
+                    descricao
+                  }))
 
-              setShowForm(false)
-            }}
-          />
+                  setShowForm(false)
+                }}
+              />
 
-          <PerfilAvatarPickerModal
-            isOpen={openAvatarPicker}
-            selectedGender={selectedGender}
-            onChangeGender={setSelectedGender}
-            avatars={filteredAvatars}
-            onClose={() => setOpenAvatarPicker(false)}
-            onSelectAvatar={handleSelectAvatar}
-          />
+              <PerfilAvatarPickerModal
+                isOpen={openAvatarPicker}
+                selectedGender={selectedGender}
+                onChangeGender={setSelectedGender}
+                avatars={filteredAvatars}
+                onClose={() => setOpenAvatarPicker(false)}
+                onSelectAvatar={handleSelectAvatar}
+              />
+            </>
+          )}
         </section>
       </div>
     </main>
