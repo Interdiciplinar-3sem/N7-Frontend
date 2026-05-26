@@ -20,6 +20,7 @@ import { PaginaMaterias } from './paginas/admin/PaginaMaterias'
 import { PaginaTags } from './paginas/admin/PaginaTags'
 import { PaginaSelos } from './paginas/admin/PaginaSelos'
 import { PaginaStudents } from './paginas/PaginaSeguindo'
+import { PaginaTurmas } from './paginas/PaginaTurmas'
 
 export default App;
 
@@ -49,6 +50,7 @@ export function App() {
                   <Route element={<PaginaPerfil />} path='/perfil/:studentId' />
                   <Route element={<PaginaFeed />} path='/feed' />
                   <Route element={<PaginaStudents />} path='/feed/students' />
+                  <Route element={<PaginaTurmas />} path='/turmas' />
                 </Route>
             </Route>
              <Route element={<PaginaBuscaMobile />} path='/busca' />
