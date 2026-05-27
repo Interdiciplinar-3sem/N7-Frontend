@@ -12,7 +12,7 @@ export const useGetAllSummary = () => {
     const query = useQuery({
         queryKey: ["get-summary"],
         queryFn: async (): Promise<ResponseGetSummaryType[]> => {
-            const response = await authFecth(`${API_URL}/resumos`)
+            const response = await authFecth(`${API_URL}/resumos?limit=20`)
             if(!response.ok){
                 throw new Error("Erro ao buscar resumo!");
             }

@@ -52,8 +52,7 @@ export function App() {
                   <Route element={<PaginaStudents />} path='/feed/students' />
                   <Route element={<PaginaTurmas />} path='/turmas' />
                 </Route>
-            </Route>
-             <Route element={<PaginaBuscaMobile />} path='/busca' />
+                <Route element={<PaginaBuscaMobile />} path='/busca' />
                 <Route element={<LayoutAdmin />} path='/painel'>
                   <Route element={<PaginaPainel />} index/>
                   <Route element={<PaginaUserPainel />} path='/painel/user' />
@@ -62,7 +61,8 @@ export function App() {
                   <Route element={<PaginaMaterias />} path='/painel/materias' />
                   <Route element={<PaginaTags />} path='/painel/tags' />
                   <Route element={<PaginaSelos />} path='/painel/selos' />
-                </Route>
+              </Route>
+              </Route>
           </Routes>
         </BrowserRouter>
       </ToastProvider>

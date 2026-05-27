@@ -17,8 +17,6 @@ export function PaginaFeed() {
     const {data: resumos} = useGetAllSummary();
     const {data: following} = parentContext.role === 'ALUNO' ? useGetFollowing(parentContext.id) : { data: undefined };
 
-
-
     const resumosArray = activeTab === "explorar" ? resumos : activeTab === "seguindo" ? resumosFeed : resumosRanking;
     const items = resumosArray ?? [];
     
@@ -84,13 +82,13 @@ export function PaginaFeed() {
                             let cor = cores[index % cores.length]
 
                             return (
-                                <CardResumo key={resumo.summaryId} titulo={resumo.titulo} texto={resumo.conteudo} formato={formato} cor={cor} imageUrl={resumo.studentUrl} studentName={resumo.studentNome}/>
+                                <CardResumo key={resumo.summaryId} titulo={resumo.titulo} texto={resumo.conteudo} formato={formato} cor={cor} imageUrl={resumo.studentUrl} studentName={resumo.studentNome} curtidas={resumo.totalCurtidas} />
                             )
                         })
                     )}
 
                     {items.length > 0 && items.length < 6 && Array.from({ length: 6 - items.length }).map((_, i) => {
-                        const index = items.length + i; // position for format/placement
+                        const index = items.length + i;
                         let formato:'quadrado' | 'horizontal' | 'vertical' = "quadrado";
                         if(index % 5 === 0) formato = "horizontal";
                         if(index % 5 === 3) formato = "vertical";
@@ -113,14 +111,16 @@ export function PaginaFeed() {
                         <CardPerfil key={s.studentId} studentId={s.studentId} className="" nome={s.name} seguidores={s.seguidores} semestre={s.semestre} url={s.studentUrl}/>
                     )
                 })}
-                <div className="flex items-center justify-start gap-3">
-                    <Link
-                    to="/feed/students"
-                    className="w-72 rounded-full border text-center border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 hover:text-zinc-900"
-                    >
-                        ver +
-                    </Link>
-                </div>
+                {following && following.length >=10 && (
+                    <div className="flex items-center justify-start gap-3">
+                        <Link
+                        to="/feed/students"
+                        className="w-72 rounded-full border text-center border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 hover:text-zinc-900"
+                        >
+                            ver +
+                        </Link>
+                    </div>
+                )}
                  
 
                 <div className="min-h-20 min-w-20 relative z-51 flex gap-1 text-xs">
