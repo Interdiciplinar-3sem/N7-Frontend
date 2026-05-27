@@ -1,9 +1,12 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { ResponseGetStudentType } from "../types/responseGetStudentType"
 
-export const useGetStudentMe = (id: string) => {
+export const useGetStudentMe = (
+    id: string,
+    options?: Omit<UseQueryOptions<ResponseGetStudentType>, "queryKey" | "queryFn">
+) => {
 
     return useQuery({
         queryKey: ["get-student-me", id],
@@ -36,6 +39,7 @@ export const useGetStudentMe = (id: string) => {
                 throw new Error("A resposta do servidor não é um JSON válido")
             }
         },
+        ...options,
         retry: false,
         refetchOnWindowFocus: true
     })

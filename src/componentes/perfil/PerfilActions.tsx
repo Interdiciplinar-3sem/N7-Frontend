@@ -19,8 +19,8 @@ export function PerfilActions({
       {!isOwnProfile ? (
         <Botao>{isFollowing ? 'Seguindo' : 'Seguir'}</Botao>
       ) : (
-          <div className="flex flex-col gap-3 mt-10 md:mt-0 pointer-events-auto pb-6 md:pb-0">
-            <Botao
+        <>
+          <Botao
             onClick={onToggleForm}
             cor="bg-green-400"
             corHover="hover:bg-green-500"
@@ -37,7 +37,7 @@ export function PerfilActions({
           </Botao>
 
           <ButtonLogOut />
-          </div>
+        </>
       )}
     </div>
   )

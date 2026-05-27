@@ -1,15 +1,17 @@
 import { useEffect } from "react"
 import { useGetSummaryId } from "../http/summary/useGetSummaryId"
 import { Overlay } from "./overlay"
-import { X } from "lucide-react"
+import { BookOpen, GraduationCap, Heart, X } from "lucide-react"
 
 type ViweSummaryProps = {
     id: string
     onClose: () => void
+    materia?: string
 }
 
-export const ViweSummary = ({ id, onClose }: ViweSummaryProps) => {
+export const ViweSummary = ({ id, onClose, materia }: ViweSummaryProps) => {
     const { data, isPending, isError } = useGetSummaryId(id);
+    const materiaNome = materia ?? data?.subjectName ?? data?.materia ?? data?.disciplina ?? data?.subject?.name ?? "Matéria não informada"
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -27,13 +29,17 @@ export const ViweSummary = ({ id, onClose }: ViweSummaryProps) => {
         <>
             <Overlay onClose={onClose} />
 
-            <div className="fixed z-100 top-1/2 left-1/2 w-[94vw] max-w-3xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl border border-[#D9E8F8] bg-white shadow-2xl ring-1 ring-black/5">
-                <div className="w-full flex items-start justify-between gap-4 border-b border-[#D9E8F8] bg-gradient-to-r from-[#EAF4FF] via-white to-[#F6FAFF] px-6 py-5">
+            <div className="fixed z-100 top-1/2 left-1/2 w-[96vw] max-w-4xl max-h-[92vh] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl border border-[#CFE0F2] bg-white shadow-[0_30px_80px_rgba(15,23,42,0.22)] ring-1 ring-black/5">
+                <div className="w-full flex items-start justify-between gap-4 border-b border-[#D9E8F8] bg-linear-to-r from-[#EAF4FF] via-white to-[#F6FAFF] px-6 py-6">
                     <div className="min-w-0">
-                        <h2 className="text-xl font-bold text-[#1B4F86] wrap-break-word">
+                        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#2E6EA8] shadow-sm ring-1 ring-[#D9E8F8]">
+                            <BookOpen className="h-3.5 w-3.5" />
+                            Resumo em destaque
+                        </div>
+                        <h2 className="text-2xl font-bold text-[#1B4F86] wrap-break-word md:text-3xl">
                             {isPending ? "Carregando resumo..." : (data?.titulo ?? "Resumo")}
                         </h2>
-                        <p className="mt-1 text-sm text-[#4B6E93]">Visualização completa do conteúdo</p>
+                        <p className="mt-2 text-sm text-[#4B6E93]">Visualização completa do conteúdo</p>
                     </div>
 
                     <button
@@ -45,7 +51,7 @@ export const ViweSummary = ({ id, onClose }: ViweSummaryProps) => {
                     </button>
                 </div>
 
-                <div className="max-h-[65vh] overflow-y-auto px-6 py-5">
+                <div className="max-h-[70vh] overflow-y-auto px-6 py-6">
                     {isPending && (
                         <p className="text-gray-500">Carregando...</p>
                     )}
@@ -58,19 +64,32 @@ export const ViweSummary = ({ id, onClose }: ViweSummaryProps) => {
 
                     {!isPending && !isError && (
                         <div className="space-y-4">
-                            <div className="flex flex-wrap gap-2 text-xs text-[#4B6E93]">
-                                <span className="rounded-full bg-[#EAF4FF] px-3 py-1">ID: {id}</span>
+                            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                                <div className="flex items-center gap-2 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700 ring-1 ring-slate-200">
+                                    <GraduationCap className="h-4 w-4 text-sky-600" />
+                                    <span className="font-medium">{materiaNome}</span>
+                                </div>
+                                <div className="flex items-center gap-2 rounded-2xl bg-[#EAF4FF] px-4 py-3 text-sm text-[#2A577F] ring-1 ring-[#D9E8F8]">
+                                    <span className="font-medium">ID: {id}</span>
+                                </div>
                                 {data?.totalCurtidas !== undefined && (
-                                    <span className="rounded-full bg-[#F3F7FB] px-3 py-1">Curtidas: {data.totalCurtidas}</span>
+                                    <div className="flex items-center gap-2 rounded-2xl bg-[#F3F7FB] px-4 py-3 text-sm text-slate-700 ring-1 ring-slate-200">
+                                        <Heart className="h-4 w-4 text-rose-500" />
+                                        <span>Curtidas: {data.totalCurtidas}</span>
+                                    </div>
                                 )}
                                 {typeof data?.reports === 'number' && (
-                                    <span className="rounded-full bg-[#F3F7FB] px-3 py-1">Denúncias: {data.reports}</span>
+                                    <div className="flex items-center gap-2 rounded-2xl bg-[#F3F7FB] px-4 py-3 text-sm text-slate-700 ring-1 ring-slate-200">
+                                        <span>Denúncias: {data.reports}</span>
+                                    </div>
                                 )}
                             </div>
 
-                            <p className="whitespace-pre-wrap wrap-break-word leading-7 text-[#2A3E55]">
-                            {data?.conteudo ?? "Sem conteúdo disponível."}
-                            </p>
+                            <div className="rounded-3xl bg-slate-50 px-5 py-5 ring-1 ring-slate-200">
+                                <p className="whitespace-pre-wrap wrap-break-word leading-8 text-[#2A3E55]">
+                                {data?.conteudo ?? "Sem conteúdo disponível."}
+                                </p>
+                            </div>
                         </div>
                     )}
                 </div>

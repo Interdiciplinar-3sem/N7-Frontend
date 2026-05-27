@@ -1,9 +1,12 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { ResponseGetStudentType } from "../types/responseGetStudentType"
 
-export const useGetStudent = (id: string) => {
+export const useGetStudent = (
+    id: string,
+    options?: Omit<UseQueryOptions<ResponseGetStudentType>, "queryKey" | "queryFn">
+) => {
 
     return useQuery({
         queryKey: ["get-student", id],
@@ -38,5 +41,6 @@ export const useGetStudent = (id: string) => {
         },
         retry: false,
         staleTime: 1000 * 60 * 5,
+        ...options
     })
 }

@@ -12,12 +12,12 @@ import { Link } from "react-router-dom";
 export function PaginaFeed() {
     const parentContext = useOutletContext<ContextPropsType>();
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
-    const {data: resumosFeed} = useGetFeed(parentContext.id);
-    const {data: resumosRanking} = useGetRanking(parentContext.id);
-    const {data: resumos} = useGetAllSummary();
-    const {data: following} = useGetFollowing(parentContext.id);
+    const {data: resumosFeed} = parentContext.role === 'aluno' ? useGetFeed(parentContext.id) : { data: undefined };
+    const {data: resumosRanking} =  useGetRanking(parentContext.id)
+    const {data: resumos} =  useGetAllSummary();
+    const {data: following} = parentContext.role === 'aluno' ? useGetFollowing(parentContext.id) : { data: undefined };
 
-    console.log("resumosFeed:", resumosFeed)
+    
 
     const resumosArray = activeTab === "explorar" ? resumos : activeTab === "seguindo" ? resumosFeed : resumosRanking;
     

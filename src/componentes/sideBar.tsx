@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Bookmark, FilePlusIcon, HomeIcon, Search, ToolCase, User } from "lucide-react";
+import { Bookmark, Coffee, FilePlusIcon, HomeIcon, Search, ToolCase, User } from "lucide-react";
 import { useNavigate } from "react-router-dom"
 import { ButtonLogOut } from "./buttonLogout";
 
@@ -45,6 +45,7 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
         { key: "home", label: "Pagina ", to: "/", icon: <HomeIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" },
         { key: "create", label: "Criar resumo", icon: <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, onClick: () => setIsOptionsFormOpen?.(!(isOptionsFormOpen ?? false)), position: "top" },
         { key: "feed", label: "Feed", to: "/feed", icon: <Bookmark className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" },
+        { key: "class", label: "Turmas", to: "/turmas", icon: <Coffee className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" },
         { key: "profile", label: "User", to: "/perfil", icon: <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "bottom" }
     ];
 
