@@ -1,14 +1,18 @@
+import { useEffect } from "react"
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { ResponseGetStudentType } from "../types/responseGetStudentType"
+import { useToast } from "../../contexto/toastContext"
+import { getErrorMessage } from "../utils/getErrorMessage"
 
 export const useGetStudent = (
     id: string,
     options?: Omit<UseQueryOptions<ResponseGetStudentType>, "queryKey" | "queryFn">
 ) => {
-
-    return useQuery({
+    const { showError } = useToast()
+    
+    const query = useQuery({
         queryKey: ["get-student", id],
         queryFn: async () => {
             const response = await authFecth(`${API_URL}/student/${id}`)
@@ -43,4 +47,12 @@ export const useGetStudent = (
         staleTime: 1000 * 60 * 5,
         ...options
     })
+
+    useEffect(() => {
+        if (query.isError) {
+            showError(getErrorMessage(query.error, "Erro ao carregar perfil"))
+        }
+    }, [query.error, query.isError, showError])
+
+    return query
 }

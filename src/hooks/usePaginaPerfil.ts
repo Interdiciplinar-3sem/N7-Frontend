@@ -9,6 +9,8 @@ import type { ContextPropsTypeNetwork } from "../types/contextPropsType"
 import type { AvatarOption } from "../types/AvatarTypes"
 import type { PerfilUser } from "../componentes/perfil/types"
 import { usePaginaPerfilModais } from "./usePaginaPerfilModais"
+import { useFollow } from "../http/follow/useFollow"
+import { useUnFollow } from "../http/follow/useUnFollow"
 
 export function usePaginaPerfil() {
   const parentContext = useOutletContext<ContextPropsTypeNetwork>()
@@ -52,6 +54,11 @@ export function usePaginaPerfil() {
   const isLoadingSubjects = isOwnProfile ? myCourseSubjects.isPending : otherCourseSubjects.isPending
 
   const { mutateAsync: updateStudent } = useUpdateStudent(viewerStudentId || profileStudentId)
+  const currentUserId = String(parentContext?.id ?? "")
+
+  const {mutateAsync: followUser, isPending: isFollowingPending} = useFollow(profileStudentId, currentUserId)
+  const {mutateAsync: unfollowUser, isPending: isUnfollowingPending} = useUnFollow(profileStudentId, currentUserId)
+
   const { modais, filteredAvatars, handlers } = usePaginaPerfilModais()
   const [user, setUser] = useState<PerfilUser>({
     nome: "",
@@ -82,7 +89,7 @@ export function usePaginaPerfil() {
     parentContext?.setIsOptionsFormOpen?.(!parentContext?.isOptionsFormOpen)
   }
 
-  const isFollowing = Boolean(studentData?.setSeguindoCurrentUser)
+  const isFollowing = Boolean(studentData?.seguidoPeloCurrentUser)
 
   const submitEditForm = async (formData: FormData) => {
     await updateStudent({
@@ -132,6 +139,8 @@ export function usePaginaPerfil() {
     isAluno,
     isPending: isPending || isLoadingSubjects,
     isFollowing,
+    isFollowingPending,
+    isUnfollowingPending,
     filteredAvatars,
     selectedResumoId: modais.selectedResumoId,
     setSelectedResumoId: modais.setSelectedResumoId,
@@ -147,7 +156,9 @@ export function usePaginaPerfil() {
       submitEditForm,
       selectAvatar,
       openFotoMenu: handlers.openFotoMenu,
-      closeFotoMenu: handlers.closeFotoMenu
+      closeFotoMenu: handlers.closeFotoMenu,
+      followUser,
+      unfollowUser,
     }
   }
 }

@@ -1,8 +1,10 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 
 export const useDeleteSummary = (id: string) => {
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationKey: ["delete-summary"],
         mutationFn: async () => {
@@ -22,8 +24,18 @@ export const useDeleteSummary = (id: string) => {
                 ? JSON.parse(responseBody) : { message: "Sucesso ao deletar resumo!"};
             return result;
         },
-        onSuccess: () => {
-            //invalidar querrys corretamente
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ["get-summary"] });
+            await queryClient.invalidateQueries({ queryKey: ["get-summary-desactivated"] });
+            await queryClient.invalidateQueries({ queryKey: ["get-summaries-me"] });
+            await queryClient.invalidateQueries({ queryKey: ["get-summaries-student"] });
+            await queryClient.invalidateQueries({ queryKey: ["get-summaries-subject"] });
+
+            await queryClient.refetchQueries({ queryKey: ["get-summary"], type: "active" });
+            await queryClient.refetchQueries({ queryKey: ["get-summary-desactivated"], type: "active" });
+            await queryClient.refetchQueries({ queryKey: ["get-summaries-me"], type: "active" });
+            await queryClient.refetchQueries({ queryKey: ["get-summaries-student"], type: "active" });
+            await queryClient.refetchQueries({ queryKey: ["get-summaries-subject"], type: "active" });
         }
     })
 }

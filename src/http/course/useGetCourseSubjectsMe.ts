@@ -1,13 +1,18 @@
+import { useEffect } from "react";
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 import type { ResponseGetCourseSubjectsType } from "../types/responseGetCourseSubjects";
+import { useToast } from "../../contexto/toastContext";
+import { getErrorMessage } from "../utils/getErrorMessage";
 
 export const useGetCourseSubjectsSemesterMe = (
     userId: string,
     options?: Omit<UseQueryOptions<ResponseGetCourseSubjectsType[]>, "queryKey" | "queryFn">
 ) => {
-    return useQuery({
+    const { showError } = useToast()
+
+    const query = useQuery({
         queryKey: ["courseSubjects", userId],
         queryFn: async () => {
             const response = await authFecth(`${API_URL}/courses/semestres/students/me`);
@@ -25,4 +30,12 @@ export const useGetCourseSubjectsSemesterMe = (
         },
         ...options
     })
+
+    useEffect(() => {
+        if (query.isError) {
+            showError(getErrorMessage(query.error, "Erro ao carregar matérias"))
+        }
+    }, [query.error, query.isError, showError])
+
+    return query
 }

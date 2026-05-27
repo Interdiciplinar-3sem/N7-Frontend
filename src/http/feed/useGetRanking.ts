@@ -1,10 +1,15 @@
+import { useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
 import type { ResponseGetSummaryType } from "../types/responseGetSummary";
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
+import { useToast } from "../../contexto/toastContext"
+import { getErrorMessage } from "../utils/getErrorMessage"
 
 export const useGetRanking = (id: string) => {
-    return useQuery({
+    const { showError } = useToast()
+
+    const query = useQuery({
         queryKey: ["get-ranking", id],
         queryFn: async (): Promise<ResponseGetSummaryType[]> => {
             const response = await authFecth(`${API_URL}/ranking`)
@@ -32,4 +37,12 @@ export const useGetRanking = (id: string) => {
         staleTime: 1000 * 60 * 5,
         retry: false
     })
+
+    useEffect(() => {
+        if (query.isError) {
+            showError(getErrorMessage(query.error, "Erro ao carregar ranking"))
+        }
+    }, [query.error, query.isError, showError])
+
+    return query
 }

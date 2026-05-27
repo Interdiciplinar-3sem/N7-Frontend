@@ -14,6 +14,10 @@ const cardStyle = tv({
             salmao: 'bg-[#FFE6E0]',
             rosa: 'bg-[#FFE2F4]',
             azul: 'bg-[#DAE8FF]',
+            invisivel: 'bg-transparent border-transparent shadow-none pointer-events-none opacity-0',
+        },
+        invisivel: {
+            true: "border-transparent bg-transparent shadow-none pointer-events-none opacity-0",
         }
     },
     defaultVariants: {
