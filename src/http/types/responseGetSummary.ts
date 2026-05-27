@@ -8,4 +8,12 @@ export type ResponseGetSummaryType = {
     totalCurtidas?: number,
     studentUrl?: string,
     studentNome?: string,
+    subjectId?: string,
+    subjectName?: string,
+    materia?: string,
+    disciplina?: string,
+    subject?: {
+        id?: string,
+        name?: string,
+    },
 }

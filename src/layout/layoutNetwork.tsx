@@ -54,7 +54,7 @@ export function LayoutNetwork() {
                 }
                 { isFormOpen && (
                         <>
-                            <FormResumo setIsFormOpen={setIsFormOpen}/>
+                            <FormResumo setIsFormOpen={setIsFormOpen} parentContext={parentContext}/>
                             <Overlay onClose={closeAllModals} />
                         </>
                     )
