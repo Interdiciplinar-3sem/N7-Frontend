@@ -3,9 +3,12 @@ import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { RequestUpdateStudentType } from "../types/requestUpdateStudentType"
 import type { ResponseUpdateStudentType } from "../types/responseUpdateStudent"
+import { useToast } from "../../contexto/toastContext"
+import { getErrorMessage } from "../utils/getErrorMessage"
 
 export const useUpdateStudent = (id: string) => {
     const queryClient = useQueryClient();
+    const { showError, showSuccess } = useToast()
 
     return useMutation({
         mutationKey: ["update-student", id],
@@ -46,8 +49,13 @@ export const useUpdateStudent = (id: string) => {
             await queryClient.invalidateQueries({ queryKey: ["get-users"] })
             await queryClient.invalidateQueries({ queryKey: ["get-users-desactivated"] })
             await queryClient.invalidateQueries({ queryKey: ["get-student", id] })
+            await queryClient.invalidateQueries({ queryKey: ["get-student-me", id] })
             await queryClient.invalidateQueries({ queryKey: ["get-feed", id] })
             await queryClient.invalidateQueries({ queryKey: ["get-ranking", id] })
+            showSuccess("Perfil atualizado com sucesso")
         },
+        onError: (error) => {
+            showError(getErrorMessage(error, "Erro ao atualizar perfil"))
+        }
     })
 }

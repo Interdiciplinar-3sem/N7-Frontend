@@ -20,6 +20,6 @@ export type ResponseGetStudentType = {
                         name: string;
                 };
         };
-        setSeguidoPeloCurrentUser?: boolean;
-        setSeguindoCurrentUser?: boolean;
+        seguidoPeloCurrentUser?: boolean;
+        seguindoCurrentUser?: boolean;
 }

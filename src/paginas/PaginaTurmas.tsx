@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { BookOpen, GraduationCap } from "lucide-react"
 import type { ContextPropsTypeNetwork } from "../types/contextPropsType"
 import { useOutletContext } from "react-router"
@@ -18,18 +18,30 @@ const tabOptions = [
 export function PaginaTurmas() {
   const parentContext = useOutletContext<ContextPropsTypeNetwork>();
   const [activeTab, setActiveTab] = useState<(typeof tabOptions)[number]["id"]>("materias")
-  const {data: turmas} = useGetCourseSubjectsSemesterMe(String(parentContext?.studentId ?? ""))
-  const [selectedTurmaId, setSelectedTurmaId] = useState<string | null>(turmas?.[0]?.id ?? null)
+  const { data: turmas } = useGetCourseSubjectsSemesterMe(String(parentContext?.studentId ?? ""))
+  const [selectedTurmaId, setSelectedTurmaId] = useState<string | null>(null)
   const [selectedResumoId, setSelectedResumoId] = useState<string | null>(null)
 
-  const semester = turmas?.[0]?.semestre ?? 1
-  const {data: students, isPending: isStudentsPending} = useGetCourseStudentsSemester("1", semester)
-  const {data: resumos, isPending} = useGetSummarySubjectId(selectedTurmaId ?? "")
+  useEffect(() => {
+    if (!turmas?.length) {
+      return
+    }
+
+    const hasValidSelection = selectedTurmaId ? turmas.some((turma) => turma.id === selectedTurmaId) : false
+
+    if (!hasValidSelection) {
+      setSelectedTurmaId(turmas[0].id)
+    }
+  }, [selectedTurmaId, turmas])
 
   const selectedTurma = useMemo(
     () => turmas?.find((turma) => turma.id === selectedTurmaId) ?? null,
     [selectedTurmaId, turmas]
   )
+
+  const semester = selectedTurma?.semestre ?? turmas?.[0]?.semestre ?? 1
+  const {data: students, isPending: isStudentsPending} = useGetCourseStudentsSemester("1", semester)
+  const {data: resumos, isPending} = useGetSummarySubjectId(selectedTurmaId ?? "")
   
 
   const openTurma = (id: string) => {

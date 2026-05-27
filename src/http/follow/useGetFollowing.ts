@@ -1,14 +1,18 @@
+import { useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { ResponseGetFollowingType } from "../types/responseGetFollwingType"
+import { useToast } from "../../contexto/toastContext"
+import { getErrorMessage } from "../utils/getErrorMessage"
 
 export const useGetFollowing = (id: string) => {
+    const { showError } = useToast()
 
-    return useQuery({
+    const query = useQuery({
         queryKey: ["get-following", id],
         queryFn: async () => {
-            const response = await authFecth(`${API_URL}/follow/following/me`)
+            const response = await authFecth(`${API_URL}/follow/following/me?limit=20`)
 
             if (response.status === 401) {
                 const errorBody = await response.json().catch(() => ({ message: "Não autorizado" }))
@@ -40,4 +44,12 @@ export const useGetFollowing = (id: string) => {
         refetchOnMount: false,
         staleTime: 1000 * 60 * 5,
     })
+
+    useEffect(() => {
+        if (query.isError) {
+            showError(getErrorMessage(query.error, "Erro ao carregar lista de seguidos"))
+        }
+    }, [query.error, query.isError, showError])
+
+    return query
 }

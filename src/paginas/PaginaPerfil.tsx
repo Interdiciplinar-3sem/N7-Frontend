@@ -5,6 +5,7 @@ import { PerfilEditFormModal } from '../componentes/perfil/PerfilEditFormModal'
 import { PerfilInfo } from '../componentes/perfil/PerfilInfo'
 import { PerfilResumosSection } from '../componentes/perfil/PerfilResumosSection'
 import { PerfilTurmasSection } from '../componentes/perfil/PerfilTurmasSection'
+import { PerfilSkeleton } from '../componentes/Skeleton/PerfilSkeleton'
 import { ViweSummary } from '../componentes/ViweSummary'
 import { usePaginaPerfil } from '../hooks/usePaginaPerfil'
 
@@ -19,7 +20,9 @@ export function PaginaPerfil() {
     selectedResumoId,
     setSelectedResumoId,
     modais,
-    actions
+    actions,
+    isFollowingPending,
+    isUnfollowingPending
   } = usePaginaPerfil()
 
   return (
@@ -27,9 +30,7 @@ export function PaginaPerfil() {
       <div className="font-sans min-h-dvh bg-zinc-100 flex flex-col pb-30">
         <section className="flex-1 p-8 pb-32 md:pb-8">
           {isPending ? (
-            <div className="min-h-[50vh] flex items-center justify-center">
-              <p className="text-zinc-500">Carregando perfil...</p>
-            </div>
+            <PerfilSkeleton />
           ) : (
             <div className="bg-zinc-100 rounded-2xl p-10 pb-24 flex flex-col md:flex-row items-center md:items-start gap-6 max-w-225 mx-auto relative shadow-md">
               <PerfilAvatarCard
@@ -41,6 +42,10 @@ export function PaginaPerfil() {
               <PerfilInfo user={user} />
 
               <PerfilActions
+                isFollowingPending={isFollowingPending}
+                isUnfollowingPending={isUnfollowingPending}
+                toFollow={actions.followUser}
+                toUnFollow={actions.unfollowUser}
                 isOwnProfile={isOwnProfile}
                 isFollowing={isFollowing}
                 onToggleForm={actions.toggleEditForm}

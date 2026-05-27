@@ -1,13 +1,18 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 import type { ResponseCreateSummaryType } from "../types/ResponseGetCourseStudentsType";
+import { useToast } from "../../contexto/toastContext";
+import { getErrorMessage } from "../utils/getErrorMessage";
 
 export const useGetCourseStudentsSemester = (
     courseId: string,
     semestre: number,
 ) => {
-    return useQuery({
+    const { showError } = useToast()
+
+    const query = useQuery({
         queryKey: ["courseStudents", courseId, semestre],
         queryFn: async () => {
             const response = await authFecth(`${API_URL}/courses/${courseId}/semestres/${semestre}/students`);
@@ -25,4 +30,12 @@ export const useGetCourseStudentsSemester = (
             return result;
         },
     })
+
+    useEffect(() => {
+        if (query.isError) {
+            showError(getErrorMessage(query.error, "Erro ao carregar alunos"))
+        }
+    }, [query.error, query.isError, showError])
+
+    return query
 }

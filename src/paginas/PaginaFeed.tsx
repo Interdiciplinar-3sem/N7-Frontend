@@ -12,14 +12,15 @@ import { Link } from "react-router-dom";
 export function PaginaFeed() {
     const parentContext = useOutletContext<ContextPropsType>();
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
-    const {data: resumosFeed} = parentContext.role === 'aluno' ? useGetFeed(parentContext.id) : { data: undefined };
-    const {data: resumosRanking} =  useGetRanking(parentContext.id)
-    const {data: resumos} =  useGetAllSummary();
-    const {data: following} = parentContext.role === 'aluno' ? useGetFollowing(parentContext.id) : { data: undefined };
+    const {data: resumosFeed} = parentContext.role === 'ALUNO' ? useGetFeed(parentContext.id) : { data: undefined };
+    const {data: resumosRanking} = useGetRanking(parentContext.id)
+    const {data: resumos} = useGetAllSummary();
+    const {data: following} = parentContext.role === 'ALUNO' ? useGetFollowing(parentContext.id) : { data: undefined };
 
-    
+
 
     const resumosArray = activeTab === "explorar" ? resumos : activeTab === "seguindo" ? resumosFeed : resumosRanking;
+    const items = resumosArray ?? [];
     
     return (
         <main className="w-full h-full flex justify-around pt-16">
@@ -63,41 +64,46 @@ export function PaginaFeed() {
                     </nav>
                 </div>
                 
-                <section className="
+                <section className={`
                     lg:w-full min-h-screen p-6 mb-20 sm:mb-0
                     sm:grid sm:grid-cols-2 flex flex-col sm:grid-flow-dense gap-8 grid-auto-rows-[180px]
-                    
-                ">
-                    {resumosArray?.map((resumo, index) => {
-                        let formato:'quadrado' | 'horizontal' | 'vertical' = "quadrado";
-                        if(index % 5 === 0) formato = "horizontal";
-                        if(index % 5 === 3) formato = "vertical";
-
-                        let cores:("verde" | "salmao" | "rosa" | "azul")[] = ["verde", "salmao", "rosa", "azul"]
-                        let cor = cores[index % cores.length]
-
-                        console.log("url:", resumo.studentUrl)
-                        return (
-                            <CardResumo key={resumo.summaryId} titulo={resumo.titulo} texto={resumo.conteudo} formato={formato} cor={cor} imageUrl={resumo.studentUrl} studentName={resumo.studentNome}/>
-                        )
-                    })}
-                    
-                    {resumosArray?.length === 0 || resumosArray === undefined && (
+                `}>
+                    {items.length === 0 ? (
                         <div className="col-span-full text-center text-gray-400">
                             {activeTab === "explorar" && "Nosso sistema está vazio. Seja o primeiro a criar um resumo!"}
                             {activeTab === "seguindo" && "Você não está seguindo ninguém ainda."}
                             {activeTab === "ranking" && "Ainda não há resumos suficientes para aparecer no ranking."}
                         </div>
+                    ) : (
+                        items.map((resumo, index) => {
+                            let formato:'quadrado' | 'horizontal' | 'vertical' = "quadrado";
+                            if(index % 5 === 0) formato = "horizontal";
+                            if(index % 5 === 3) formato = "vertical";
+
+                            let cores:("verde" | "salmao" | "rosa" | "azul")[] = ["verde", "salmao", "rosa", "azul"]
+                            let cor = cores[index % cores.length]
+
+                            return (
+                                <CardResumo key={resumo.summaryId} titulo={resumo.titulo} texto={resumo.conteudo} formato={formato} cor={cor} imageUrl={resumo.studentUrl} studentName={resumo.studentNome}/>
+                            )
+                        })
                     )}
 
-                    
+                    {items.length > 0 && items.length < 6 && Array.from({ length: 6 - items.length }).map((_, i) => {
+                        const index = items.length + i; // position for format/placement
+                        let formato:'quadrado' | 'horizontal' | 'vertical' = "quadrado";
+                        if(index % 5 === 0) formato = "horizontal";
+                        if(index % 5 === 3) formato = "vertical";
+
+                        return (
+                            <CardResumo key={`ph-${i}`} titulo={""} texto={""} formato={formato} cor={"invisivel" as any} invisivel={true} imageUrl={""} studentName={""}/>
+                        )
+                    })}
 
                 </section>
             </section>
 
             <section className={`hidden min-w-72 xl:w-96 lg:flex lg:flex-col gap-3`}>
-                {/* <CardPerfil className="" studentId="" nome="SeuNome" seguidores={30} semestre={2}/> */}
-
                 <div className="flex items-center justify-between gap-3">
                     <h2>Seguindo:</h2>
                 </div>

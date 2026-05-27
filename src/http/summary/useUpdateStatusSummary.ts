@@ -5,6 +5,20 @@ import { API_URL } from "../api"
 export const useUpdateStatusSummary = () => {
     const queryClient = useQueryClient();
 
+    const invalidateSummaryQueries = async () => {
+        await queryClient.invalidateQueries({ queryKey: ["get-summary"] });
+        await queryClient.invalidateQueries({ queryKey: ["get-summary-desactivated"] });
+        await queryClient.invalidateQueries({ queryKey: ["get-summaries-me"] });
+        await queryClient.invalidateQueries({ queryKey: ["get-summaries-student"] });
+        await queryClient.invalidateQueries({ queryKey: ["get-summaries-subject"] });
+
+        await queryClient.refetchQueries({ queryKey: ["get-summary"], type: "active" });
+        await queryClient.refetchQueries({ queryKey: ["get-summary-desactivated"], type: "active" });
+        await queryClient.refetchQueries({ queryKey: ["get-summaries-me"], type: "active" });
+        await queryClient.refetchQueries({ queryKey: ["get-summaries-student"], type: "active" });
+        await queryClient.refetchQueries({ queryKey: ["get-summaries-subject"], type: "active" });
+    }
+
     return useMutation({
         mutationKey: ["put-status-summary"],
         mutationFn: async (id: string): Promise<{ message: string }> => {
@@ -28,11 +42,6 @@ export const useUpdateStatusSummary = () => {
                 return { message: responseBody };
             }
         },
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ["get-summary"] });
-            await queryClient.invalidateQueries({ queryKey: ["get-summary-desactivated"] });
-            await queryClient.refetchQueries({ queryKey: ["get-summary"], type: "active" });
-            await queryClient.refetchQueries({ queryKey: ["get-summary-desactivated"], type: "active" });
-        }
+        onSuccess: invalidateSummaryQueries
     })
 }
