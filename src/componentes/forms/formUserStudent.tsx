@@ -4,11 +4,14 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import z from "zod";
 import { useCreateStudent } from "../../http/auth/useCreateStudent";
+import { useLogin } from "../../http/auth/useLogin";
 
 
 export function FormSignUp() {
 
-    const {mutateAsync: signUp} = useCreateStudent();
+    const {mutateAsync: signUp } = useCreateStudent();
+    const {mutateAsync: login} = useLogin();
+    
     const navigate = useNavigate();
 
     const formSchema = z.object({
@@ -38,11 +41,13 @@ export function FormSignUp() {
     const handdlerSignUp = async (data: z.infer<typeof formSchema>) => {
         try {
 
-            if(data.senha != data.senhaConfirmacao){
+            if(data.senha !== data.senhaConfirmacao){
                 form.setError("senha", {
                     type: "manual",
                     message: "As senhas não coincidem"
                 })
+
+                return;
             }
 
             await signUp({
@@ -51,8 +56,13 @@ export function FormSignUp() {
                 senha: data.senha,
                 senhaConfirmacao: data.senhaConfirmacao,
                 semestre: Number(data.semestre)
-            })
+            },)
 
+            await login({
+                email: data.email,
+                senha: data.senha
+            })
+            
             navigate("/feed", { replace: true })
         } catch (error) {
             const parsed = JSON.parse((error as Error).message)

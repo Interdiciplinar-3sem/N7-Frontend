@@ -32,10 +32,10 @@ type CardProps = VariantProps<typeof cardStyle> & {
     imageUrl?: string;
     studentName?: string;
     className?: string;
-
+    curtidas?: number;
 }
 
-export function CardResumo({titulo, texto, imageUrl, studentName, className, formato, cor }: CardProps) {
+export function CardResumo({titulo, texto, imageUrl, studentName, className, formato, cor, curtidas }: CardProps) {
     const isVertical = formato === "vertical";
 
     return (
@@ -52,7 +52,7 @@ export function CardResumo({titulo, texto, imageUrl, studentName, className, for
                         aria-label="Curtir resumo"
                     >
                         <Heart size={16} className="group-hover:scale-110 transition-transform" />
-                        <span>30</span>
+                        <span>{curtidas ?? 0}</span>
                     </button>
                 </div>
 

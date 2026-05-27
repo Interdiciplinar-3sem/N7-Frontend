@@ -63,7 +63,7 @@ export function PaginaPainel() {
     ];
 
     return (
-        <main className="px-16 w-full min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+        <main className="ml-6 px-16 w-full min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
             <div className="w-full p-6 md:p-8">
                 {/* Header */}
                 <div className="mb-12">
@@ -81,22 +81,18 @@ export function PaginaPainel() {
                             onClick={() => navigate(table.path)}
                             className={`p-6 rounded-lg border-2 transition-all duration-300 text-left group ${table.color}`}
                         >
-                            {/* Card Icon */}
                             <div className={`${table.iconColor} mb-4 group-hover:scale-110 transition-transform duration-300`}>
                                 {table.icon}
                             </div>
 
-                            {/* Card Title */}
                             <h2 className="text-xl font-semibold text-gray-800 mb-2">
                                 {table.label}
                             </h2>
 
-                            {/* Card Description */}
                             <p className="text-gray-600 text-sm mb-4">
                                 {table.description}
                             </p>
 
-                            {/* Card Action */}
                             <div className="flex items-center text-sm font-medium text-gray-700 group-hover:translate-x-2 transition-transform duration-300">
                                 <span>Acessar</span>
                                 <ArrowRight className="h-4 w-4 ml-2" />

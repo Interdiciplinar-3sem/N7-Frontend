@@ -12,7 +12,7 @@ export const useGetFeed = (id: string) => {
     const query = useQuery({
         queryKey: ["get-feed", id],
         queryFn: async (): Promise<ResponseGetSummaryType[]> => {
-            const response = await authFecth(`${API_URL}/feed/me`)
+            const response = await authFecth(`${API_URL}/feed/me?limit=20`)
             if(!response.ok){
                 throw new Error("Erro ao buscar feed!");
             }

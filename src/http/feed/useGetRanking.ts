@@ -12,7 +12,7 @@ export const useGetRanking = (id: string) => {
     const query = useQuery({
         queryKey: ["get-ranking", id],
         queryFn: async (): Promise<ResponseGetSummaryType[]> => {
-            const response = await authFecth(`${API_URL}/ranking`)
+            const response = await authFecth(`${API_URL}/resumos/ranking?limit=20`)
             if(!response.ok){
                 throw new Error("Erro ao buscar ranking!");
             }
