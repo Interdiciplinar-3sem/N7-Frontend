@@ -15,9 +15,9 @@ export function usePaginaPerfil() {
   const navigate = useNavigate()
   const { studentId: routeId } = useParams<{ studentId?: string }>()
 
-  const viewerStudentId = String(parentContext?.studentId ?? "") //usuario logado
-  const profileStudentId = routeId ?? viewerStudentId // caso tenha studentId na rota, usa ele, senao usa o do usuario logado
-  const isOwnProfile = profileStudentId === viewerStudentId // se for igual significa que o usuario esta vendo seu proprio perfil, senao esta vendo o perfil de outro usuario
+  const viewerStudentId = String(parentContext?.studentId ?? "") 
+  const profileStudentId = routeId ?? viewerStudentId
+  const isOwnProfile = profileStudentId === viewerStudentId
   const isAluno = parentContext?.role === "ALUNO"
 
   useEffect(() => {
@@ -78,15 +78,9 @@ export function usePaginaPerfil() {
     }))
   }, [studentData])
 
-  useEffect(() => {
-    if (typeof parentContext?.isOptionsFormOpen === "boolean") {
-      handlers.setIsOptionsFormOpen(parentContext.isOptionsFormOpen)
-    }
-  }, [parentContext?.isOptionsFormOpen, handlers, parentContext])
-
-  useEffect(() => {
-    parentContext?.setIsOptionsFormOpen?.(modais.isOptionsFormOpen)
-  }, [modais.isOptionsFormOpen, parentContext])
+  const toggleResumoForm = () => {
+    parentContext?.setIsOptionsFormOpen?.(!parentContext?.isOptionsFormOpen)
+  }
 
   const isFollowing = Boolean(studentData?.setSeguindoCurrentUser)
 
@@ -149,7 +143,7 @@ export function usePaginaPerfil() {
       openAvatarPicker: handlers.openAvatarPicker,
       closeAvatarPicker: handlers.closeAvatarPicker,
       setSelectedGender: handlers.setSelectedGender,
-      toggleResumoForm: handlers.toggleOptionsForm,
+      toggleResumoForm,
       submitEditForm,
       selectAvatar,
       openFotoMenu: handlers.openFotoMenu,

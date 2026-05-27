@@ -3,25 +3,32 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { useSummaryPost } from "../../http/summary/usePostSummary";
 import { useToast } from "../../contexto/toastContext";
+import { useGetCourseSubjectsSemesterMe } from "../../http/course/useGetCourseSubjectsMe";
+import type { ContextPropsType } from "../../types/contextPropsType";
 
 type FormResumoProps = {
     setIsFormOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    parentContext: ContextPropsType
 }
 
-export function FormResumo({setIsFormOpen}: FormResumoProps) {
+export function FormResumo({setIsFormOpen, parentContext}: FormResumoProps) {
+    const {id} = parentContext ? parentContext : {id: ""};
 
     const {mutateAsync: summaryPost, isPending} = useSummaryPost();
     const { showSuccess } = useToast();
+    const { data: subjects } = useGetCourseSubjectsSemesterMe(id);
 
     const formSchema = z.object({
         titulo: z.string().min(3, "O titulo deve ter ao menos 3 letras"),
-        conteudo: z.string().min(50, "O resumo deve ter ao menos 50 letras")
+        conteudo: z.string().min(50, "O resumo deve ter ao menos 50 letras"),
+        materia: z.string()
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
             titulo: "",
-            conteudo: ""
+            conteudo: "",
+            materia: ""
         },
         resolver: zodResolver(formSchema)
     })
@@ -31,7 +38,8 @@ export function FormResumo({setIsFormOpen}: FormResumoProps) {
 
             await summaryPost({
                 titulo: data.titulo,
-                conteudo: data.conteudo
+                conteudo: data.conteudo,
+                subjectId: data.materia
             })
 
             showSuccess("Resumo criado com sucesso!");
@@ -92,7 +100,21 @@ export function FormResumo({setIsFormOpen}: FormResumoProps) {
                     placeholder="Digite aqui"
                 />
                   {form.formState.errors.conteudo && (
-                    <p className="text-red-500 text-sm">{form.formState.errors.conteudo.message}</p>
+                        <p className="text-red-500 text-sm">{form.formState.errors.conteudo.message}</p>
+                    )}
+            </div>
+            <div className="flex flex-col gap-3">
+                <select
+                    {...form.register("materia")}
+                    className="w-full rounded-xl bg-white px-3 py-2.5 border border-[#C9DFF5] outline-none focus:ring-2 focus:ring-[#7AB4EA]"
+                >
+                    {subjects?.map((subject) => (
+                        <option key={subject.id} value={subject.id}>{subject.name}</option>
+                    ))}
+                    <option value="" selected>Selecione uma matéria</option>
+                </select>
+                {form.formState.errors.materia && (
+                    <p className="text-red-500 text-sm">{form.formState.errors.materia.message}</p>
                 )}
             </div>
             <div className="flex flex-wrap gap-3 sm:flex-row flex-col">
