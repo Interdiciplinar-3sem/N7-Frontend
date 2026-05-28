@@ -1,5 +1,6 @@
 import { PerfilActions } from '../componentes/perfil/PerfilActions'
 import { PerfilAvatarCard } from '../componentes/perfil/PerfilAvatarCard'
+import { PerfilBioPickerModal } from '../componentes/perfil/PerfilBioPickerModal'
 import { PerfilAvatarPickerModal } from '../componentes/perfil/PerfilAvatarPickerModal'
 import { PerfilEditFormModal } from '../componentes/perfil/PerfilEditFormModal'
 import { PerfilInfo } from '../componentes/perfil/PerfilInfo'
@@ -17,6 +18,7 @@ export function PaginaPerfil() {
     isPending,
     isFollowing,
     filteredAvatars,
+    bios,
     selectedResumoId,
     setSelectedResumoId,
     modais,
@@ -49,6 +51,7 @@ export function PaginaPerfil() {
                 isOwnProfile={isOwnProfile}
                 isFollowing={isFollowing}
                 onToggleForm={actions.toggleEditForm}
+                onToggleBioPicker={actions.openBioPicker}
                 onToggleCreateResumo={actions.toggleResumoForm}
               />
             </div>
@@ -85,6 +88,14 @@ export function PaginaPerfil() {
                 avatars={filteredAvatars}
                 onClose={actions.closeAvatarPicker}
                 onSelectAvatar={actions.selectAvatar}
+              />
+
+              <PerfilBioPickerModal
+                isOpen={modais.openBioPicker}
+                bios={bios}
+                currentBio={user?.descricao ?? ''}
+                onClose={actions.closeBioPicker}
+                onSelectBio={(bio) => actions.selectBio(bio.description)}
               />
             </>
           )}

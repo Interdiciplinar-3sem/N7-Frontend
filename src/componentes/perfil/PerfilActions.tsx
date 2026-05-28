@@ -9,6 +9,7 @@ type PerfilActionsProps = {
   toFollow: () => Promise<{message: string}>
   toUnFollow: () => Promise<{message: string}>
   onToggleForm: () => void
+  onToggleBioPicker: () => void
   onToggleCreateResumo: () => void
 }
 
@@ -16,6 +17,7 @@ export function PerfilActions({
   isOwnProfile,
   isFollowing,
   onToggleForm,
+  onToggleBioPicker,
   onToggleCreateResumo,
   toFollow,
   toUnFollow,
@@ -36,6 +38,14 @@ export function PerfilActions({
             corHover="hover:bg-green-500"
           >
             Editar Perfil
+          </Botao>
+
+          <Botao
+            onClick={onToggleBioPicker}
+            cor="bg-amber-300"
+            corHover="hover:bg-amber-400"
+          >
+            Escolher bio
           </Botao>
 
           <Botao

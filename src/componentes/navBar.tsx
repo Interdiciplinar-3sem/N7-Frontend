@@ -1,8 +1,7 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../http/auth/useAuth";
-import { ButtonLogOut } from "./buttonLogout";
 
 export function NavBar(){
     const [toggle, setToggle] = useState(false);
@@ -47,6 +46,9 @@ export function NavBar(){
                         lg:ml-4 lg:gap-16">
                         <li className="hover:scale-105 hover:font-bold transform" ><button onClick={() => handdleNavigate("/")}>Home</button></li>
                         <li className="hover:scale-105 hover:font-bold transform"><button onClick={() => handdleNavigate("/feed")}>feed</button></li>
+                        {isAuthenticated && (
+                            <Link to="/turmas" className="hover:scale-105 hover:font-bold transform">Turmas</Link>
+                        )}
                     </ul>
                 </div>
                
@@ -56,16 +58,14 @@ export function NavBar(){
                     lg:pr-4
                 ">
                     {isAuthenticated ? (
-                        <ButtonLogOut />
+                        <Link to="/perfil" className="px-1 md:px-2 border border-white hover:bg-blue-100 hover:text-black hover:scale-105 ">Perfil</Link>
                     ) : (
                         <>
                             <button onClick={() => handdleNavigate("/login")} className="px-1 md:px-2 border border-white hover:bg-blue-100 hover:text-black hover:scale-105 ">Login</button>
                             <button onClick={() => handdleNavigate("/cadastro")} className="px-1 text-black font-semibold bg-[#2CD76E] hover:bg-green-200 hover:scale-105">Criar</button>
                         </>
                     )}
-                 
                 </section>
-              
                 <button className="flex items-center xxs:hidden"
                 onClick={() => handdleToggle()}>
                     <Menu/>
