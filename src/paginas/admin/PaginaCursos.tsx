@@ -3,16 +3,16 @@ import { X } from "lucide-react";
 import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
 import { Overlay } from "../../componentes/overlay";
-import { useGetCourses, type CourseAdminRow } from "../../http/course/useGetCourses";
 import { useGetCoursesDesactivated } from "../../http/course/useGetCoursesDesactivated";
 import { useUpdateCourseStatus } from "../../http/course/useUpdateCourseStatus";
 import { useGetCourseSubjects } from "../../http/course/useGetCourseSubjects";
+import { useGetCourses } from "../../http/course/useGetCourse";
+import type { ResponseGetCourseType } from "../../http/types/responseGetCourse";
 
-const columns: Column<CourseAdminRow>[] = [
+const columns: Column<ResponseGetCourseType>[] = [
     { key: "id", header: "ID", width: "180px" },
-    { key: "nome", header: "Curso" },
-    { key: "semestre", header: "Semestre", width: "140px" },
-    { key: "materias", header: "Matérias", width: "120px", align: "center" },
+    { key: "name", header: "Curso" },
+    { key: "descricao", header: "Semestre", width: "360px" },
 ]
 
 export function PaginaCursos() {

@@ -16,7 +16,7 @@ export function PerfilInfo({ user }: PerfilInfoProps) {
       <p className="text-zinc-500">{user.faculdade || 'Faculdade'}</p>
 
       <p className="text-zinc-400 mt-3">
-        {user.descricao || 'Adicione uma descrição...'}
+        {user.descricao || 'Adicione uma bio...'}
       </p>
     </div>
   )

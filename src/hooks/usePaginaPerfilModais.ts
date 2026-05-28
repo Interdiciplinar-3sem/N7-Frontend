@@ -4,6 +4,7 @@ import { avatarOptions, type AvatarGender } from "../types/AvatarTypes"
 export function usePaginaPerfilModais() {
     const [openFotoMenu, setOpenFotoMenu] = useState(false)
     const [openAvatarPicker, setOpenAvatarPicker] = useState(false)
+    const [openBioPicker, setOpenBioPicker] = useState(false)
     const [selectedGender, setSelectedGender] = useState<AvatarGender>('all')
     const [showForm, setShowForm] = useState(false)
     const [isOptionsFormOpen, setIsOptionsFormOpen] = useState(false)
@@ -19,12 +20,14 @@ export function usePaginaPerfilModais() {
         modais: {
             openFotoMenu,
             openAvatarPicker,
+            openBioPicker,
             selectedGender,
             showForm,
             isOptionsFormOpen,
             selectedResumoId,
             setOpenFotoMenu,
             setOpenAvatarPicker,
+            setOpenBioPicker,
             setSelectedGender,
             setShowForm,
             setIsOptionsFormOpen,
@@ -35,10 +38,12 @@ export function usePaginaPerfilModais() {
             toggleEditForm: () => setShowForm((prev) => !prev),
             closeEditForm: () => setShowForm(false),
             openAvatarPicker: () => setOpenAvatarPicker(true),
+            openBioPicker: () => setOpenBioPicker(true),
             closeAvatarPicker: () => {
                 setOpenAvatarPicker(false)
                 setOpenFotoMenu(false)
             },
+            closeBioPicker: () => setOpenBioPicker(false),
             setSelectedGender,
             openFotoMenu: () => setOpenFotoMenu(true),
             closeFotoMenu: () => setOpenFotoMenu(false),

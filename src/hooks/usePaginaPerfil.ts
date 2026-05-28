@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useOutletContext, useParams } from "react-router"
 import { useGetCourseSubjectsSemester } from "../http/course/useGetCourseSubjectsSemester"
 import { useGetCourseSubjectsSemesterMe } from "../http/course/useGetCourseSubjectsMe"
+import { useGetBios } from "../http/bio/useGetBio"
 import { useGetStudent } from "../http/student/useGetStudent"
 import { useGetStudentMe } from "../http/student/useGetStudentMe"
 import { useUpdateStudent } from "../http/student/useUpdateStudent"
@@ -45,6 +46,11 @@ export function usePaginaPerfil() {
   const myCourseSubjects = useGetCourseSubjectsSemesterMe(viewerStudentId, {
     enabled: isAluno && isOwnProfile && !!viewerStudentId
   })
+
+  const biosQuery = useGetBios({
+    enabled: isAluno
+  })
+  const bios = biosQuery.data?.filter((bio) => bio.ativo) ?? []
 
   const otherCourseSubjects = useGetCourseSubjectsSemester(currentCourseId, currentSemester, {
     enabled: isAluno && !isOwnProfile && !!currentCourseId && !!currentSemester
@@ -132,6 +138,19 @@ export function usePaginaPerfil() {
     handlers.closeAvatarPicker()
   }
 
+  const selectBio = async (bioDescription: string) => {
+    await updateStudent({
+      bio: bioDescription
+    })
+
+    setUser((prev) => ({
+      ...prev,
+      descricao: bioDescription
+    }))
+
+    handlers.closeBioPicker()
+  }
+
   return {
     user,
     subjects,
@@ -145,16 +164,20 @@ export function usePaginaPerfil() {
     selectedResumoId: modais.selectedResumoId,
     setSelectedResumoId: modais.setSelectedResumoId,
     modais,
+    bios,
     actions: {
       profileStudentId,
       toggleEditForm: handlers.toggleEditForm,
       closeEditForm: handlers.closeEditForm,
       openAvatarPicker: handlers.openAvatarPicker,
       closeAvatarPicker: handlers.closeAvatarPicker,
+      openBioPicker: handlers.openBioPicker,
+      closeBioPicker: handlers.closeBioPicker,
       setSelectedGender: handlers.setSelectedGender,
       toggleResumoForm,
       submitEditForm,
       selectAvatar,
+      selectBio,
       openFotoMenu: handlers.openFotoMenu,
       closeFotoMenu: handlers.closeFotoMenu,
       followUser,
