@@ -6,7 +6,7 @@ import { useLogin } from "../../http/auth/useLogin";
 
 export function FormLogin() {
 
-    const {mutateAsync: login} = useLogin();
+    const { mutateAsync: login } = useLogin();
 
     const formSchema = z.object({
         email: z.email("Email válido"),
@@ -46,41 +46,108 @@ export function FormLogin() {
         }
     }
 
+
     return (
-        <form onSubmit={form.handleSubmit(handdlerLogin)}
-        className="
-            w-full max-w-lg p-4 m-1 flex flex-col gap-2 
-            rounded-lg shadow-[0_10px_20px_rgba(0,0,0,0.04),0_20px_40px_rgba(0,0,0,0.06)]
-            xs:bg-[#F1F5F9]
-            sm:m-0
-            max-[720px]:max-w-md
-            max-[720px]:translate-y-0
-            xl:translate-y-16
-        ">
-            <h1 className="text-2xl text-black font-bold xxs:text-4xl">Entrar</h1>
-            <label className="text-black font-semibold">Email </label>
-            { form.formState.errors.email && (
-                <p className="text-red-500 text-sm">
-                    {form.formState.errors.email?.message}
-                </p>
-            )}
-            <input className="p-1 bg-white rounded-sm shadow-sm" type="text" placeholder="Email" {...form.register("email")} required/>
-            <label className="text-black font-semibold">Senha </label>
-            {form.formState.errors.senha && (
-                <p className="text-red-500 text-sm">
-                    {form.formState.errors.senha.message}
-                </p>
-            )}
-            <input className="p-1 bg-white rounded-sm shadow-sm" type="password" placeholder="Senha" {...form.register("senha")} required/>
 
-             {form.formState.errors.root && (
-                <p className="text-red-500 text-sm">
-                    {form.formState.errors.root?.message}
-                </p>
-            )}
+        
+        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#78a3ff] via-[#286fbd] to-[#78a3ff] relative overflow-hidden">
 
-            <button type="submit" className="px-1 text-black font-semibold bg-[#2CD76E]">Entrar</button>
-            <Link className="text-xs lg:text-sm xs:text-blue-600 cursor-pointer text-center" to="/cadastro">Ainda não tem cadastro?</Link>
-        </form>
-    )
+            {/* Bolas */}
+            <div className="absolute top-[-80px] right-[-80px] w-80 h-80 rounded-full bg-white opacity-30 pointer-events-none" />
+            <div className="absolute bottom-[-60px] left-[-40px] w-56 h-56 rounded-full bg-white opacity-30 pointer-events-none" />
+
+            {/*
+        * card quase transparente
+      */}
+            <div className="relative w-full max-w-md mx-4 bg-white/10 backdrop-blur-xl border border-white/25 rounded-3xl p-10 shadow-2xl">
+
+                {/* LOGO*/}
+                <div className="mb-8">
+                    <span className="text-2xl font-bold tracking-tight text-white">Resumi</span>
+                    
+                    <span className="text-2xl font-bold tracking-tight text-[#aac9f7]">FY</span>
+                </div>
+
+                <h1 className="text-2xl font-semibold text-white mb-6">Entrar</h1>
+
+                <form onSubmit={form.handleSubmit(handdlerLogin)} className="space-y-4">
+                    {/* ── Campo E-mail ──────────────────────────────────────────── */}
+                    <div>
+                        <label className="block text-xs font-medium text-white/70 mb-2 uppercase tracking-wider">
+                            E-mail
+                        </label>
+                        {/*
+              * icone dentro do campo
+            */}
+                        <div className="flex items-center gap-3 bg-white/15 border border-white/25 rounded-xl px-4 focus-within:border-white/60 focus-within:bg-white/20 transition-all duration-200">
+                            <svg className="w-4 h-4 text-white/50 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <input
+                                type="email"
+                                placeholder="seu@email.com"
+                                className="flex-1 bg-transparent border-none outline-none text-white placeholder-white/40 text-sm py-3"
+                                {...form.register("email")}
+                            />
+                        </div>
+                        {form.formState.errors.email && (
+                            
+                            <p className="text-red-300 text-xs mt-1.5 pl-1">
+                                {form.formState.errors.email.message}
+                            </p>
+                        )}
+                    </div>
+
+                    {/*  Campo Senha */}
+                    <div>
+                        <label className="block text-xs font-medium text-white/70 mb-2 uppercase tracking-wider">
+                            Senha
+                        </label>
+                        <div className="flex items-center gap-3 bg-white/15 border border-white/25 rounded-xl px-4 focus-within:border-white/60 focus-within:bg-white/20 transition-all duration-200">
+                            <svg className="w-4 h-4 text-white/50 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            <input
+                                type="password"
+                                placeholder="••••••••"
+                                className="flex-1 bg-transparent border-none outline-none text-white placeholder-white/40 text-sm py-3"
+                                {...form.register("senha")}
+                            />
+                        </div>
+                        {form.formState.errors.senha && (
+                            <p className="text-red-300 text-xs mt-1.5 pl-1">
+                                {form.formState.errors.senha.message}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Erro geral  */}
+                    {form.formState.errors.root && (
+                        <div className="bg-red-500/20 border border-red-400/40 rounded-xl px-4 py-3">
+                            <p className="text-red-200 text-sm">{form.formState.errors.root.message}</p>
+                        </div>
+                    )}
+
+                  
+                    <button
+                        type="submit"
+                        disabled={form.formState.isSubmitting}
+                        className="w-full bg-white text-[#2d5be3] font-bold text-sm py-3.5 rounded-xl mt-2
+                       hover:bg-white/90 active:scale-[0.98] transition-all duration-200
+                       disabled:opa city-60 disabled:cursor-not-allowed shadow-lg"
+                    >
+                        {form.formState.isSubmitting ? "Entrando..." : "Entrar"}
+                    </button>
+
+                    {/* Link para cadastro */}
+                    <p className="text-center text-xs text-white/50 pt-1">
+                        Não tem conta?{" "}
+                        <Link to="/cadastro" className="text-[#aac9f7] font-semibold hover:text-white transition-colors">
+                            Cadastre-se
+                        </Link>
+                    </p>
+                </form>
+            </div>
+        </main>
+    );
 }
