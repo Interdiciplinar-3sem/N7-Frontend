@@ -6,7 +6,7 @@ type BioViewMode = 'list' | 'carousel'
 
 type PerfilBioPickerModalProps = {
   isOpen: boolean
-  bios: ResponseGetBiosType[]
+  bios: ResponseGetBiosType[] | []
   currentBio: string
   onClose: () => void
   onSelectBio: (bio: ResponseGetBiosType) => void | Promise<void>

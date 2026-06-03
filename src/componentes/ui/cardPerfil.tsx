@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge"
 
 type CardPerfilProps = {
+    onSelectUser?: () => void;
     studentId: string;
     nome: string;
     semestre: number;
@@ -10,12 +11,13 @@ type CardPerfilProps = {
     className?: string;
 }
 
-export function CardPerfil({studentId, nome, semestre, seguidores, url, className}: CardPerfilProps) {
+export function CardPerfil({studentId, nome, semestre, seguidores, url, className, onSelectUser}: CardPerfilProps) {
     const navigate = useNavigate();
 
     const handleRedirect = () => {
         console.log(studentId)
-        navigate(`/perfil/${studentId}`);   
+        navigate(`/perfil/${studentId}`);
+        onSelectUser?.();
     }
 
     return (

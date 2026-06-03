@@ -6,13 +6,13 @@ import type { ResponseGetFollowingType } from "../types/responseGetFollwingType"
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 
-export const useGetFollowing = (currentId: string, targetId: string) => {
+export const useGetFollowers = (currentId: string, targetId: string) => {
     const { showError } = useToast()
 
     const query = useQuery({
-        queryKey: ["get-following", currentId, targetId],
+        queryKey: ["get-followers", currentId, targetId],
         queryFn: async () => {
-            const response = await authFecth(`${API_URL}/follow/following/${targetId}?limit=20`)
+            const response = await authFecth(`${API_URL}/follow/followers/${targetId}?limit=20`)
 
             if (response.status === 401) {
                 const errorBody = await response.json().catch(() => ({ message: "Não autorizado" }))
@@ -47,7 +47,7 @@ export const useGetFollowing = (currentId: string, targetId: string) => {
 
     useEffect(() => {
         if (query.isError) {
-            showError(getErrorMessage(query.error, "Erro ao carregar lista de seguidos"))
+            showError(getErrorMessage(query.error, "Erro ao carregar lista de seguidores"))
         }
     }, [query.error, query.isError, showError])
 

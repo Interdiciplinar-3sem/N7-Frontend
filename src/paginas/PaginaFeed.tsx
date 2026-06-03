@@ -4,18 +4,18 @@ import { CardResumo } from "../componentes/ui/cardResumo";
 import { useOutletContext } from "react-router-dom";
 import type { ContextPropsType } from "../types/contextPropsType";
 import { useGetFeed } from "../http/feed/useGetFeed";
-import { useGetAllSummary } from "../http/summary/useGetAllSummary";
 import { useGetRanking } from "../http/feed/useGetRanking";
-import { useGetFollowing } from "../http/follow/useGetFollowing";
+import { useGetFollowingMe } from "../http/follow/useGetFollowingMe";
 import { Link } from "react-router-dom";
+import { useGetSummaryActivated } from "../http/summary/useGetSummaryActivated";
 
 export function PaginaFeed() {
     const parentContext = useOutletContext<ContextPropsType>();
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
     const {data: resumosFeed} = parentContext.role === 'ALUNO' ? useGetFeed(parentContext.id) : { data: undefined };
     const {data: resumosRanking} = useGetRanking(parentContext.id)
-    const {data: resumos} = useGetAllSummary();
-    const {data: following} = parentContext.role === 'ALUNO' ? useGetFollowing(parentContext.id) : { data: undefined };
+    const {data: resumos} = useGetSummaryActivated();
+    const {data: following} = parentContext.role === 'ALUNO' ? useGetFollowingMe(parentContext.id) : { data: undefined };
 
     const resumosArray = activeTab === "explorar" ? resumos : activeTab === "seguindo" ? resumosFeed : resumosRanking;
     const items = resumosArray ?? [];
@@ -105,7 +105,7 @@ export function PaginaFeed() {
                 <div className="flex items-center justify-between gap-3">
                     <h2>Seguindo:</h2>
                 </div>
-                {following?.map((s) => {
+                {following?.map((s: any) => {
 
                     return (
                         <CardPerfil key={s.studentId} studentId={s.studentId} className="" nome={s.name} seguidores={s.seguidores} semestre={s.semestre} url={s.studentUrl}/>

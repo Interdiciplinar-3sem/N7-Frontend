@@ -6,7 +6,6 @@ import z from "zod";
 import { useCreateStudent } from "../../http/auth/useCreateStudent";
 import { useLogin } from "../../http/auth/useLogin";
 
-
 export function FormSignUp() {
 
     const {mutateAsync: signUp } = useCreateStudent();

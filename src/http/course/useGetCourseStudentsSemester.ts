@@ -29,6 +29,8 @@ export const useGetCourseStudentsSemester = (
 
             return result;
         },
+        staleTime: 1000 * 60  * 15,
+        retry: 2
     })
 
     useEffect(() => {
