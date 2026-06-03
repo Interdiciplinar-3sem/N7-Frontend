@@ -35,6 +35,10 @@ export function PaginaPerfil() {
     isUnfollowingPending
   } = usePaginaPerfil()
 
+  const others = openFollowersList
+    ? follwers.data
+    : follwing.data
+
   return (
     <main className="w-full min-h-screen p-4">
       <div className="font-sans min-h-dvh bg-zinc-100 flex flex-col pb-30">
@@ -118,7 +122,7 @@ export function PaginaPerfil() {
               backLabel="Voltar ao perfil"
               isPending={isPending}
               pendingLabel="Carregando usuários"
-              items={follwing?.data}
+              items={others}
               emptyMessage={openFollowersList ? "Nenhum seguidor encontrado." : "Nenhum usuário seguido encontrado."}
               renderItem={(user) => (
                 <CardPerfil

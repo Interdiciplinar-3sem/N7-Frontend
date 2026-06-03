@@ -11,7 +11,7 @@ export const useGetFollowingMe = (id: string) => {
 
     const query = useQuery({
         queryKey: ["get-following", id],
-        queryFn: async () => {
+        queryFn: async (): Promise<ResponseGetFollowingType[]> => {
             const response = await authFecth(`${API_URL}/follow/following/me?limit=20`)
 
             if (response.status === 401) {

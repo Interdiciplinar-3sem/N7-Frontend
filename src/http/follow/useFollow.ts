@@ -47,6 +47,8 @@ export const useFollow = (targetStudentId: string, currentUserId: string) => {
             }
         },
         onSuccess: async (result) => {
+            await queryClient.invalidateQueries({ queryKey: ["get-followers", currentUserId, targetStudentId] })
+            await queryClient.invalidateQueries({ queryKey: ["get-following", currentUserId, targetStudentId] })
             await queryClient.invalidateQueries({ queryKey: ["get-student", targetStudentId] })
             await queryClient.invalidateQueries({ queryKey: ["get-student-me", currentUserId] })
             await queryClient.invalidateQueries({ queryKey: ["get-following", currentUserId] })

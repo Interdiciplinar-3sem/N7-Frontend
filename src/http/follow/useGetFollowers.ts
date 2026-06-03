@@ -11,7 +11,7 @@ export const useGetFollowers = (currentId: string, targetId: string) => {
 
     const query = useQuery({
         queryKey: ["get-followers", currentId, targetId],
-        queryFn: async () => {
+        queryFn: async (): Promise<ResponseGetFollowingType[]> => {
             const response = await authFecth(`${API_URL}/follow/followers/${targetId}?limit=20`)
 
             if (response.status === 401) {
