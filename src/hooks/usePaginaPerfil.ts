@@ -12,8 +12,11 @@ import type { PerfilUser } from "../componentes/perfil/types"
 import { usePaginaPerfilModais } from "./usePaginaPerfilModais"
 import { useFollow } from "../http/follow/useFollow"
 import { useUnFollow } from "../http/follow/useUnFollow"
+import { useGetFollowers } from "../http/follow/useGetFollowers"
+import { useGetFollowing } from "../http/follow/useGetFollowing"
 
 export function usePaginaPerfil() {
+  const { modais, filteredAvatars, handlers } = usePaginaPerfilModais()
   const parentContext = useOutletContext<ContextPropsTypeNetwork>()
   const navigate = useNavigate()
   const { studentId: routeId } = useParams<{ studentId?: string }>()
@@ -40,6 +43,9 @@ export function usePaginaPerfil() {
   const studentData = isOwnProfile ? myPerfil.data : otherPerfil.data
   const isPending = isOwnProfile ? myPerfil.isPending : otherPerfil.isPending
 
+  const follwers = useGetFollowers(viewerStudentId, profileStudentId);
+  const follwing = useGetFollowing(viewerStudentId, profileStudentId);
+
   const currentCourseId = String(studentData?.course?.id ?? "")
   const currentSemester = String(studentData?.semestre ?? "")
 
@@ -48,24 +54,24 @@ export function usePaginaPerfil() {
   })
 
   const biosQuery = useGetBios({
-    enabled: isAluno
+    enabled: isAluno && modais.openBioPicker && !!profileStudentId
   })
-  const bios = biosQuery.data?.filter((bio) => bio.ativo) ?? []
-
+  
   const otherCourseSubjects = useGetCourseSubjectsSemester(currentCourseId, currentSemester, {
     enabled: isAluno && !isOwnProfile && !!currentCourseId && !!currentSemester
   })
-
+  
   const subjects = isOwnProfile ? (myCourseSubjects.data ?? []) : (otherCourseSubjects.data ?? [])
   const isLoadingSubjects = isOwnProfile ? myCourseSubjects.isPending : otherCourseSubjects.isPending
-
+  
   const { mutateAsync: updateStudent } = useUpdateStudent(viewerStudentId || profileStudentId)
   const currentUserId = String(parentContext?.id ?? "")
-
+  
   const {mutateAsync: followUser, isPending: isFollowingPending} = useFollow(profileStudentId, currentUserId)
   const {mutateAsync: unfollowUser, isPending: isUnfollowingPending} = useUnFollow(profileStudentId, currentUserId)
+  
+  const bios = biosQuery.data ? biosQuery.data.filter((bio) => bio.ativo) : []
 
-  const { modais, filteredAvatars, handlers } = usePaginaPerfilModais()
   const [user, setUser] = useState<PerfilUser>({
     nome: "",
     curso: "",
@@ -87,7 +93,9 @@ export function usePaginaPerfil() {
       curso: studentData.course?.name ?? "",
       faculdade: studentData.course?.university?.name ?? "",
       descricao: studentData.bio ?? "",
-      avatar: studentData.avatar ?? null
+      avatar: studentData.avatar ?? null,
+      seguidores: studentData.seguidores,
+      seguindo: studentData.seguindo
     }))
   }, [studentData])
 
@@ -153,6 +161,8 @@ export function usePaginaPerfil() {
 
   return {
     user,
+    follwers,
+    follwing,
     subjects,
     isOwnProfile,
     isAluno,

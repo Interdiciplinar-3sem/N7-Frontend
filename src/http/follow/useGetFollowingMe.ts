@@ -6,13 +6,13 @@ import type { ResponseGetFollowingType } from "../types/responseGetFollwingType"
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 
-export const useGetFollowing = (currentId: string, targetId: string) => {
+export const useGetFollowingMe = (id: string) => {
     const { showError } = useToast()
 
     const query = useQuery({
-        queryKey: ["get-following", currentId, targetId],
+        queryKey: ["get-following", id],
         queryFn: async (): Promise<ResponseGetFollowingType[]> => {
-            const response = await authFecth(`${API_URL}/follow/following/${targetId}?limit=20`)
+            const response = await authFecth(`${API_URL}/follow/following/me?limit=20`)
 
             if (response.status === 401) {
                 const errorBody = await response.json().catch(() => ({ message: "Não autorizado" }))

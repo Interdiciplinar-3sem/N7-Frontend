@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { avatarOptions, type AvatarGender } from "../types/AvatarTypes"
 
 export function usePaginaPerfilModais() {
@@ -9,6 +9,15 @@ export function usePaginaPerfilModais() {
     const [showForm, setShowForm] = useState(false)
     const [isOptionsFormOpen, setIsOptionsFormOpen] = useState(false)
     const [selectedResumoId, setSelectedResumoId] = useState<string | null>(null)
+    const [openFollowersList, setOpenFollowersList] = useState(false)
+    const [openFollowingList, setOpenFollowingList] = useState(false)
+
+    useEffect(() => {
+        avatarOptions.forEach(element => {
+            const img = new Image()
+            img.src = element.url
+        });
+    }, [])
 
     const filteredAvatars = useMemo(() => {
         if (selectedGender === 'all') return avatarOptions
@@ -31,7 +40,11 @@ export function usePaginaPerfilModais() {
             setSelectedGender,
             setShowForm,
             setIsOptionsFormOpen,
-            setSelectedResumoId
+            setSelectedResumoId,
+            openFollowersList,
+            setOpenFollowersList,
+            openFollowingList,
+            setOpenFollowingList
         },
         filteredAvatars,
         handlers: {

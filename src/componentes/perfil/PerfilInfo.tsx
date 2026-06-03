@@ -1,10 +1,11 @@
 import type { PerfilUser } from './types'
 
 type PerfilInfoProps = {
+  isOwnProfile: boolean
   user: PerfilUser
 }
 
-export function PerfilInfo({ user }: PerfilInfoProps) {
+export function PerfilInfo({ user, isOwnProfile }: PerfilInfoProps) {
   return (
     <div className="flex-1">
       <h2 className="text-xs lg:text-2xl font-bold">
@@ -16,7 +17,7 @@ export function PerfilInfo({ user }: PerfilInfoProps) {
       <p className="text-zinc-500">{user.faculdade || 'Faculdade'}</p>
 
       <p className="text-zinc-400 mt-3">
-        {user.descricao || 'Adicione uma bio...'}
+        {user.descricao || (isOwnProfile ? 'Adicione uma descrição ao seu perfil' : 'Este usuário ainda não adicionou uma descrição.')}
       </p>
     </div>
   )

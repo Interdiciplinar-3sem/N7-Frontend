@@ -22,4 +22,6 @@ export type ResponseGetStudentType = {
         };
         seguidoPeloCurrentUser?: boolean;
         seguindoCurrentUser?: boolean;
+        seguidores: number;
+        seguindo: number;
 }

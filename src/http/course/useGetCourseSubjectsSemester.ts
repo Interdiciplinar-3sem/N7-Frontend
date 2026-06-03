@@ -30,7 +30,9 @@ export const useGetCourseSubjectsSemester = (
 
             return result;
         },
-        ...options
+        ...options,
+        staleTime: 1000 * 60  * 15,
+        retry: 2
     })
 
     useEffect(() => {

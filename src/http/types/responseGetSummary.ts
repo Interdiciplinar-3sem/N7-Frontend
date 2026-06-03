@@ -16,4 +16,5 @@ export type ResponseGetSummaryType = {
         id?: string,
         name?: string,
     },
+    tags?: string[]
 }

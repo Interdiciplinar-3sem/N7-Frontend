@@ -17,6 +17,8 @@ export const useGetCourseSubjects = (courseId: string) => {
             const result: ResponseGetCourseSubjectsType[] = responseBody.trim()
                 ? JSON.parse(responseBody) : [{ message: "Sucesso ao buscar resumo!" }];
             return result;
-        }
+        },
+        staleTime: 1000 * 60  * 15,
+        retry: 2
     })
 }

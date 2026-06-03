@@ -9,10 +9,14 @@ import { PerfilTurmasSection } from '../componentes/perfil/PerfilTurmasSection'
 import { PerfilSkeleton } from '../componentes/Skeleton/PerfilSkeleton'
 import { ViweSummary } from '../componentes/ViweSummary'
 import { usePaginaPerfil } from '../hooks/usePaginaPerfil'
+import { StudentsListPage } from '../componentes/ui/StudentsListPage'
+import { CardPerfil } from '../componentes/ui/cardPerfil'
 
 export function PaginaPerfil() {
   const {
     user,
+    follwing,
+    follwers,
     subjects,
     isOwnProfile,
     isPending,
@@ -22,10 +26,18 @@ export function PaginaPerfil() {
     selectedResumoId,
     setSelectedResumoId,
     modais,
+    modais: {
+      openFollowersList,
+      openFollowingList
+    },
     actions,
     isFollowingPending,
     isUnfollowingPending
   } = usePaginaPerfil()
+
+  const others = openFollowersList
+    ? follwers.data
+    : follwing.data
 
   return (
     <main className="w-full min-h-screen p-4">
@@ -36,12 +48,14 @@ export function PaginaPerfil() {
           ) : (
             <div className="bg-zinc-100 rounded-2xl p-10 pb-24 flex flex-col md:flex-row items-center md:items-start gap-6 max-w-225 mx-auto relative shadow-md">
               <PerfilAvatarCard
+                isOwnProfile={isOwnProfile}
                 user={user}
-                openFotoMenu={modais.openFotoMenu}
                 onOpenAvatarPicker={actions.openAvatarPicker}
+                setOpenFollowingList={modais.setOpenFollowingList}
+                setOpenFollowersList={modais.setOpenFollowersList}
               />
 
-              <PerfilInfo user={user} />
+              <PerfilInfo user={user} isOwnProfile={isOwnProfile} />
 
               <PerfilActions
                 isFollowingPending={isFollowingPending}
@@ -99,6 +113,33 @@ export function PaginaPerfil() {
               />
             </>
           )}
+          <StudentsListPage
+              setOpenFollowersList={modais.setOpenFollowersList}
+              setOpenFollowingList={modais.setOpenFollowingList}
+              title={openFollowersList ? "Seguidores" : "Seguindo"}
+              isOpen={openFollowersList || openFollowingList}
+              description="Lista de usuários que seguem este perfil"
+              backLabel="Voltar ao perfil"
+              isPending={isPending}
+              pendingLabel="Carregando usuários"
+              items={others}
+              emptyMessage={openFollowersList ? "Nenhum seguidor encontrado." : "Nenhum usuário seguido encontrado."}
+              renderItem={(user) => (
+                <CardPerfil
+                   onSelectUser={() => {
+                    modais.setOpenFollowersList(false);
+                    modais.setOpenFollowingList(false);
+                  }}
+                  key={user.studentId}
+                  studentId={user.studentId}
+                  nome={user.name}
+                  seguidores={user.seguidores}
+                  semestre={user.semestre}
+                  url={user.studentUrl}
+                  className="w-full max-w-none"
+                />
+              )}
+            />
         </section>
       </div>
     </main>

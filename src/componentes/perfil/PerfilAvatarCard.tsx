@@ -2,14 +2,19 @@ import { Camera } from 'lucide-react'
 import type { PerfilUser } from './types'
 
 type PerfilAvatarCardProps = {
+  isOwnProfile: boolean
   user: PerfilUser
-  openFotoMenu: boolean
+  setOpenFollowingList: (open: boolean) => void
+  setOpenFollowersList: (open: boolean) => void
   onOpenAvatarPicker: () => void
 }
 
 export function PerfilAvatarCard({
+  isOwnProfile,
   user,
   onOpenAvatarPicker,
+  setOpenFollowersList,
+  setOpenFollowingList,
 }: PerfilAvatarCardProps) {
   return (
     <div className="foto-area flex flex-col items-center relative">
@@ -29,12 +34,13 @@ export function PerfilAvatarCard({
           }}
         />
 
-        <button
-          type="button"
-          onClick={onOpenAvatarPicker}
-          className="
-            absolute
-            bottom-0
+        {isOwnProfile && (
+          <button
+            type="button"
+            onClick={onOpenAvatarPicker}
+            className="
+              absolute
+              bottom-0
             right-0
             w-10
             h-10
@@ -55,15 +61,16 @@ export function PerfilAvatarCard({
             size={18} className="text-gray-500"
           />
         </button>
+      )}
       </div>
 
       <div className="mt-6 flex gap-6 justify-center text-zinc-500">
-        <div>
+        <button onClick={() => setOpenFollowersList(true)}>
           <strong>{user.seguidores}</strong>
           <div className="text-xs">seguidores</div>
-        </div>
+        </button>
 
-        <div>
+        <div onClick={() => setOpenFollowingList(true)} className="cursor-pointer">
           <strong>{user.seguindo}</strong>
           <div className="text-xs">seguindo</div>
         </div>
