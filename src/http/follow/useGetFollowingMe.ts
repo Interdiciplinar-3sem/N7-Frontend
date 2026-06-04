@@ -43,6 +43,7 @@ export const useGetFollowingMe = (id: number) => {
         retry: false,
         refetchOnMount: false,
         staleTime: 1000 * 60 * 5,
+        enabled: !!id
     })
 
     useEffect(() => {

@@ -16,7 +16,7 @@ export const useDeleteSummary = (id: number) => {
             })
 
             if(!response.ok){
-                throw new Error("Erro ao deletar resumo!"); //precisa cobrir mais excessões posteriormente
+                throw new Error("Erro ao deletar resumo!"); 
             }
 
             const responseBody = await response.text();

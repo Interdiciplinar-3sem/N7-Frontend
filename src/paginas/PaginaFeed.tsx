@@ -13,10 +13,10 @@ import { ViweSummary } from "../componentes/ViweSummary";
 export function PaginaFeed() {
     const parentContext = useOutletContext<ContextPropsType>();
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
-    const {data: resumosFeed} = parentContext.role === 'ALUNO' ? useGetFeed(parentContext.id) : { data: undefined };
-    const {data: resumosRanking} = useGetRanking(parentContext.id)
+    const {data: resumosRanking} = useGetRanking(parentContext.studentId)
     const {data: resumos} = useGetSummaryActivated();
-    const {data: following} = parentContext.role === 'ALUNO' ? useGetFollowingMe(parentContext.id) : { data: undefined };
+    const {data: resumosFeed} = useGetFeed(parentContext.studentId);
+    const {data: following} = useGetFollowingMe(parentContext.studentId);
     const [selectedResumoId, setSelectedResumoId] = useState<number | null>(null);
 
     const resumosArray = activeTab === "explorar" ? resumos : activeTab === "seguindo" ? resumosFeed : resumosRanking;

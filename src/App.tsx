@@ -41,9 +41,9 @@ export function App() {
           <Routes>
             <Route element={<LayoutDefault />}>
               <Route element={<PaginaInicial />} path='/' />
+            </Route>
               <Route element={<PaginaCadastro />} path='/cadastro' />
               <Route element={<PaginaLogin />} path='/login' />
-            </Route>
               <Route element={<ProtectedRoute />}>
                 <Route element={<LayoutNetwork />}>
                   <Route element={<PaginaResumo />} path='/resumo/:id' />

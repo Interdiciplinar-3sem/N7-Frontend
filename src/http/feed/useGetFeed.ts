@@ -41,7 +41,8 @@ export const useGetFeed = (id: number) => {
             return data;
         },
         staleTime: 1000 * 60 * 5,
-        retry: false
+        retry: false,
+        enabled: !!id
     })
 
     useEffect(() => {
