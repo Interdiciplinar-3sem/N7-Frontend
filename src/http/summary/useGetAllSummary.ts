@@ -6,7 +6,7 @@ import { API_URL } from "../api";
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 
-export const useGetAllSummary = (searchTerm?: string) => {
+export const useGetAllSummary = () => {
     const { showError } = useToast()
 
     const query = useQuery({
