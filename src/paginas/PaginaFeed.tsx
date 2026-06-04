@@ -8,6 +8,7 @@ import { useGetRanking } from "../http/feed/useGetRanking";
 import { useGetFollowingMe } from "../http/follow/useGetFollowingMe";
 import { Link } from "react-router-dom";
 import { useGetSummaryActivated } from "../http/summary/useGetSummaryActivated";
+import { ViweSummary } from "../componentes/ViweSummary";
 
 export function PaginaFeed() {
     const parentContext = useOutletContext<ContextPropsType>();
@@ -16,6 +17,7 @@ export function PaginaFeed() {
     const {data: resumosRanking} = useGetRanking(parentContext.id)
     const {data: resumos} = useGetSummaryActivated();
     const {data: following} = parentContext.role === 'ALUNO' ? useGetFollowingMe(parentContext.id) : { data: undefined };
+    const [selectedResumoId, setSelectedResumoId] = useState<string | null>(null);
 
     const resumosArray = activeTab === "explorar" ? resumos : activeTab === "seguindo" ? resumosFeed : resumosRanking;
     const items = resumosArray ?? [];
@@ -82,7 +84,7 @@ export function PaginaFeed() {
                             let cor = cores[index % cores.length]
 
                             return (
-                                <CardResumo key={resumo.summaryId} titulo={resumo.titulo} texto={resumo.conteudo} formato={formato} cor={cor} imageUrl={resumo.studentUrl} studentName={resumo.studentNome} curtidas={resumo.totalCurtidas} />
+                                <CardResumo key={resumo.summaryId} summaryId={resumo.summaryId} setViewSummary={setSelectedResumoId} titulo={resumo.titulo} texto={resumo.conteudo} formato={formato} cor={cor} imageUrl={resumo.studentUrl} studentName={resumo.studentNome} curtidas={resumo.totalCurtidas} />
                             )
                         })
                     )}
@@ -94,11 +96,18 @@ export function PaginaFeed() {
                         if(index % 5 === 3) formato = "vertical";
 
                         return (
-                            <CardResumo key={`ph-${i}`} titulo={""} texto={""} formato={formato} cor={"invisivel" as any} invisivel={true} imageUrl={""} studentName={""}/>
+                            <CardResumo key={`ph-${i}`} summaryId={`ph-${i}`} setViewSummary={setSelectedResumoId} titulo={""} texto={""} formato={formato} cor={"invisivel" as any} invisivel={true} imageUrl={""} studentName={""}/>
                         )
                     })}
 
                 </section>
+
+                {selectedResumoId && (
+                    <ViweSummary
+                        id={selectedResumoId}
+                        onClose={() => setSelectedResumoId(null)}
+                    />
+                )}
             </section>
 
             <section className={`hidden min-w-72 xl:w-96 lg:flex lg:flex-col gap-3`}>

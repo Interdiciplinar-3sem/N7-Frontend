@@ -12,7 +12,7 @@ type ViweSummaryProps = {
 
 export const ViweSummary = ({ id, onClose, materia }: ViweSummaryProps) => {
     const { data, isPending, isError } = useGetSummaryId(id);
-    const materiaNome = materia ?? data?.subjectName ?? data?.materia ?? data?.disciplina ?? data?.subject?.name ?? "Matéria não informada"
+    const materiaNome = materia ?? data?.subjectName ?? data?.subjectNome ?? data?.disciplina ?? data?.subject?.name ?? "Matéria não informada"
     const navigate = useNavigate();
 
     useEffect(() => {
