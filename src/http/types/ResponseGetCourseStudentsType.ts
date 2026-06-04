@@ -1,5 +1,5 @@
 export type ResponseCreateSummaryType = {
-    studentId: string;
+    studentId: number;
     nome: string;
     semestre: number;
     url: string;

@@ -7,7 +7,7 @@ import { useToast } from "../../contexto/toastContext";
 import { getErrorMessage } from "../utils/getErrorMessage";
 
 export const useGetCourseStudentsSemester = (
-    courseId: string,
+    courseId: number,
     semestre: number,
 ) => {
     const { showError } = useToast()

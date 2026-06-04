@@ -7,7 +7,7 @@ export const useUpdateSubjectStatus = () => {
 
     return useMutation({
         mutationKey: ["put-status-subject"],
-        mutationFn: async (subjectId: string): Promise<{ message: string }> => {
+        mutationFn: async (subjectId: number): Promise<{ message: string }> => {
             try {
                 const response = await authFecth(`${API_URL}/subjects/atualizar_status/${subjectId}`, {
                     method: "PATCH",

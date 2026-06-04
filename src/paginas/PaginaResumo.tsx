@@ -16,13 +16,14 @@ import { useToast } from "../contexto/toastContext";
 export function PaginaResumo() {
     const parentContext = useOutletContext<ContextPropsType>();
     const { id } = useParams();
-    const {mutateAsync: update, isPending: isPendingUpdate} = useUpdateSummary(id ?? "");
-    const { data: resumo, isPending: isPendingSummary, isError } = useGetSummaryId(id ?? "");
+    const summaryId = Number(id) || 0;
+    const {mutateAsync: update, isPending: isPendingUpdate} = useUpdateSummary(summaryId);
+    const { data: resumo, isPending: isPendingSummary, isError } = useGetSummaryId(summaryId);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const isOwner = parentContext.studentId === resumo?.studentId;
-    const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
+    const [selectedTagIds, setSelectedTagIds] = useState<number[]>([])
     const [isPublic, setIsPublic] = useState(resumo?.publico)
-    const { data: subjects } = useGetCourseSubjectsSemesterMe(id ?? "");
+    const { data: subjects } = useGetCourseSubjectsSemesterMe(summaryId);
     const tags = resumo?.tags?.map(tag => tag.id);
     const {showSuccess, showError} = useToast();
 

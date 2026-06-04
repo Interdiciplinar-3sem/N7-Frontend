@@ -5,14 +5,14 @@ import { Expand, GraduationCap, Heart, X } from "lucide-react"
 import { useNavigate } from "react-router"
 
 type ViweSummaryProps = {
-    id: string
+    id: number;
     onClose: () => void
     materia?: string
 }
 
 export const ViweSummary = ({ id, onClose, materia }: ViweSummaryProps) => {
     const { data, isPending, isError } = useGetSummaryId(id);
-    const materiaNome = materia ?? data?.subjectName ?? data?.subjectNome ?? data?.disciplina ?? data?.subject?.name ?? "Matéria não informada"
+    const materiaNome = materia ?? data?.subjectNome ?? "Matéria não informada"
     const navigate = useNavigate();
 
     useEffect(() => {

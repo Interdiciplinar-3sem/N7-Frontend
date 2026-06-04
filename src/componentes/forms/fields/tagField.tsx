@@ -3,15 +3,15 @@ import { useGetAllTags } from "../../../http/tags/useGetAllTags"
 import type { ResponseGetTagsType } from "../../../http/types/responseGetTagsType";
 
 type TagFieldProps = {
-    setSelectedTagIds: React.Dispatch<React.SetStateAction<string[]>>,
-    tags?: string[],
+    setSelectedTagIds: React.Dispatch<React.SetStateAction<number[]>>,
+    tags?: number[],
 }
 
 export const TagField = (props: TagFieldProps) => {
     const { data: tags } = useGetAllTags();
     const [isTagListOpen, setIsTagListOpen] = useState(false)
     const [tagSearch, setTagSearch] = useState("")
-    const [selectedTags, setSelectedTags] = useState<{id: string; name: string}[]>([])
+    const [selectedTags, setSelectedTags] = useState<{id: number; name: string}[]>([])
     const availableTags = (Array.isArray(tags) ? tags : [])
     const selectedTagIds = useMemo(() => new Set(selectedTags.map((tag) => tag.id)), [selectedTags])
     const filteredTags = useMemo(() => {
@@ -36,11 +36,11 @@ export const TagField = (props: TagFieldProps) => {
         }
     }, [tags])
 
-    const getTagId = (tag: any) => String(tag?.id ?? "")
+    const getTagId = (tag: any) => tag?.id ?? 0
 
     const getTagName = (tag: any) => String(tag?.name ?? tag?.nome ?? tag?.title ?? "").trim()
 
-    const addTagById = (tagId: string) => {
+    const addTagById = (tagId: number) => {
         if (!tagId) return
         const tag = availableTags.find((tag: ResponseGetTagsType) => tag?.id === tagId) 
         if (!tag) return
@@ -53,7 +53,7 @@ export const TagField = (props: TagFieldProps) => {
         setIsTagListOpen(false)
         }
 
-    const removeTag = (tagId: string) => {
+    const removeTag = (tagId: number) => {
         setSelectedTags(prev => prev.filter(t => t.id !== tagId))
     }
 

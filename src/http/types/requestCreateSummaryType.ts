@@ -1,7 +1,7 @@
 export type RequestCreateSummaryType = {
     titulo: string,
     conteudo: string,
-    subjectId: string,
-    tags_ids?: string[],
+    subjectId: number,
+    tags_ids?: number[],
     publico?: boolean
 }

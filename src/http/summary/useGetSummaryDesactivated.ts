@@ -17,12 +17,19 @@ export const useGetSummaryDesactivated = () => {
                 ? JSON.parse(responseBody) : [{ message: "Sucesso ao buscar resumo desativados!" }];
 
             const data = result.map((item) => ({
-                studentId: item.studentId,
+                 studentId: item.studentId,
                 summaryId: item.summaryId,
                 titulo: item.titulo,
-                conteudo: item.conteudo.slice(0, 100) + (item.conteudo.length > 100 ? "..." : ""),
+                conteudo: item.conteudo,
                 reports: item.reports ?? 0,
-                ativo: item.ativo
+                ativo: item.ativo,
+                studentUrl: item.studentUrl ?? "/avatares/default.svg",
+                studentNome: item.studentNome,
+                totalCurtidas: item.totalCurtidas ?? 0,
+                subjectId: item.subjectId,
+                subjectNome: item.subjectNome,
+                publico: item.publico,
+                tags: item.tags
             }))
             return data;
         },

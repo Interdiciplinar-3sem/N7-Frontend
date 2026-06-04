@@ -27,14 +27,14 @@ const cardStyle = tv({
 
 
 type CardProps = VariantProps<typeof cardStyle> & {
-    summaryId: string;
+    summaryId: number;
     titulo: string;
     texto: string;
     imageUrl?: string;
     studentName?: string;
     className?: string;
     curtidas?: number;
-    setViewSummary?: (id: string) => void;
+    setViewSummary?: (id: number) => void;
 }
 
 export function CardResumo({summaryId, titulo, texto, imageUrl, studentName, className, formato, cor, curtidas, setViewSummary }: CardProps) {

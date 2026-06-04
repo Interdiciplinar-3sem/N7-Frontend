@@ -1,6 +1,6 @@
 export type ResponseGetCourseType = {
     ativo: boolean,
-    id: string,
+    id: number,
     name: string,
     descricao: string,
 }

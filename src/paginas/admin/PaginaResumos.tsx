@@ -11,9 +11,9 @@ export function PaginaResumos() {
     const {data} = useGetAllSummary();
     const {data: dataDesactivated} = useGetSummaryDesactivated();
     const {mutateAsync: updateStatusSummary} = useUpdateStatusSummary();
-    const [updateSummaryId, setUpdateSummaryId] = useState<string | null>(null)
+    const [updateSummaryId, setUpdateSummaryId] = useState<number | null>(null)
     const [isSummaryOpen, setIsSummaryOpen] = useState(false);
-    const [selectedSummaryId, setSelectedSummaryId] = useState<string | null>(null);
+    const [selectedSummaryId, setSelectedSummaryId] = useState<number | null>(null);
 
     const columns: Column<ResponseGetSummaryType>[] = [
         { key: "studentId", header: "ID estudante" },
@@ -49,7 +49,7 @@ export function PaginaResumos() {
             }
         }
     ]
-    const handdleUpdateSummary = async (summaryId: string) => {
+    const handdleUpdateSummary = async (summaryId: number) => {
         setUpdateSummaryId(summaryId);
 
         try {
@@ -79,7 +79,7 @@ export function PaginaResumos() {
 
             {isSummaryOpen && (
                 <ViweSummary
-                    id={selectedSummaryId ?? ""}
+                    id={selectedSummaryId ?? 0}
                     onClose={() => {
                         setIsSummaryOpen(false)
                         setSelectedSummaryId(null)

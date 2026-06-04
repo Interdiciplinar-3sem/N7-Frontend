@@ -17,7 +17,7 @@ export function PaginaFeed() {
     const {data: resumosRanking} = useGetRanking(parentContext.id)
     const {data: resumos} = useGetSummaryActivated();
     const {data: following} = parentContext.role === 'ALUNO' ? useGetFollowingMe(parentContext.id) : { data: undefined };
-    const [selectedResumoId, setSelectedResumoId] = useState<string | null>(null);
+    const [selectedResumoId, setSelectedResumoId] = useState<number | null>(null);
 
     const resumosArray = activeTab === "explorar" ? resumos : activeTab === "seguindo" ? resumosFeed : resumosRanking;
     const items = resumosArray ?? [];
@@ -96,7 +96,7 @@ export function PaginaFeed() {
                         if(index % 5 === 3) formato = "vertical";
 
                         return (
-                            <CardResumo key={`ph-${i}`} summaryId={`ph-${i}`} setViewSummary={setSelectedResumoId} titulo={""} texto={""} formato={formato} cor={"invisivel" as any} invisivel={true} imageUrl={""} studentName={""}/>
+                            <CardResumo key={`ph-${i}`} summaryId={i} setViewSummary={setSelectedResumoId} titulo={""} texto={""} formato={formato} cor={"invisivel" as any} invisivel={true} imageUrl={""} studentName={""}/>
                         )
                     })}
 

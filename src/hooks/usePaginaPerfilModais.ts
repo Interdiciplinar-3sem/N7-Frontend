@@ -8,7 +8,7 @@ export function usePaginaPerfilModais() {
     const [selectedGender, setSelectedGender] = useState<AvatarGender>('all')
     const [showForm, setShowForm] = useState(false)
     const [isOptionsFormOpen, setIsOptionsFormOpen] = useState(false)
-    const [selectedResumoId, setSelectedResumoId] = useState<string | null>(null)
+    const [selectedResumoId, setSelectedResumoId] = useState<number | null>(null)
     const [openFollowersList, setOpenFollowersList] = useState(false)
     const [openFollowingList, setOpenFollowingList] = useState(false)
 

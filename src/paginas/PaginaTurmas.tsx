@@ -20,9 +20,9 @@ const semesterOptions = [1, 2, 3, 4, 5, 6]
 export function PaginaTurmas() {
   const parentContext = useOutletContext<ContextPropsTypeNetwork>()
   const [activeTab, setActiveTab] = useState<(typeof tabOptions)[number]["id"]>("materias")
-  const { data: turmas } = useGetCourseSubjectsSemesterMe(String(parentContext?.studentId ?? ""))
-  const [selectedTurmaId, setSelectedTurmaId] = useState<string | null>(null)
-  const [selectedResumoId, setSelectedResumoId] = useState<string | null>(null)
+  const { data: turmas } = useGetCourseSubjectsSemesterMe(parentContext?.studentId ?? 0)
+  const [selectedTurmaId, setSelectedTurmaId] = useState<number | null>(null)
+  const [selectedResumoId, setSelectedResumoId] = useState<number | null>(null)
   const [selectedSemester, setSelectedSemester] = useState<number | null>(null)
 
   useEffect(() => {
@@ -55,8 +55,8 @@ export function PaginaTurmas() {
     }
   }, [selectedSemester, selectedTurma?.semestre])
 
-  const { data: students, isPending: isStudentsPending } = useGetCourseStudentsSemester("1", semesterToExplore)
-  const { data: resumos, isPending } = useGetSummarySubjectId(selectedTurmaId ?? "")
+  const { data: students, isPending: isStudentsPending } = useGetCourseStudentsSemester(1, semesterToExplore)
+  const { data: resumos, isPending } = useGetSummarySubjectId(selectedTurmaId ?? 0)
 
   return (
     <main className="min-h-screen w-full bg-[radial-gradient(circle_at_top,#f4f7ff_0%,#f8fafc_42%,#f1f5f9_100%)] px-4 py-6 text-zinc-900 sm:px-6 lg:px-8">

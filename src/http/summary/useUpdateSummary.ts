@@ -4,7 +4,7 @@ import type { ResponseUpdateSummaryType } from "../types/responseUpdateSummaryTy
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 
-export const useUpdateSummary = (summaryId: string) => {
+export const useUpdateSummary = (summaryId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({

@@ -2,7 +2,7 @@ import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
 
 type SeloRow = {
-    id: string;
+    id: number;
     nome: string;
     criterio: string;
     obtidos: number;
@@ -10,9 +10,9 @@ type SeloRow = {
 }
 
 const data: SeloRow[] = [
-    { id: "1", nome: "Colaborador", criterio: "10 resumos aprovados", obtidos: 14, status: "Ativo" },
-    { id: "2", nome: "Expert", criterio: "20 resumos publicados", obtidos: 8, status: "Ativo" },
-    { id: "3", nome: "Veterano", criterio: "1 ano de atividade", obtidos: 4, status: "Rascunho" },
+    { id: 1, nome: "Colaborador", criterio: "10 resumos aprovados", obtidos: 14, status: "Ativo" },
+    { id: 2, nome: "Expert", criterio: "20 resumos publicados", obtidos: 8, status: "Ativo" },
+    { id: 3, nome: "Veterano", criterio: "1 ano de atividade", obtidos: 4, status: "Rascunho" },
 ]
 
 const columns: Column<SeloRow>[] = [

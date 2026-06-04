@@ -1,8 +1,8 @@
 import type { TagType } from "./TagType"
 
 export type ResponseGetSummaryType = {
-    studentId: string,
-    summaryId: string,
+    studentId: number,
+    summaryId: number,
     titulo: string,
     conteudo: string,
     reports: number,
@@ -12,7 +12,6 @@ export type ResponseGetSummaryType = {
     studentNome: string,
     subjectId: number,
     subjectNome: string,
-    disciplina: string,
     publico: boolean,
     tags?: TagType[]
 }

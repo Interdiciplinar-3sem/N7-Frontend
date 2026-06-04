@@ -1,8 +1,8 @@
 export type ResponseGetSubjectType = {
-    id: string
+    id: number
     name: string
     semestre: number
-    courseId: string
+    courseId: number
     courseName: string
     ativo: boolean
 }

@@ -7,7 +7,7 @@ import { useToast } from "../../contexto/toastContext";
 import { getErrorMessage } from "../utils/getErrorMessage";
 
 export const useGetCourseSubjectsSemesterMe = (
-    userId: string,
+    userId: number,
     options?: Omit<UseQueryOptions<ResponseGetCourseSubjectsType[]>, "queryKey" | "queryFn">
 ) => {
     const { showError } = useToast()
