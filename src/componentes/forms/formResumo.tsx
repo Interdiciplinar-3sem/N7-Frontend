@@ -14,32 +14,33 @@ type FormResumoProps = {
 }
 
 export function FormResumo({setIsFormOpen, parentContext}: FormResumoProps) {
-    const {id} = parentContext ? parentContext : {id: ""};
+    const {id} = parentContext ? parentContext : {id: 0};
+    const summaryId = Number(id) || 0;
 
     const [isPublic, setIsPublic] = useState(true)
     const {mutateAsync: summaryPost, isPending} = useSummaryPost();
     const { showSuccess } = useToast();
-    const { data: subjects } = useGetCourseSubjectsSemesterMe(id);
-    const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
+    const { data: subjects } = useGetCourseSubjectsSemesterMe(summaryId);
+    const [selectedTagIds, setSelectedTagIds] = useState<number[]>([])
 
     const formSchema = z.object({
         titulo: z.string().min(3, "O titulo deve ter ao menos 3 letras"),
         conteudo: z.string().min(50, "O resumo deve ter ao menos 50 letras"),
-        materia: z.string()
+        materia: z.number()
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
             titulo: "",
             conteudo: "",
-            materia: ""
+            materia: 0
         },
         resolver: zodResolver(formSchema)
     })
 
     const handdleForm = async (data: z.infer<typeof formSchema>) => {
        try {
-            if(data.materia === "Selecione uma matéria") {
+            if(data.materia === 0) {
                 form.setError("materia", {
                     type: "manual",
                     message: "Por favor, selecione uma matéria"
@@ -50,8 +51,8 @@ export function FormResumo({setIsFormOpen, parentContext}: FormResumoProps) {
             await summaryPost({
                 titulo: data.titulo,
                 conteudo: data.conteudo,
-                subjectId: data.materia,
-                tags_ids: selectedTagIds.length > 0 ? selectedTagIds : [],
+                subjectId: Number(data.materia),
+                tags_ids: selectedTagIds.map(Number),
                 publico: isPublic
             })
 
@@ -86,11 +87,11 @@ export function FormResumo({setIsFormOpen, parentContext}: FormResumoProps) {
                 <div className="flex flex-col space-y-2">
                     <label className="text-base sm:text-lg font-semibold text-[#22486E]" htmlFor="materia">Materia</label>
                     <select
-                        {...form.register("materia")}
-                        defaultValue="Selecione uma matéria"
+                        {...form.register("materia", {valueAsNumber: true})}
+                        defaultValue={0}
                         className="w-full rounded-xl bg-white px-3 py-2.5 border border-[#C9DFF5] outline-none focus:ring-2 focus:ring-[#7AB4EA]"
                     >
-                        <option value="Selecione uma materia">Selecione uma matéria</option>
+                        <option value={0}>Selecione uma matéria</option>
                         {subjects?.map((subject) => (
                             <option key={subject.id} value={subject.id}>{subject.name}</option>
                         ))}

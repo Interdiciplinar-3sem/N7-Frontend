@@ -1,5 +1,5 @@
 export type ResponseGetBiosType = {
     ativo: boolean;
-    id: string;
+    id: number;
     description: string;
 };

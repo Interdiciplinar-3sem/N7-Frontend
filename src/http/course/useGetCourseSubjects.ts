@@ -3,7 +3,7 @@ import { authFecth } from "../authFetch";
 import type { ResponseGetCourseSubjectsType } from "../types/responseGetCourseSubjects";
 import { API_URL } from "../api";
 
-export const useGetCourseSubjects = (courseId: string) => {
+export const useGetCourseSubjects = (courseId: number) => {
     return useQuery({
         queryKey: ["courseSubjects", courseId],
         queryFn: async () => {

@@ -6,7 +6,7 @@ import { useUpdateStudent } from "../../http/student/useUpdateStudent"
 import { useGetStudent } from "../../http/student/useGetStudent"
 
 type StudentEditFormProps = {
-    studentId: string
+    studentId: number
     onClose: () => void
 }
 

@@ -7,7 +7,7 @@ export const useUpdateCourseStatus = () => {
 
     return useMutation({
         mutationKey: ["put-status-course"],
-        mutationFn: async (courseId: string): Promise<{ message: string }> => {
+        mutationFn: async (courseId: number): Promise<{ message: string }> => {
             try {
                 const response = await authFecth(`${API_URL}/courses/atualizar_status/${courseId}`, {
                     method: "PATCH",

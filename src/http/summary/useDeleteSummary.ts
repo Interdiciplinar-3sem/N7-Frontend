@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 
-export const useDeleteSummary = (id: string) => {
+export const useDeleteSummary = (id: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({

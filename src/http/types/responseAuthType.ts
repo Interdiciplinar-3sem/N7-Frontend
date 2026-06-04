@@ -1,6 +1,6 @@
 export type ResponseAuthType = {
     status: boolean,
-    id: string,
-    studentId: string,
+    id: number,
+    studentId: number,
     role: string
 }

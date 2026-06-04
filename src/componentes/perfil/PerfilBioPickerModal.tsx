@@ -20,7 +20,7 @@ export function PerfilBioPickerModal({
   onSelectBio
 }: PerfilBioPickerModalProps) {
   const [viewMode, setViewMode] = useState<BioViewMode>('list')
-  const [selectedBioId, setSelectedBioId] = useState<string | null>(null)
+  const [selectedBioId, setSelectedBioId] = useState<number | null>(null)
 
   const selectedBio = useMemo(() => {
     return bios.find((bio) => bio.id === selectedBioId) ?? null

@@ -1,5 +1,5 @@
 export type ResponseGetUserType = {
-        userId: string;
+        userId: number;
         email: string;
         role: string;
         createdAt: string;

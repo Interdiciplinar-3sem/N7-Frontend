@@ -20,14 +20,14 @@ export function PaginaMaterias() {
     const { data, isPending } = useGetAllSubjects()
     const { data: dataDesactivated } = useGetSubjectsDesactivated()
     const { mutateAsync: updateSubjectStatus } = useUpdateSubjectStatus()
-    const [updatingSubjectId, setUpdatingSubjectId] = useState<string | null>(null)
+    const [updatingSubjectId, setUpdatingSubjectId] = useState<number | null>(null)
     const [isPostForm, setIsPostForm] = useState(false)
     
     const totalSubjects = isPending ? "carregando..." : data?.length ?? 0
     const totalInactiveSubjects = dataDesactivated?.length ?? 0
     
     console.log(data)
-    const handdleStatusUpdate = async (subjectId: string) => {
+    const handdleStatusUpdate = async (subjectId: number) => {
         setUpdatingSubjectId(subjectId)
 
         try {

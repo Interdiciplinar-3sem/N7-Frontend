@@ -30,7 +30,11 @@ export const useGetAllSummary = () => {
                 ativo: item.ativo,
                 studentUrl: item.studentUrl ?? "/avatares/default.svg",
                 studentNome: item.studentNome,
-                totalCurtidas: item.totalCurtidas ?? 0
+                totalCurtidas: item.totalCurtidas ?? 0,
+                subjectId: item.subjectId,
+                subjectNome: item.subjectNome,
+                publico: item.publico,
+                tags: item.tags
             }))
             return data;
         },

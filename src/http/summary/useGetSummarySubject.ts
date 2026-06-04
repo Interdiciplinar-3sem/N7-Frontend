@@ -7,7 +7,7 @@ import { useToast } from "../../contexto/toastContext";
 import { getErrorMessage } from "../utils/getErrorMessage";
 
 export const useGetSummarySubjectId = (
-    subjectId: string,
+    subjectId: number,
 ) => {
     const { showError } = useToast()
 

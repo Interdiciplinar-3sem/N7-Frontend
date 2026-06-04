@@ -7,7 +7,7 @@ export const useUpdateActiveStudent = () => {
 
     return useMutation({
         mutationKey: ["update-active-user"],
-        mutationFn: async (userId: string) => {
+        mutationFn: async (userId: number) => {
             const response = await authFecth(`${API_URL}/user/atualizar_status/${userId}`, {
                 method: "PATCH",
             })

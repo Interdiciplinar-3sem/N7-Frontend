@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 
-export const useUnFollow = (targetStudentId: string, currentUserId: string) => {
+export const useUnFollow = (targetStudentId: number, currentUserId: number) => {
     const queryClient = useQueryClient();
     const { showError, showSuccess } = useToast()
 

@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge"
 
 type CardPerfilProps = {
     onSelectUser?: () => void;
-    studentId: string;
+    studentId: number;
     nome: string;
     semestre: number;
     seguidores: number;

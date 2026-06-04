@@ -17,7 +17,7 @@ type UserRow = ResponseGetUserType & {
     semestre?: number
     bio?: string
     foto?: string
-    studentId?: string
+    studentId?: number
 }
 
 export function PaginaUserPainel() {
@@ -25,8 +25,8 @@ export function PaginaUserPainel() {
     const [isPostForm, setIsPostForm] = useState(false);
     const [isEditForm, setIsEditForm] = useState(false);
     const [userRole, setUserRole] = useState<"ALUNO" | "ADM" | "PROFESSOR" | "">("")
-    const [updatingUserId, setUpdatingUserId] = useState<string | null>(null)
-    const [editingUserId, setEditingUserId] = useState<string | null>(null)
+    const [updatingUserId, setUpdatingUserId] = useState<number | null>(null)
+    const [editingUserId, setEditingUserId] = useState<number | null>(null)
     const [editingStudent, setEditingStudent] = useState<UserRow | null>(null)
     const { data, isPending} = useGetUser()
     const { data: desactivatedData} = useGetUserDesactivated()
@@ -84,7 +84,7 @@ export function PaginaUserPainel() {
         }
     ]
 
-    const handdleStatusUpdate = async (userId: string) => {
+    const handdleStatusUpdate = async (userId: number) => {
        setUpdatingUserId(userId)
 
        try {    

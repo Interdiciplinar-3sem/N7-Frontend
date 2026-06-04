@@ -2,16 +2,16 @@ import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
 
 type TagRow = {
-    id: string;
+    id: number;
     nome: string;
     uso: number;
     categoria: string;
 }
 
 const data: TagRow[] = [
-    { id: "1", nome: "exame", uso: 32, categoria: "Acadêmico" },
-    { id: "2", nome: "resumido", uso: 18, categoria: "Formato" },
-    { id: "3", nome: "fácil", uso: 11, categoria: "Qualidade" },
+    { id: 1, nome: "exame", uso: 32, categoria: "Acadêmico" },
+    { id: 2, nome: "resumido", uso: 18, categoria: "Formato" },
+    { id: 3, nome: "fácil", uso: 11, categoria: "Qualidade" },
 ]
 
 const columns: Column<TagRow>[] = [

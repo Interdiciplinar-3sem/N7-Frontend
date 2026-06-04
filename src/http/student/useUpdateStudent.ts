@@ -6,7 +6,7 @@ import type { ResponseUpdateStudentType } from "../types/responseUpdateStudent"
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 
-export const useUpdateStudent = (id: string) => {
+export const useUpdateStudent = (id: number) => {
     const queryClient = useQueryClient();
     const { showError, showSuccess } = useToast()
 
