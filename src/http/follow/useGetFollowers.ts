@@ -6,7 +6,7 @@ import type { ResponseGetFollowingType } from "../types/responseGetFollwingType"
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 
-export const useGetFollowers = (currentId: string, targetId: string) => {
+export const useGetFollowers = (currentId: number, targetId: number) => {
     const { showError } = useToast()
 
     const query = useQuery({

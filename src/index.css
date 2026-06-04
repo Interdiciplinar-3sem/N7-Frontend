@@ -9,16 +9,6 @@
     box-sizing: border-box;
 }
 
-/* cores de fundo para ajudar no ajuste da responsividade
-    bg-amber-200
-    xxs:bg-gray-900
-    xs:bg-pink-300
-    sm:bg-orange-400
-    md:bg-green-900
-    lg:bg-red-900
-    xl:bg-purple-900
-*/
-
 @keyframes float {
     0% {
         transform: translateY(0px);
@@ -33,4 +23,21 @@
 
 .animate-float {
   animation: float 4s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.7s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
 }

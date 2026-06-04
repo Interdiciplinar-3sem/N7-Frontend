@@ -6,7 +6,7 @@ import type { ResponseGetFollowingType } from "../types/responseGetFollwingType"
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 
-export const useGetFollowingMe = (id: string) => {
+export const useGetFollowingMe = (id: number) => {
     const { showError } = useToast()
 
     const query = useQuery({
@@ -43,6 +43,7 @@ export const useGetFollowingMe = (id: string) => {
         retry: false,
         refetchOnMount: false,
         staleTime: 1000 * 60 * 5,
+        enabled: !!id
     })
 
     useEffect(() => {

@@ -6,7 +6,7 @@ import { API_URL } from "../api";
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 
-export const useGetAllSummary = () => {
+export const useGetAllSummary = (searchTerm?: string) => {
     const { showError } = useToast()
 
     const query = useQuery({
@@ -19,9 +19,9 @@ export const useGetAllSummary = () => {
 
             const responseBody = await response.text();
             const result: ResponseGetSummaryType[] = responseBody.trim()
-                ? JSON.parse(responseBody) : [{ message: "Sucesso ao buscar resumo!" }];
+                ? JSON.parse(responseBody) : [];
 
-            const data = result.map((item) => ({
+            return result.map((item) => ({
                 studentId: item.studentId,
                 summaryId: item.summaryId,
                 titulo: item.titulo,
@@ -30,9 +30,12 @@ export const useGetAllSummary = () => {
                 ativo: item.ativo,
                 studentUrl: item.studentUrl ?? "/avatares/default.svg",
                 studentNome: item.studentNome,
-                totalCurtidas: item.totalCurtidas ?? 0
+                totalCurtidas: item.totalCurtidas ?? 0,
+                subjectId: item.subjectId,
+                subjectNome: item.subjectNome,
+                publico: item.publico,
+                tags: item.tags
             }))
-            return data;
         },
         staleTime: 1000 * 60 * 5,
         retry: false

@@ -5,8 +5,8 @@ import { useGetSummaryStudentId } from '../../http/summary/useGetSummaryStudentI
 
 type PerfilResumosSectionProps = {
   isOwnProfile: boolean
-  studentId?: string
-  onOpenResumo: (summaryId: string) => void
+  studentId?: number
+  onOpenResumo: (summaryId: number) => void
 }
 
 export function PerfilResumosSection({ onOpenResumo, isOwnProfile, studentId }: PerfilResumosSectionProps) {

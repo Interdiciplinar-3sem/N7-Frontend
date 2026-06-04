@@ -1,6 +1,6 @@
 export type ResponseGetCourseSubjectsType = {
     ativo: true,
-    id: string;
+    id: number;
     name: string;
     semestre: number;
 }

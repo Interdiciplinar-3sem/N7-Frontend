@@ -1,6 +1,6 @@
 export type ResponseGetFollowingType = {
-    studentId: string,
-    followerId: string,
+    studentId: number,
+    followerId: number,
     name: string,
     semestre: number,
     course: string,

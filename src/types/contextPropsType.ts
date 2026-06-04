@@ -1,6 +1,6 @@
 export type ContextPropsType = {
-    id: string;
-    studentId: string;
+    id: number;
+    studentId: number;
     role: string;
 }
 

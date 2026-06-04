@@ -21,7 +21,7 @@ export const useUpdateStatusSummary = () => {
 
     return useMutation({
         mutationKey: ["put-status-summary"],
-        mutationFn: async (id: string): Promise<{ message: string }> => {
+        mutationFn: async (id: number): Promise<{ message: string }> => {
             const response = await authFecth(`${API_URL}/resumos/atualizar_status/${id}`, {
                 method: "PATCH",
             })

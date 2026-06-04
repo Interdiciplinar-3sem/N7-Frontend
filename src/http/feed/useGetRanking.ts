@@ -6,7 +6,7 @@ import { API_URL } from "../api";
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 
-export const useGetRanking = (id: string) => {
+export const useGetRanking = (id: number) => {
     const { showError } = useToast()
 
     const query = useQuery({
@@ -28,9 +28,13 @@ export const useGetRanking = (id: string) => {
                 conteudo: item.conteudo,
                 reports: item.reports ?? 0,
                 ativo: item.ativo,
-                studentUrl: item.studentUrl,
+                studentUrl: item.studentUrl ?? "/avatares/default.svg",
                 studentNome: item.studentNome,
-                totalCurtidas: item.totalCurtidas ?? 0
+                totalCurtidas: item.totalCurtidas ?? 0,
+                subjectId: item.subjectId,
+                subjectNome: item.subjectNome,
+                publico: item.publico,
+                tags: item.tags
             }))
             return data;
         },

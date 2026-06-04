@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 
-export const useDeleteSummary = (id: string) => {
+export const useDeleteSummary = (id: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -16,7 +16,7 @@ export const useDeleteSummary = (id: string) => {
             })
 
             if(!response.ok){
-                throw new Error("Erro ao deletar resumo!"); //precisa cobrir mais excessões posteriormente
+                throw new Error("Erro ao deletar resumo!"); 
             }
 
             const responseBody = await response.text();

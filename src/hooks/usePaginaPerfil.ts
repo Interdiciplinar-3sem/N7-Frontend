@@ -21,8 +21,8 @@ export function usePaginaPerfil() {
   const navigate = useNavigate()
   const { studentId: routeId } = useParams<{ studentId?: string }>()
 
-  const viewerStudentId = String(parentContext?.studentId ?? "") 
-  const profileStudentId = routeId ?? viewerStudentId
+  const viewerStudentId = parentContext?.studentId ?? 0
+  const profileStudentId = Number(routeId ?? viewerStudentId)
   const isOwnProfile = profileStudentId === viewerStudentId
   const isAluno = parentContext?.role === "ALUNO"
 
@@ -46,8 +46,8 @@ export function usePaginaPerfil() {
   const follwers = useGetFollowers(viewerStudentId, profileStudentId);
   const follwing = useGetFollowing(viewerStudentId, profileStudentId);
 
-  const currentCourseId = String(studentData?.course?.id ?? "")
-  const currentSemester = String(studentData?.semestre ?? "")
+  const currentCourseId = studentData?.course?.id ?? 0
+  const currentSemester = studentData?.semestre ?? 0
 
   const myCourseSubjects = useGetCourseSubjectsSemesterMe(viewerStudentId, {
     enabled: isAluno && isOwnProfile && !!viewerStudentId
@@ -65,7 +65,7 @@ export function usePaginaPerfil() {
   const isLoadingSubjects = isOwnProfile ? myCourseSubjects.isPending : otherCourseSubjects.isPending
   
   const { mutateAsync: updateStudent } = useUpdateStudent(viewerStudentId || profileStudentId)
-  const currentUserId = String(parentContext?.id ?? "")
+  const currentUserId = parentContext?.id ?? ""
   
   const {mutateAsync: followUser, isPending: isFollowingPending} = useFollow(profileStudentId, currentUserId)
   const {mutateAsync: unfollowUser, isPending: isUnfollowingPending} = useUnFollow(profileStudentId, currentUserId)

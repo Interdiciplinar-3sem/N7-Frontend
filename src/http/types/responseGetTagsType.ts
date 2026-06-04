@@ -1,5 +1,5 @@
 export type ResponseGetTagsType = {
     ativo: boolean;
-    id: string;
+    id: number;
     name: string;
 }

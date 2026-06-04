@@ -4,13 +4,13 @@ import type { ResponseUpdateSummaryType } from "../types/responseUpdateSummaryTy
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 
-export const useUpdateSummary = () => {
+export const useUpdateSummary = (summaryId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationKey: ["put-summary"],
+        mutationKey: ["put-summary", summaryId],
         mutationFn: async (data: RequestUpdateSummaryType): Promise<ResponseUpdateSummaryType> => {
-            const response = await authFecth(`${API_URL}/resumos`, {
+            const response = await authFecth(`${API_URL}/resumos/${summaryId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -19,7 +19,7 @@ export const useUpdateSummary = () => {
             })
 
             if(!response.ok){
-                throw new Error("Erro ao atualizar resumo!"); //precisa cobrir mais excessões posteriormente
+                throw new Error("Erro ao atualizar resumo!"); 
             }
 
             const responseBody = await response.text();

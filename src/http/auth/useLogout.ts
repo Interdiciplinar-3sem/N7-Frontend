@@ -26,12 +26,7 @@ export const useLogout = () => {
             return result;
         },
         onSuccess: async () => {
-            queryClient.setQueryData(["user-auth"], {
-                status: false
-            })
-
-            await queryClient.invalidateQueries({ queryKey: ["user-auth"] })
-
+            queryClient.clear();
             navigate("/login", { replace: true})
         }
     })

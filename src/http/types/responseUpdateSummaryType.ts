@@ -1,6 +1,6 @@
 export type ResponseUpdateSummaryType = {
-        studentId: string,
-        summaryId: string,
+        studentId: number,
+        summaryId: number,
         titulo: string,
         conteudo: string
 }

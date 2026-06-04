@@ -3,7 +3,7 @@ import type { ResponseGetSummaryType } from "../types/responseGetSummary";
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 
-export const useGetSummaryStudentId = (id: string) => {
+export const useGetSummaryStudentId = (id: number) => {
     return useQuery({
         queryKey: ["get-summaries-student", id],
         queryFn: async (): Promise<ResponseGetSummaryType[]> => {

@@ -17,10 +17,10 @@ const columns: Column<ResponseGetCourseType>[] = [
 
 export function PaginaCursos() {
     const { data, isPending } = useGetCourses()
-    const { data: courseSubjects, isPending: isPendingCourseSubjects } = useGetCourseSubjects("1");
+    const { data: courseSubjects, isPending: isPendingCourseSubjects } = useGetCourseSubjects(1);
     const { data: dataDesactivated } = useGetCoursesDesactivated()
     const { mutateAsync: updateCourseStatus } = useUpdateCourseStatus()
-    const [updatingCourseId, setUpdatingCourseId] = useState<string | null>(null)
+    const [updatingCourseId, setUpdatingCourseId] = useState<number | null>(null)
     const [isPostForm, setIsPostForm] = useState(false)
 
     const totalCourses = isPending ? "carregando..." : data?.length ?? 0
@@ -34,7 +34,7 @@ export function PaginaCursos() {
         ? "carregando..."
         : new Set(courseSubjects?.map((course) => course.semestre).filter(Boolean)).size
 
-    const handdleStatusUpdate = async (courseId: string) => {
+    const handdleStatusUpdate = async (courseId: number) => {
         setUpdatingCourseId(courseId)
 
         try {
