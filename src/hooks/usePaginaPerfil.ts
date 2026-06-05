@@ -14,6 +14,8 @@ import { useFollow } from "../http/follow/useFollow"
 import { useUnFollow } from "../http/follow/useUnFollow"
 import { useGetFollowers } from "../http/follow/useGetFollowers"
 import { useGetFollowing } from "../http/follow/useGetFollowing"
+import { useGetSummaryMe } from "../http/summary/useGetSummaryMe"
+import { useGetSummaryStudentId } from "../http/summary/useGetSummaryStudentId"
 
 export function usePaginaPerfil() {
   const { modais, filteredAvatars, handlers } = usePaginaPerfilModais()
@@ -39,6 +41,16 @@ export function usePaginaPerfil() {
   const otherPerfil = useGetStudent(profileStudentId, {
     enabled: isAluno && !isOwnProfile && !!profileStudentId
   })
+
+  const summaryCurrent = useGetSummaryMe({
+    enabled: isOwnProfile && !!viewerStudentId
+  })
+  const summaryOther = useGetSummaryStudentId(profileStudentId, {
+    enabled: !isOwnProfile && !!profileStudentId
+  })
+
+  const resumoData = isOwnProfile ? summaryCurrent.data : summaryOther.data
+  const resumoIsPending = isOwnProfile ? summaryCurrent.isPending : summaryOther.isPending
 
   const studentData = isOwnProfile ? myPerfil.data : otherPerfil.data
   const isPending = isOwnProfile ? myPerfil.isPending : otherPerfil.isPending
@@ -161,6 +173,8 @@ export function usePaginaPerfil() {
 
   return {
     user,
+    resumoData,
+    resumoIsPending,
     follwers,
     follwing,
     subjects,

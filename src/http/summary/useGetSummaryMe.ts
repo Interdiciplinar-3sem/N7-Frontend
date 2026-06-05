@@ -1,9 +1,11 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
 import type { ResponseGetSummaryType } from "../types/responseGetSummary";
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 
-export const useGetSummaryMe = () => {
+export const useGetSummaryMe = (
+    options?: Omit<UseQueryOptions<ResponseGetSummaryType[]>,"queryKey" | "queryFn" >
+) => {
     return useQuery({
         queryKey: ["get-summaries-me"],
         queryFn: async (): Promise<ResponseGetSummaryType[]> => {
@@ -19,5 +21,6 @@ export const useGetSummaryMe = () => {
             return result;
         },
         staleTime: 1000 * 60 * 5,
+        ...options,
     })
 }

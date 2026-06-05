@@ -15,6 +15,7 @@ import { CardPerfil } from '../componentes/ui/cardPerfil'
 export function PaginaPerfil() {
   const {
     user,
+    resumoData,
     follwing,
     follwers,
     subjects,
@@ -72,7 +73,7 @@ export function PaginaPerfil() {
           )}
 
           <PerfilResumosSection
-            isOwnProfile={isOwnProfile}
+            data={resumoData ?? []}
             studentId={actions.profileStudentId}
             onOpenResumo={(summaryId) => setSelectedResumoId(summaryId)}
           />

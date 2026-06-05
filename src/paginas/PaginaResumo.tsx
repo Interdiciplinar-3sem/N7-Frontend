@@ -1,4 +1,4 @@
-import { useOutletContext, useParams } from "react-router";
+import { useNavigate, useOutletContext, useParams } from "react-router";
 import {EditorContent } from "@tiptap/react";
 import { GraduationCap, Heart } from "lucide-react";
 import { useGetSummaryId } from "../http/summary/useGetSummaryId";
@@ -12,20 +12,29 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { useUpdateSummary } from "../http/summary/useUpdateSummary";
 import { useToast } from "../contexto/toastContext";
+import { useUpdateStatusSummary } from "../http/summary/useUpdateStatusSummary";
 
 export function PaginaResumo() {
+    const navigate = useNavigate();
+    const {showError, showSuccess} = useToast();
     const parentContext = useOutletContext<ContextPropsType>();
     const { id } = useParams();
     const summaryId = Number(id) || 0;
+    const { data: resumo, isPending: isPendingSummary, isError, error } = useGetSummaryId(summaryId);
+    const {mutateAsync: deleteSummary} = useUpdateStatusSummary();
+    const { confirm } = useToast();
+
+    if((resumo?.publico === false && resumo.studentId !== parentContext.studentId) || error?.message === "400") {
+        navigate("/feed")
+        showError("Acesso negado a este resumo")
+    }
+
     const {mutateAsync: update, isPending: isPendingUpdate} = useUpdateSummary(summaryId);
-    const { data: resumo, isPending: isPendingSummary, isError } = useGetSummaryId(summaryId);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const isOwner = parentContext.studentId === resumo?.studentId;
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([])
     const [isPublic, setIsPublic] = useState(resumo?.publico)
     const { data: subjects } = useGetCourseSubjectsSemesterMe(summaryId);
     const tags = resumo?.tags?.map(tag => tag.id);
-    const {showSuccess, showError} = useToast();
 
     const formSchema = z.object({
         titulo: z.string().min(3, "O titulo deve ter ao menos 3 letras"),
@@ -73,14 +82,16 @@ export function PaginaResumo() {
                 tags_ids: selectedTagIds.map(Number)
             })
 
-            showSuccess("Resumo atualizado com sucesso!")
+            showSuccess("Resumo salvo com sucesso!")
         } catch (error) {
-            showError("Erro ao atualizar resumo")
+            showError("Erro ao salvar resumo")
             console.log(error)
         }
     }
     
     const editor = useSummaryEditor();
+
+    console.log(resumo?.conteudo)
 
     useEffect(() => {
         if (resumo?.conteudo) {
@@ -196,18 +207,42 @@ export function PaginaResumo() {
                                         className={`${
                                             isPublic ? "bg-[#BDEBFF]" : "bg-amber-300"
                                         } flex items-center justify-between px-3 gap-4 min-w-36 rounded-xl py-2 text-sm font-medium text-[#12415C] cursor-pointer transition hover:brightness-95`}
-                                        onClick={() => setIsPublic((prev) => !prev)}    
+                                        onClick={async () => {
+                                             const nextValue = !isPublic;
+
+                                            const ok = await confirm({
+                                                title: "Alterar visibilidade",
+                                                message: `Deseja tornar este resumo ${nextValue ? "público" : "privado"}?`,
+                                                confirmText: "Sim"
+                                            });
+
+                                            if (!ok) return;
+
+                                            setIsPublic(nextValue);
+                                            showSuccess("Visibilidade do resumo atualizada com sucesso!");
+                                        }}    
                                     >
                                         {isPublic ? "Público" : "Privado"}                    
                                     </button>
                                 </div>
                                 <div className="flex flex-wrap gap-3 pt-1 sm:flex-row flex-col ">
                                     <button type="submit" className="rounded-xl bg-[#2E77C2] text-white px-5 py-2 text-sm font-semibold hover:brightness-95 transition">
-                                        {isPendingUpdate ? "Carregando..." : "Atualizar resumo"}
+                                        {isPendingUpdate ? "Carregando..." : "Salvar resumo"}
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => setIsDeleteModalOpen(true)}
+                                        onClick={async () => {
+                                            const ok = await confirm({
+                                                title: "Excluir resumo",
+                                                message: "Tem certeza?",
+                                                confirmText: "Sim, excluir"
+                                            });
+
+                                            if (!ok) return;
+                                            await deleteSummary(summaryId);
+                                            showSuccess("Resumo excluído com sucesso!");
+                                            navigate("/feed");
+                                        }}
                                         className="rounded-xl bg-red-500 text-white px-5 py-2 text-sm font-semibold hover:brightness-95 transition"
                                     >
                                         Excluir Resumo
@@ -216,50 +251,6 @@ export function PaginaResumo() {
                             </form>
                         </section>
                     )}
-
-                    {isDeleteModalOpen && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                            <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
-                                <h2 className="text-xl font-bold text-red-600">
-                                    Excluir resumo
-                                </h2>
-
-                                <p className="mt-3 text-slate-600">
-                                    Tem certeza que deseja excluir este resumo?
-                                </p>
-
-                                <p className="mt-2 text-sm text-slate-500">
-                                    Esta ação não poderá ser desfeita.
-                                </p>
-
-                                <div className="mt-6 flex justify-end gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsDeleteModalOpen(false)}
-                                        className="rounded-xl border border-slate-300 px-4 py-2 font-medium text-slate-700 hover:bg-slate-100"
-                                    >
-                                        Cancelar
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        onClick={async () => {
-                                            try {
-                                                setIsDeleteModalOpen(false);
-                                                showSuccess("Resumo excluído com sucesso!");
-                                            } catch {
-                                                showError("Erro ao excluir resumo");
-                                            }
-                                        }}
-                                        className="rounded-xl bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700"
-                                    >
-                                        Sim, excluir
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
                 </div>
             )}
         </main>

@@ -9,7 +9,7 @@ export const useGetSummaryId = (id: number) => {
         queryFn: async (): Promise<ResponseGetSummaryType> => {
             const response = await authFecth(`${API_URL}/resumos/${id}`)
             if(!response.ok){
-                throw new Error("Erro ao buscar resumo!");
+                throw new Error(String(response.status))
             }
 
             const responseBody = await response.text();

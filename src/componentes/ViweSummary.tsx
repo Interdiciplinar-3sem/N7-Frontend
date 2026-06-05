@@ -93,6 +93,9 @@ export const ViweSummary = ({ id, onClose, materia }: ViweSummaryProps) => {
                                         <span>Denúncias: {data.reports}</span>
                                     </div>
                                 )}
+                                 <div className="flex items-center gap-2 rounded-2xl bg-[#EAF4FF] px-4 py-3 text-sm text-[#2A577F] ring-1 ring-[#D9E8F8]">
+                                    <span className="font-medium">{data.publico ? "Público" : "Privado"}</span>
+                                </div>
                             </div>
 
                             <div className="rounded-3xl bg-slate-50 px-5 py-5 ring-1 ring-slate-200">

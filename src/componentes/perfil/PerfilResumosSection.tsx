@@ -1,17 +1,14 @@
 
-import { useGetSummaryMe } from '../../http/summary/useGetSummaryMe'
 import { ArrowUpRight, FileText, Heart } from 'lucide-react'
-import { useGetSummaryStudentId } from '../../http/summary/useGetSummaryStudentId'
+import type { ResponseGetSummaryType } from '../../http/types/responseGetSummary'
 
 type PerfilResumosSectionProps = {
-  isOwnProfile: boolean
   studentId?: number
   onOpenResumo: (summaryId: number) => void
+  data: ResponseGetSummaryType[] | undefined
 }
 
-export function PerfilResumosSection({ onOpenResumo, isOwnProfile, studentId }: PerfilResumosSectionProps) {
-  const { data } = isOwnProfile ? useGetSummaryMe() : useGetSummaryStudentId(studentId!);
-
+export function PerfilResumosSection({ onOpenResumo, data }: PerfilResumosSectionProps) {
   return (
     <div className='w-full flex flex-col gap-4 items-center justify-between'>
       <div className='flex items-center gap-3' />

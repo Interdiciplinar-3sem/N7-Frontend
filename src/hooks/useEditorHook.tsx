@@ -1,15 +1,10 @@
 import {useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
-import CharacterCount from "@tiptap/extension-character-count";
-
 export const useSummaryEditor = () => {
     return useEditor({
         extensions: [
             StarterKit,
-            CharacterCount.configure({
-                limit: 5000,
-            }),
         ],
         editorProps: {
             attributes: {
