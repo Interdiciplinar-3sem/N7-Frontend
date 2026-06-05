@@ -3,6 +3,8 @@ import { useGetSummaryId } from "../http/summary/useGetSummaryId"
 import { Overlay } from "./overlay"
 import { Expand, GraduationCap, Heart, X } from "lucide-react"
 import { useNavigate } from "react-router"
+import { EditorContent } from "@tiptap/react"
+import { useSummaryEditor } from "../hooks/useEditorHook"
 
 type ViweSummaryProps = {
     id: number;
@@ -14,21 +16,22 @@ export const ViweSummary = ({ id, onClose, materia }: ViweSummaryProps) => {
     const { data, isPending, isError } = useGetSummaryId(id);
     const materiaNome = materia ?? data?.subjectNome ?? "Matéria não informada"
     const navigate = useNavigate();
+    const editor = useSummaryEditor();
+
+    useEffect(() => {
+        if (data?.conteudo && editor) {
+            editor.commands.setContent(data.conteudo);
+            editor.setEditable(false);
+        }
+    }, [data, editor])
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                onClose()
-            }
+            if (event.key === 'Escape') onClose()
         }
-
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
     }, [onClose])
-
-    const handleExpand = () => {
-        navigate(`/resumo/${id}`)
-    }
 
     return (
         <>
@@ -36,9 +39,9 @@ export const ViweSummary = ({ id, onClose, materia }: ViweSummaryProps) => {
 
             <div className="fixed z-100 top-1/2 left-1/2 w-[96vw] max-w-4xl max-h-[92vh] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-4xl border border-[#CFE0F2] bg-white shadow-[0_30px_80px_rgba(15,23,42,0.22)] ring-1 ring-black/5">
                 <div className="w-full flex items-start justify-between gap-4 border-b border-[#D9E8F8] bg-linear-to-r from-[#EAF4FF] via-white to-[#F6FAFF] px-6 py-6">
-                    <button 
+                    <button
                         type="button"
-                        onClick={handleExpand}
+                        onClick={() => navigate(`/resumo/${id}`)}
                         className="flex flex-col justify-start cursor-pointer transition"
                     >
                         <div className="hover:bg-[#EAF4FF] max-w-30 mb-3 inline-flex justify-center items-center gap-2 bg-white px-3 py-1 text-xs font-semibold text-[#2E6EA8] shadow-sm ring-1 ring-[#D9E8F8]">
@@ -50,7 +53,7 @@ export const ViweSummary = ({ id, onClose, materia }: ViweSummaryProps) => {
                         </h2>
                     </button>
 
-                   <section className="flex items-center gap-2">
+                    <section className="flex items-center gap-2">
                         <button
                             type="button"
                             onClick={onClose}
@@ -58,7 +61,7 @@ export const ViweSummary = ({ id, onClose, materia }: ViweSummaryProps) => {
                         >
                             <X size={18} />
                         </button>
-                   </section>
+                    </section>
                 </div>
 
                 <div className="max-h-[70vh] overflow-y-auto px-6 py-6">
@@ -93,12 +96,13 @@ export const ViweSummary = ({ id, onClose, materia }: ViweSummaryProps) => {
                                         <span>Denúncias: {data.reports}</span>
                                     </div>
                                 )}
+                                <div className="flex items-center gap-2 rounded-2xl bg-[#EAF4FF] px-4 py-3 text-sm text-[#2A577F] ring-1 ring-[#D9E8F8]">
+                                    <span className="font-medium">{data?.publico ? "Público" : "Privado"}</span>
+                                </div>
                             </div>
 
                             <div className="rounded-3xl bg-slate-50 px-5 py-5 ring-1 ring-slate-200">
-                                <p className="whitespace-pre-wrap wrap-break-word leading-8 text-[#2A3E55]">
-                                {data?.conteudo ?? "Sem conteúdo disponível."}
-                                </p>
+                                <EditorContent editor={editor} />
                             </div>
                         </div>
                     )}

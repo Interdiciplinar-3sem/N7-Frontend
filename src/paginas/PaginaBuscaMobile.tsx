@@ -8,8 +8,7 @@ export function PaginaBuscaMobile() {
     const navigate = useNavigate();
     const [inputValue, setInputValue] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
-
-    const { data: resumos, isPending } = useGetAllSummary(searchTerm);
+    const { data: resumos, isPending } = useGetAllSummary();
 
     const handleSearch = (event: React.FormEvent) => {
         event.preventDefault();
@@ -56,6 +55,7 @@ export function PaginaBuscaMobile() {
                         return (
                             <CardResumo
                                 key={resumo.summaryId}
+                                summaryId={resumo.summaryId}
                                 titulo={resumo.titulo}
                                 texto={resumo.conteudo}
                                 formato="horizontal"
@@ -63,6 +63,7 @@ export function PaginaBuscaMobile() {
                                 imageUrl={resumo.studentUrl}
                                 studentName={resumo.studentNome}
                                 curtidas={resumo.totalCurtidas}
+                                setViewSummary={(id) => navigate(`/resumo/${id}`)}
                             />
                         );
                     })}

@@ -29,11 +29,9 @@ export function PaginaFeed() {
             ">
                 <div className="min-h-15 flex items-center justify-between mx-6 mb-6 bg-[#F8FAFC] shadow-lg rounded-lg">
                     <nav className="w-full">
-                        <ul role="tablist" className="flex gap-2 p-2 text-sm items-center">
+                        <ul role="tablist" className=" flex flex-col xs:flex-row gap-2 p-2 text-sm items-center">
                             <li role="presentation">
-                            </li>
-                            <li role="presentation">
-                                <button
+                                 <button
                                     onClick={() => setActiveTab("explorar")}
                                     role="tab"
                                     aria-selected="false"
@@ -41,6 +39,8 @@ export function PaginaFeed() {
                                 >
                                     explorar
                                 </button>
+                            </li>
+                            <li role="presentation">
                                 <button
                                     onClick={() => setActiveTab("seguindo")}
                                     role="tab"

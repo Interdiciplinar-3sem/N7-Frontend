@@ -46,6 +46,7 @@ export function App() {
               <Route element={<PaginaLogin />} path='/login' />
               <Route element={<ProtectedRoute />}>
                 <Route element={<LayoutNetwork />}>
+                  <Route element={<PaginaResumo />} path='/resumo' />
                   <Route element={<PaginaResumo />} path='/resumo/:id' />
                   <Route element={<PaginaPerfil />} path='/perfil' />
                   <Route element={<PaginaPerfil />} path='/perfil/:studentId' />

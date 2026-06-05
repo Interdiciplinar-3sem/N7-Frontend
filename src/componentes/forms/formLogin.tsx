@@ -55,11 +55,11 @@ export function FormLogin() {
     }
 
     return (
-        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#78a3ff] via-[#286fbd] to-[#78a3ff] relative overflow-hidden">
+        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#78a3ff]/70 via-[#286fbd]/90 to-[#78a3ff]/70 relative overflow-hidden">
 
             {/* Bolas */}
-            <div className="absolute top-[-80px] right-[-80px] w-80 h-80 rounded-full bg-white opacity-30 pointer-events-none" />
-            <div className="absolute bottom-[-60px] left-[-40px] w-56 h-56 rounded-full bg-white opacity-30 pointer-events-none" />
+            <div className="absolute top-[-80px] right-[-80px] w-80 h-80 rounded-full bg-white opacity-3" />
+            <div className="absolute bottom-[-60px] left-[-40px] w-56 h-56 rounded-full bg-white opacity-4" />
 
             {/* * card quase transparente */}
             <div className="relative w-full max-w-md mx-4 bg-white/10 backdrop-blur-xl border border-white/25 rounded-3xl p-10 shadow-2xl">

@@ -8,7 +8,7 @@ export const useDeleteSummary = (id: number) => {
     return useMutation({
         mutationKey: ["delete-summary"],
         mutationFn: async () => {
-            const response = await authFecth(`${API_URL}/resumos/${id}`, {
+            const response = await authFecth(`${API_URL}/resumos/${id}`, { //lembrando que isso apaga permanentemente, cuidado (prefia a rota de atualizar o status soft delete)
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"

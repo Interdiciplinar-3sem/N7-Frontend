@@ -1,5 +1,7 @@
 export type ResponseCreateSummaryType = {
+    summaryId: number;
     studentId: number;
-    titulo: string,
+    subjectId: number;
+    titulo: string;
     conteudo: string;
 }
