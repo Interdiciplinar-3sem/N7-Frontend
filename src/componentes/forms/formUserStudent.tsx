@@ -1,15 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import z from "zod";
-import { useCreateStudent } from "../../http/auth/useCreateStudent";
-import { useLogin } from "../../http/auth/useLogin";
+import { useEmailValidation } from "../../http/auth/useEmailValidation";
 
-export function FormSignUp() {
-    const { mutateAsync: signUp } = useCreateStudent();
-    const { mutateAsync: login } = useLogin();
+type FormSignUpProps = {
+    setIsEmailValid: React.Dispatch<React.SetStateAction<null | string>>;
+}
 
-    const navigate = useNavigate();
+export function FormSignUp({ setIsEmailValid }: FormSignUpProps) {
+    const { mutateAsync: signUp, isPending  } = useEmailValidation();
 
     const formSchema = z.object({
         nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
@@ -38,42 +38,39 @@ export function FormSignUp() {
         reValidateMode: "onChange",
     });
 
-    const handdlerSignUp = async (
-        data: z.infer<typeof formSchema>
-    ) => {
+    const handdlerSignUp = async (formData: z.infer<typeof formSchema>) => {
         try {
-            if (data.senha !== data.senhaConfirmacao) {
+            if (formData.senha !== formData.senhaConfirmacao) {
                 form.setError("senha", {
                     type: "manual",
                     message: "As senhas não coincidem",
                 });
-
                 return;
             }
 
             await signUp({
-                nome: data.nome,
-                email: data.email,
-                senha: data.senha,
-                senhaConfirmacao: data.senhaConfirmacao,
-                semestre: Number(data.semestre),
+                nome: formData.nome,
+                email: formData.email,
+                senha: formData.senha,
+                semestre: Number(formData.semestre),
             });
 
-            await login({
-                email: data.email,
-                senha: data.senha,
-            });
+            setIsEmailValid(formData.email);
 
-            navigate("/feed", { replace: true });
         } catch (error) {
-            const parsed = JSON.parse(
-                (error as Error).message
-            );
+            try {
+                const parsed = JSON.parse((error as Error).message);
 
-            if (parsed.status === 409) {
+                if (parsed.status === 409 || parsed.status === 400) {
+                    form.setError("email", {
+                        type: "manual",
+                        message: parsed.message,
+                    });
+                }
+            } catch {
                 form.setError("email", {
                     type: "manual",
-                    message: parsed.message,
+                    message: "Erro ao realizar cadastro. Tente novamente.",
                 });
             }
         }
@@ -87,8 +84,6 @@ export function FormSignUp() {
             <h1 className="text-2xl font-semibold text-white mb-6">
                 Criar conta
             </h1>
-
-            {/* Nome */}
             <div>
                 <label className="block text-xs font-medium text-white/70 mb-2 uppercase tracking-wider">
                     Nome
@@ -123,8 +118,6 @@ export function FormSignUp() {
                     </p>
                 )}
             </div>
-
-            {/* Email */}
             <div>
                 <label className="block text-xs font-medium text-white/70 mb-2 uppercase tracking-wider">
                     E-mail
@@ -159,8 +152,6 @@ export function FormSignUp() {
                     </p>
                 )}
             </div>
-
-            {/* Senha */}
             <div>
                 <label className="block text-xs font-medium text-white/70 mb-2 uppercase tracking-wider">
                     Senha
@@ -189,8 +180,6 @@ export function FormSignUp() {
                     />
                 </div>
             </div>
-
-            {/* Confirmar senha */}
             <div>
                 <label className="block text-xs font-medium text-white/70 mb-2 uppercase tracking-wider">
                     Confirmar senha
@@ -225,8 +214,6 @@ export function FormSignUp() {
                     </p>
                 )}
             </div>
-
-            {/* Semestre */}
             <div>
                 <label className="block text-xs font-medium text-white/70 mb-2 uppercase tracking-wider">
                     Semestre
@@ -266,9 +253,9 @@ export function FormSignUp() {
                     </option>
                 </select>
             </div>
-
             <button
                 type="submit"
+                disabled={isPending}
                 className="
                     w-full
                     bg-white
@@ -283,11 +270,13 @@ export function FormSignUp() {
                     transition-all
                     duration-200
                     shadow-lg
+                    disabled:opacity-60
+                    disabled:cursor-not-allowed
+                    disabled:active:scale-100
                 "
             >
-                Cadastrar-se
+                {isPending ? "Enviando..." : "Cadastrar-se"}
             </button>
-
             <p className="text-center text-xs text-white/50 pt-1">
                 Já tem uma conta?{" "}
                 <Link

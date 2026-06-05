@@ -21,6 +21,7 @@ import { PaginaTags } from './paginas/admin/PaginaTags'
 import { PaginaSelos } from './paginas/admin/PaginaSelos'
 import { PaginaTurmas } from './paginas/PaginaTurmas'
 import { PaginaResumo } from './paginas/PaginaResumo'
+import { PaginaConfirmacaoEmail } from './paginas/PaginaConfirmacaoEmail'
 
 export default App;
 
@@ -43,6 +44,7 @@ export function App() {
               <Route element={<PaginaInicial />} path='/' />
             </Route>
               <Route element={<PaginaCadastro />} path='/cadastro' />
+              <Route path="/confirm-email" element={<PaginaConfirmacaoEmail />} />
               <Route element={<PaginaLogin />} path='/login' />
               <Route element={<ProtectedRoute />}>
                 <Route element={<LayoutNetwork />}>
