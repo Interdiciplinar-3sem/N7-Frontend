@@ -16,11 +16,9 @@ export const TagField = (props: TagFieldProps) => {
     const selectedTagIds = useMemo(() => new Set(selectedTags.map((tag) => tag.id)), [selectedTags])
     const filteredTags = useMemo(() => {
         const normalizedSearch = tagSearch.trim().toLowerCase()
-
         return availableTags.filter((tag) => {
             const tagName = String(tag.name ?? "").trim()
             const matchesSearch = normalizedSearch ? tagName.toLowerCase().includes(normalizedSearch) : true
-
             return matchesSearch && !selectedTagIds.has(tag.id)
         })
     }, [availableTags, selectedTagIds, tagSearch])
@@ -30,28 +28,37 @@ export const TagField = (props: TagFieldProps) => {
     }, [selectedTagIds])
 
     useEffect(() => {
-         if (props.tags) {
-            const tagsToAdd = props.tags.filter((tagId) => !selectedTags.some((tag) => tag.id === tagId));
-            tagsToAdd.forEach((tagId) => addTagById(tagId));
-        }
-    }, [tags])
+        if (!props.tags || !tags) return;
 
-    const getTagId = (tag: any) => tag?.id ?? 0
+        const tagsToAdd = props.tags
+            .map(tagId => availableTags.find((t) => t.id === tagId))
+            .filter((tag): tag is ResponseGetTagsType => !!tag)
+            .map(tag => ({ id: tag?.id ?? 0, name: String(tag?.name ?? "").trim() }))
+            .filter(t => t.id && t.name);
 
-    const getTagName = (tag: any) => String(tag?.name ?? tag?.nome ?? tag?.title ?? "").trim()
+        if (tagsToAdd.length === 0) return;
+
+        setSelectedTags(prev => {
+            const existingIds = new Set(prev.map(t => t.id));
+            const newTags = tagsToAdd.filter(t => !existingIds.has(t.id));
+            return [...prev, ...newTags];
+        });
+    }, [tags]);
 
     const addTagById = (tagId: number) => {
         if (!tagId) return
-        const tag = availableTags.find((tag: ResponseGetTagsType) => tag?.id === tagId) 
+        const tag = availableTags.find((tag: ResponseGetTagsType) => tag?.id === tagId)
         if (!tag) return
-        const normalizedId = getTagId(tag)
-        const normalizedName = getTagName(tag)
-        if (!normalizedId || !normalizedName) return
-        if (selectedTags.some(t => t.id === normalizedId)) return
-        setSelectedTags(prev => [...prev, { id: normalizedId, name: normalizedName }])
+        const id = tag?.id ?? 0
+        const name = String(tag?.name ?? "").trim()
+        if (!id || !name) return
+        setSelectedTags(prev => {
+            if (prev.some(t => t.id === id)) return prev
+            return [...prev, { id, name }]
+        })
         setTagSearch("")
         setIsTagListOpen(false)
-        }
+    }
 
     const removeTag = (tagId: number) => {
         setSelectedTags(prev => prev.filter(t => t.id !== tagId))
@@ -59,9 +66,9 @@ export const TagField = (props: TagFieldProps) => {
 
     return (
         <div>
-            <input 
-                className="w-full rounded-xl bg-white px-3 py-2.5 pr-24 border border-[#C9DFF5] outline-none transition focus:ring-2 focus:ring-[#7AB4EA]" 
-                type="text" 
+            <input
+                className="w-full rounded-xl bg-white px-3 py-2.5 pr-24 border border-[#C9DFF5] outline-none transition focus:ring-2 focus:ring-[#7AB4EA]"
+                type="text"
                 name="tag"
                 id="tag"
                 value={tagSearch}
@@ -91,34 +98,33 @@ export const TagField = (props: TagFieldProps) => {
             </div>
 
             {isTagListOpen && (
-            <div className="fixed mt-3 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg ring-1 ring-slate-900/5">
-                <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
-                    <p className="text-sm font-semibold text-slate-700">Tags disponíveis</p>
-                    <button type="button" onClick={() => setIsTagListOpen(false)} className="text-xs font-semibold text-slate-400 transition hover:text-slate-700">
-                        Fechar
-                    </button>
+                <div className="fixed mt-3 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg ring-1 ring-slate-900/5">
+                    <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+                        <p className="text-sm font-semibold text-slate-700">Tags disponíveis</p>
+                        <button type="button" onClick={() => setIsTagListOpen(false)} className="text-xs font-semibold text-slate-400 transition hover:text-slate-700">
+                            Fechar
+                        </button>
+                    </div>
+                    <div className="max-h-52 overflow-y-auto p-2">
+                        {filteredTags.length > 0 ? (
+                            filteredTags.map((tag) => (
+                                <button
+                                    key={tag.id}
+                                    type="button"
+                                    className="flex w-full items-center justify-between rounded-xl px-4 py-2.5 text-left text-sm text-slate-700 transition hover:bg-sky-50 hover:text-sky-800"
+                                    onClick={() => addTagById(tag.id)}
+                                >
+                                    <span>{tag.name}</span>
+                                </button>
+                            ))
+                        ) : (
+                            <div className="px-4 py-6 text-center text-sm text-slate-400">
+                                Nenhuma tag encontrada.
+                            </div>
+                        )}
+                    </div>
                 </div>
-
-                <div className="max-h-52 overflow-y-auto p-2">
-                    {filteredTags.length > 0 ? (
-                        filteredTags.map((tag) => (
-                            <button
-                                key={tag.id}
-                                type="button"
-                                className=" flex w-full items-center justify-between rounded-xl px-4 py-2.5 text-left text-sm text-slate-700 transition hover:bg-sky-50 hover:text-sky-800"
-                                onClick={() => addTagById(tag.id)}
-                            >
-                                <span>{tag.name}</span>
-                            </button>
-                        ))
-                    ) : (
-                        <div className="px-4 py-6 text-center text-sm text-slate-400">
-                            Nenhuma tag encontrada.
-                        </div>
-                    )}
-                </div>
-            </div>
-        )}
+            )}
         </div>
     )
 }
