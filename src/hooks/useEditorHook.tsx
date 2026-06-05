@@ -9,7 +9,7 @@ export const useSummaryEditor = () => {
         editorProps: {
             attributes: {
                 class:
-                    "p-4 focus:outline-none",
+                    "min-h-[675px] p-4 focus:outline-none",
             },
             handleKeyDown: (view, event) => {
                 if(event.key === "Tab") {

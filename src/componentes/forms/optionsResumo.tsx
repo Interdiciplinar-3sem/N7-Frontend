@@ -1,4 +1,5 @@
 import { Copy, FileText, Upload } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type OptionsResumoProps = {
     setIsFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -6,9 +7,13 @@ type OptionsResumoProps = {
 }
 
 export function OptionsResumo({setIsFormOpen, setIsOptionsFormOpen}: OptionsResumoProps){
-
-    const handleOptionClick = () => {
+    const navigate = useNavigate();
+    const handleOptionCopiaEColaClick = () => {
         setIsFormOpen(true);
+        setIsOptionsFormOpen(false);
+    }
+    const handleOptionEscrevaResumoClick = () => {
+        navigate("/resumo");
         setIsOptionsFormOpen(false);
     }
 
@@ -54,13 +59,13 @@ export function OptionsResumo({setIsFormOpen, setIsOptionsFormOpen}: OptionsResu
                 icon={Copy}
                 title="Copia e Cola"
                 description="Crie seus resumos rapidamente apenas copiando e colando o conteúdo desejado."
-                onClick={handleOptionClick}
+                onClick={handleOptionCopiaEColaClick}
             />
             <CardOption 
                 icon={FileText}
-                title="Escreva seu resumo"
+                title="Escreva seu resumo - BETA"
                 description="Crie seus resumos escrevendo diretamente no campo de texto."
-                disabled
+                onClick={handleOptionEscrevaResumoClick}
             />
             <CardOption 
                 icon={Upload}

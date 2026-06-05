@@ -9,6 +9,7 @@ type ToastContextType = {
 type ConfirmOptions = {
     title: string;
     message: string;
+    description?: string;
     confirmText?: string;
     cancelText?: string;
 };
@@ -72,7 +73,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                     {message}
                 </div>
             )}
-            
+
             {confirmOptions && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
                     <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
@@ -84,6 +85,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                         <p className="mt-3 text-slate-600">
                             {confirmOptions.message}
                         </p>
+
+                        {confirmOptions.description && (
+                            <p className="text-sm font-thin mt-2 text-slate-500">
+                                {confirmOptions.description}
+                            </p>
+                        )}
 
                         <div className="mt-6 flex justify-end gap-3">
 
