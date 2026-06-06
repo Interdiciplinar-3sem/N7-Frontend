@@ -4,6 +4,8 @@ import { API_URL } from "../api"
 import type { ResponseLogutType } from "../types/responseLogoutType"
 import { useNavigate } from "react-router-dom"
 
+localStorage.removeItem("accessToken");
+
 export const useLogout = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
