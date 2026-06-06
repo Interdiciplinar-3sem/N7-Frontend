@@ -69,43 +69,6 @@ export function PerfilEditFormModal({
             "
           />
         </label>
-
-        <label className="flex flex-col gap-1">
-          Curso
-          <input
-            name="curso"
-            type="text"
-            defaultValue={user.curso}
-            className="
-              w-full
-              p-2
-              border
-              rounded-md
-              outline-none
-              focus:ring-2
-              focus:ring-blue-500
-            "
-          />
-        </label>
-
-        <label className="flex flex-col gap-1">
-          Faculdade
-          <input
-            name="faculdade"
-            type="text"
-            defaultValue={user.faculdade}
-            className="
-              w-full
-              p-2
-              border
-              rounded-md
-              outline-none
-              focus:ring-2
-              focus:ring-blue-500
-            "
-          />
-        </label>
-
         <label className="flex flex-col gap-1">
           Descrição
           <textarea
