@@ -11,9 +11,21 @@ type FormSignUpProps = {
 export function FormSignUp({ setIsEmailValid }: FormSignUpProps) {
     const { mutateAsync: signUp, isPending  } = useEmailValidation();
 
+    const DOMINIOS_PERMITIDOS = [
+        "@aluno.cps.sp.gov.br",
+        "@fatec.sp.gov.br",
+        "@cps.sp.gov.br"
+    ];
+
     const formSchema = z.object({
         nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
-        email: z.email("Email inválido"),
+        email: z.string()
+            .email("Email inválido")
+            .refine((email) => {
+                return DOMINIOS_PERMITIDOS.some(dominio => email.endsWith(dominio));
+            }, {
+                message: "O email deve ser institucional (@fatec, @aluno.cps ou @cps)"
+            }),
         senha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
         senhaConfirmacao: z.string(),
         semestre: z.string(),
@@ -21,9 +33,10 @@ export function FormSignUp({ setIsEmailValid }: FormSignUpProps) {
         data => data.senha === data.senhaConfirmacao,
         {
             message: "Senhas não conferem",
-            path: ["senha"],
+            path: ["senha"], 
         }
-    );
+);
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {

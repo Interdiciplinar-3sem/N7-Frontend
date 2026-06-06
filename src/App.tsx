@@ -18,7 +18,6 @@ import { PaginaResumos } from './paginas/admin/PaginaResumos'
 import { PaginaCursos } from './paginas/admin/PaginaCursos'
 import { PaginaMaterias } from './paginas/admin/PaginaMaterias'
 import { PaginaTags } from './paginas/admin/PaginaTags'
-import { PaginaSelos } from './paginas/admin/PaginaSelos'
 import { PaginaTurmas } from './paginas/PaginaTurmas'
 import { PaginaResumo } from './paginas/PaginaResumo'
 import { PaginaConfirmacaoEmail } from './paginas/PaginaConfirmacaoEmail'
@@ -43,9 +42,9 @@ export function App() {
             <Route element={<LayoutDefault />}>
               <Route element={<PaginaInicial />} path='/' />
             </Route>
-              <Route element={<PaginaCadastro />} path='/cadastro' />
-              <Route path="/confirm-email" element={<PaginaConfirmacaoEmail />} />
-              <Route element={<PaginaLogin />} path='/login' />
+            <Route element={<PaginaCadastro />} path='/cadastro' />
+            <Route path="/confirm-email" element={<PaginaConfirmacaoEmail />} />
+            <Route element={<PaginaLogin />} path='/login' />
               <Route element={<ProtectedRoute />}>
                 <Route element={<LayoutNetwork />}>
                   <Route element={<PaginaResumo />} path='/resumo' />
@@ -63,7 +62,6 @@ export function App() {
                   <Route element={<PaginaCursos />} path='/painel/cursos' />
                   <Route element={<PaginaMaterias />} path='/painel/materias' />
                   <Route element={<PaginaTags />} path='/painel/tags' />
-                  <Route element={<PaginaSelos />} path='/painel/selos' />
               </Route>
               </Route>
           </Routes>

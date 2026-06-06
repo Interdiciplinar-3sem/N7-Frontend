@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CardPerfil } from "../componentes/ui/cardPerfil";
 import { CardResumo } from "../componentes/ui/cardResumo";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import type { ContextPropsType } from "../types/contextPropsType";
 import { useGetFeed } from "../http/feed/useGetFeed";
 import { useGetRanking } from "../http/feed/useGetRanking";
@@ -11,7 +11,12 @@ import { useGetSummaryActivated } from "../http/summary/useGetSummaryActivated";
 import { ViweSummary } from "../componentes/ViweSummary";
 
 export function PaginaFeed() {
+    const navigate = useNavigate();
     const parentContext = useOutletContext<ContextPropsType>();
+    if(parentContext.role === "ADM") {
+        navigate("/painel")
+    }
+
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
     const {data: resumosRanking} = useGetRanking(parentContext.studentId)
     const {data: resumos} = useGetSummaryActivated();

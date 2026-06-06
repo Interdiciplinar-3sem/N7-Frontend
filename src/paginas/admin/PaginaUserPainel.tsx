@@ -1,5 +1,5 @@
-import { useGetUser } from "../../http/user/useGetUser"
-import { useState } from "react"
+import { useGetUser } from "../../http/user/useGetUser";
+import { useState } from "react";
 import { StudentForm } from "../../componentes/admin/adminStudentForm";
 import { ADMform } from "../../componentes/admin/admForm";
 import { X } from "lucide-react";
@@ -10,110 +10,173 @@ import { useGetUserDesactivated } from "../../http/user/useGetUserDesactivated";
 import { StudentEditForm } from "../../componentes/admin/adminStudentEditForm";
 import type { ResponseGetUserType } from "../../http/types/responseGetUserType";
 import { Overlay } from "../../componentes/overlay";
+import { useAdminPreviewer } from "../../layout/layoutAdmin";
 
 type UserRow = ResponseGetUserType & {
-    ativo?: boolean
-    nome?: string
-    semestre?: number
-    bio?: string
-    foto?: string
-    studentId?: number
-}
+    ativo?: boolean;
+    nome?: string;
+    semestre?: number;
+    bio?: string;
+    foto?: string;
+    studentId?: number;
+};
 
 export function PaginaUserPainel() {
+    const { openUser } = useAdminPreviewer();
+
     const { mutateAsync: updateActiveStudent } = useUpdateActiveStudent();
     const [isPostForm, setIsPostForm] = useState(false);
     const [isEditForm, setIsEditForm] = useState(false);
-    const [userRole, setUserRole] = useState<"ALUNO" | "ADM" | "PROFESSOR" | "">("")
-    const [updatingUserId, setUpdatingUserId] = useState<number | null>(null)
-    const [editingUserId, setEditingUserId] = useState<number | null>(null)
-    const [editingStudent, setEditingStudent] = useState<UserRow | null>(null)
-    const { data, isPending} = useGetUser()
-    const { data: desactivatedData} = useGetUserDesactivated()
+    const [userRole, setUserRole] = useState<"ALUNO" | "ADM" | "PROFESSOR" | "">("");
+    const [updatingUserId, setUpdatingUserId] = useState<number | null>(null);
+    const [editingUserId, setEditingUserId] = useState<number | null>(null);
+    const [editingStudent, setEditingStudent] = useState<UserRow | null>(null);
 
-    const totalUsers = isPending ? "carregando..." : data?.length ?? 0
-    const totalStudent = isPending ? { estudantes: "carregando..." } : data?.reduce(
-        (acc, user) => ({ estudantes: acc.estudantes + (user.role === "ALUNO" ? 1 : 0) }),
-        { estudantes: 0 }
-    )
+    const { data, isPending } = useGetUser();
+    const { data: desactivatedData } = useGetUserDesactivated();
 
-    const totalUserDesactivated = isPending ? "carregando..." : desactivatedData?.length ?? 0
+    const totalUsers = isPending ? "carregando..." : (data?.length ?? 0);
 
-    const totalAdmin = isPending ? { adm: "carregando..." } : data?.reduce(
-        (acc, user) => ({adm: acc.adm + (user.role === "ADM" ? 1 : 0)}),
-        {adm: 0}
-    )
+    const totalStudent = isPending
+        ? { estudantes: "carregando..." }
+        : data?.reduce(
+              (acc, user) => ({ estudantes: acc.estudantes + (user.role === "ALUNO" ? 1 : 0) }),
+              { estudantes: 0 }
+          );
+
+    const totalUserDesactivated = isPending ? "carregando..." : (desactivatedData?.length ?? 0);
+
+    const totalAdmin = isPending
+        ? { adm: "carregando..." }
+        : data?.reduce(
+              (acc, user) => ({ adm: acc.adm + (user.role === "ADM" ? 1 : 0) }),
+              { adm: 0 }
+          );
 
     const columns: Column<UserRow>[] = [
-        { key: 'userId', header: 'ID', width: '180px' },
-        { key: 'email', header: 'Email' },
-        { key: 'role', header: 'Role', width: '120px' },
-        { key: 'createdAt', header: 'Criado em', width: '160px', render: (row) => new Date(row.createdAt).toLocaleString() },
         {
-            key: 'actions',
-            header: 'Ações',
-            width: '180px',
-            align: 'center',
+            key: "userId",
+            header: "Usuário",
+            width: "300px",
             render: (row) => (
-                <div>
-                    {row.role === "ALUNO" && (
-                    <div className="flex gap-2 justify-center">
-                        <button
-                            className="px-2 py-1 bg-gray-500 text-white rounded-sm"
-                            onClick={() => {
-                                setEditingUserId(row.userId)
-                                setEditingStudent(row)
-                                setIsEditForm(true)
-                            }}
-                        >
-                            Editar
-                        </button>
-                        <button
-                            onClick={() => handdleStatusUpdate(row.userId)}
-                            className="px-2 py-1 bg-yellow-500 text-white rounded-sm"
-                            disabled={updatingUserId === row.userId}
-                        >
-                            {updatingUserId === row.userId
-                                ? "Atualizando..."
-                                : (row.ativo ? "Desativar" : "Ativar")}
-                        </button>
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">
+                        {row.email.substring(0, 2).toUpperCase()}
                     </div>
+                    <div className="flex flex-col">
+                        <span className="font-medium text-gray-900">{row.email}</span>
+                        <span className="text-[10px] text-gray-400 uppercase tracking-tighter">
+                            USER ID: {row.userId}
+                        </span>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            key: "role",
+            header: "Papel",
+            width: "120px",
+            render: (row) => (
+                <span
+                    className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                        row.role === "ADM"
+                            ? "bg-purple-100 text-purple-700"
+                            : row.role === "ALUNO"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-gray-100 text-gray-700"
+                    }`}
+                >
+                    {row.role}
+                </span>
+            ),
+        },
+        {
+            key: "createdAt",
+            header: "Membro desde",
+            width: "160px",
+            render: (row) => (
+                <span className="text-gray-500 text-sm">
+                    {new Date(row.createdAt).toLocaleDateString()}
+                </span>
+            ),
+        },
+        {
+            key: "actions",
+            header: "Ações",
+            width: "180px",
+            align: "center",
+            render: (row) => (
+                <div onClick={(e) => e.stopPropagation()}>
+                    {row.role === "ALUNO" && (
+                        <div className="flex gap-2 justify-center">
+                            <button
+                                className="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg text-xs font-medium transition-colors"
+                                onClick={() => {
+                                    setEditingUserId(row.userId);
+                                    setEditingStudent(row);
+                                    setIsEditForm(true);
+                                }}
+                            >
+                                Editar
+                            </button>
+                            <button
+                                onClick={() => handleStatusUpdate(row.userId)}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                    row.ativo
+                                        ? "bg-red-50 text-red-600 hover:bg-red-100"
+                                        : "bg-green-50 text-green-600 hover:bg-green-100"
+                                }`}
+                                disabled={updatingUserId === row.userId}
+                            >
+                                {updatingUserId === row.userId
+                                    ? "..."
+                                    : row.ativo
+                                    ? "Desativar"
+                                    : "Ativar"}
+                            </button>
+                        </div>
                     )}
                 </div>
-            )
+            ),
+        },
+    ];
+
+    const handleStatusUpdate = async (userId: number) => {
+        setUpdatingUserId(userId);
+        try {
+            await updateActiveStudent(userId);
+        } finally {
+            setUpdatingUserId(null);
         }
-    ]
+    };
 
-    const handdleStatusUpdate = async (userId: number) => {
-       setUpdatingUserId(userId)
-
-       try {    
-         await updateActiveStudent(userId)
-       } finally {
-         setUpdatingUserId(null)
-       }
-    }
-    
     return (
         <>
             <AdminCrudPage
                 title="Admin Dashboard"
                 description="Gerencie usuários e recursos do sistema"
                 stats={[
-                    { title: "Total de usuários", value: totalUsers.toString(), cor: "azul" },
-                    { title: "Estudantes", value: totalStudent?.estudantes.toString() ?? "0", cor: "verde" },
-                    { title: "ADM", value: totalAdmin?.adm.toString() ?? "0", cor: "amarelo" },
-                    { title: "Professores", value: "0", cor: "vermelho" },
-                    { title: "Usuarios Desativados", value: totalUserDesactivated?.toString() ?? "0", cor: "vermelho" },
+                    { title: "Total de usuários",     value: totalUsers.toString(),                         cor: "azul"     },
+                    { title: "Estudantes",            value: totalStudent?.estudantes.toString() ?? "0",    cor: "verde"    },
+                    { title: "ADM",                   value: totalAdmin?.adm.toString() ?? "0",             cor: "amarelo"  },
+                    { title: "Professores",           value: "0",                                           cor: "vermelho" },
+                    { title: "Usuarios Desativados",  value: totalUserDesactivated?.toString() ?? "0",      cor: "vermelho" },
                 ]}
                 columns={columns}
                 data={data ?? []}
                 dataDesactivated={desactivatedData ?? []}
                 rowKey={(r) => r.userId}
                 tableTitle="usuários"
-                emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum usuário encontrado</div>}
+                emptyPlaceholder={
+                    <div className="p-6 text-center text-gray-400">Nenhum usuário encontrado</div>
+                }
                 primaryActionLabel="Novo Usuário"
                 onPrimaryAction={() => setIsPostForm(true)}
+                onRowClick={(row) => {
+                    if (row.role === "ALUNO" && row.studentId) {
+                        openUser(row.studentId);
+                    }
+                }}
             />
 
             {isEditForm && editingUserId && editingStudent && (
@@ -124,21 +187,20 @@ export function PaginaUserPainel() {
                             <button
                                 className="p-1 bg-gray-300 text-gray-700 rounded-md"
                                 onClick={() => {
-                                    setIsEditForm(false)
-                                    setEditingUserId(null)
-                                    setEditingStudent(null)
+                                    setIsEditForm(false);
+                                    setEditingUserId(null);
+                                    setEditingStudent(null);
                                 }}
                             >
                                 <X size={16} />
                             </button>
                         </div>
-
                         <StudentEditForm
                             studentId={editingStudent.studentId || editingUserId}
                             onClose={() => {
-                                setIsEditForm(false)
-                                setEditingUserId(null)
-                                setEditingStudent(null)
+                                setIsEditForm(false);
+                                setEditingUserId(null);
+                                setEditingStudent(null);
                             }}
                         />
                     </div>
@@ -153,8 +215,8 @@ export function PaginaUserPainel() {
                             <button
                                 className="ml-auto mb-4 p-1 bg-gray-300 text-gray-700 rounded-md"
                                 onClick={() => {
-                                    setIsPostForm(false)
-                                    setUserRole("")
+                                    setIsPostForm(false);
+                                    setUserRole("");
                                 }}
                             >
                                 <X size={16} />
@@ -173,7 +235,6 @@ export function PaginaUserPainel() {
                                             Criar ADM
                                         </button>
                                     </div>
-
                                     <div className="flex-1 bg-blue-900/50 rounded-2xl shadow-2xl flex justify-center items-center">
                                         <button className="w-full h-full px-3 py-2 text-white rounded-md" onClick={() => setUserRole("PROFESSOR")}>
                                             Criar professor
@@ -185,21 +246,16 @@ export function PaginaUserPainel() {
                             {userRole === "ALUNO" && (
                                 <StudentForm setIsPostForm={setIsPostForm} setUserRole={setUserRole} />
                             )}
-
                             {userRole === "ADM" && (
                                 <div className="w-full">
                                     <ADMform setIsPostForm={setIsPostForm} setUserRole={setUserRole} />
                                 </div>
                             )}
-                            {userRole === "PROFESSOR" && (
-                                <div>
-                                    Em breve
-                                </div>
-                            )}
+                            {userRole === "PROFESSOR" && <div>Em breve</div>}
                         </div>
                     </div>
                 </>
             )}
         </>
-    )
+    );
 }
