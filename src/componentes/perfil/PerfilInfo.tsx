@@ -17,7 +17,7 @@ export function PerfilInfo({ user, isOwnProfile }: PerfilInfoProps) {
       <p className="text-zinc-500">{user.faculdade || 'Faculdade'}</p>
 
       <p className="text-zinc-400 mt-3">
-        {user.descricao || (isOwnProfile ? 'Adicione uma descrição ao seu perfil' : 'Este usuário ainda não adicionou uma descrição.')}
+        {user.descricao || (isOwnProfile ? 'Sem descrição' : 'Este usuário ainda não adicionou uma descrição.')}
       </p>
     </div>
   )

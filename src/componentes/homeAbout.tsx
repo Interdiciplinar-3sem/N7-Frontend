@@ -16,7 +16,7 @@ export function HomeAbout() {
 
     return (
         <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="rounded-4xl border border-[#DDEBFA] bg-white p-5 shadow-[0_20px_50px_rgba(76,154,228,0.12)]">
+            <div className="rounded-4xl border border-[#DDEBFA] bg-white p-3 shadow-[0_20px_50px_rgba(76,154,228,0.12)]">
                 <div className="flex items-center gap-2 text-[#4C9AE4]">
                     <Palette className="h-5 w-5" />
                     <h3 className="text-xl font-black text-[#22486E]">Perfil com cara própria</h3>

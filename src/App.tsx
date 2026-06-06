@@ -6,8 +6,6 @@ import { PaginaLogin } from './paginas/PaginaLogin'
 import { PaginaPerfil } from './paginas/PaginaPerfil'
 import { PaginaPainel } from './paginas/PaginaPainel'
 import { PaginaFeed } from './paginas/PaginaFeed'
-
-import { LayoutDefault } from './layout/layoutDefault'
 import { LayoutNetwork } from './layout/layoutNetwork'
 import { ProtectedRoute } from './guards/protecRoute'
 import { ToastProvider } from './contexto/toastContext'
@@ -39,9 +37,7 @@ export function App() {
       <ToastProvider>
         <BrowserRouter>
           <Routes>
-            <Route element={<LayoutDefault />}>
-              <Route element={<PaginaInicial />} path='/' />
-            </Route>
+            <Route element={<PaginaInicial />} path='/' />
             <Route element={<PaginaCadastro />} path='/cadastro' />
             <Route path="/confirm-email" element={<PaginaConfirmacaoEmail />} />
             <Route element={<PaginaLogin />} path='/login' />
