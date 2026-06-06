@@ -9,22 +9,17 @@ import { useGetCourseSubjects } from "../../http/course/useGetCourseSubjects";
 import { useGetCourses } from "../../http/course/useGetCourse";
 import type { ResponseGetCourseType } from "../../http/types/responseGetCourse";
 
-const columns: Column<ResponseGetCourseType>[] = [
-    { key: "id", header: "ID", width: "180px" },
-    { key: "name", header: "Curso" },
-    { key: "descricao", header: "Semestre", width: "360px" },
-]
-
 export function PaginaCursos() {
-    const { data, isPending } = useGetCourses()
+    const { data, isPending } = useGetCourses();
     const { data: courseSubjects, isPending: isPendingCourseSubjects } = useGetCourseSubjects(1);
-    const { data: dataDesactivated } = useGetCoursesDesactivated()
-    const { mutateAsync: updateCourseStatus } = useUpdateCourseStatus()
-    const [updatingCourseId, setUpdatingCourseId] = useState<number | null>(null)
-    const [isPostForm, setIsPostForm] = useState(false)
+    const { data: dataDesactivated } = useGetCoursesDesactivated();
+    const { mutateAsync: updateCourseStatus } = useUpdateCourseStatus();
+    
+    const [updatingCourseId, setUpdatingCourseId] = useState<number | null>(null);
+    const [isPostForm, setIsPostForm] = useState(false);
 
-    const totalCourses = isPending ? "carregando..." : data?.length ?? 0
-    const totalInactiveCourses = dataDesactivated?.length ?? 0
+    const totalCourses = isPending ? "carregando..." : data?.length ?? 0;
+    const totalInactiveCourses = dataDesactivated?.length ?? 0;
 
     const totalSubjects = isPendingCourseSubjects
         ? { materias: "carregando..." }
@@ -32,17 +27,88 @@ export function PaginaCursos() {
 
     const totalSemesters = isPendingCourseSubjects
         ? "carregando..."
-        : new Set(courseSubjects?.map((course) => course.semestre).filter(Boolean)).size
+        : new Set(courseSubjects?.map((course) => course.semestre).filter(Boolean)).size;
 
     const handdleStatusUpdate = async (courseId: number) => {
-        setUpdatingCourseId(courseId)
-
+        setUpdatingCourseId(courseId);
         try {
-            await updateCourseStatus(courseId)
+            await updateCourseStatus(courseId);
         } finally {
-            setUpdatingCourseId(null)
+            setUpdatingCourseId(null);
         }
-    }
+    };
+
+    const columns: Column<ResponseGetCourseType>[] = [
+        {
+            key: "name",
+            header: "Curso",
+            width: "350px",
+            render: (row) => (
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xs shrink-0">
+                        {row.name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                        <span className="font-medium text-gray-900 truncate">{row.name}</span>
+                        <span className="text-[10px] text-gray-400 uppercase tracking-tighter mt-0.5">
+                            CURSO ID: {row.id}
+                        </span>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            key: "descricao",
+            header: "Descrição / Informações",
+            width: "300px",
+            render: (row) => (
+                <span className="text-gray-500 text-sm block truncate max-w-xs">
+                    {row.descricao || "Sem descrição informada"}
+                </span>
+            )
+        },
+        {
+            key: "status",
+            header: "Status",
+            width: "120px",
+            render: (row) => (
+                <span
+                    className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                        row.ativo
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                    }`}
+                >
+                    {row.ativo ? "Ativo" : "Inativo"}
+                </span>
+            ),
+        },
+        {
+            key: "actions",
+            header: "Ações",
+            width: "150px",
+            align: "center",
+            render: (row) => (
+                <div onClick={(e) => e.stopPropagation()}>
+                    <button
+                        onClick={() => handdleStatusUpdate(row.id)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors w-28 text-center ${
+                            row.ativo
+                                ? "bg-red-50 text-red-600 hover:bg-red-100"
+                                : "bg-green-50 text-green-600 hover:bg-green-100"
+                        }`}
+                        disabled={updatingCourseId === row.id}
+                    >
+                        {updatingCourseId === row.id
+                            ? "..."
+                            : row.ativo
+                            ? "Desativar"
+                            : "Ativar"}
+                    </button>
+                </div>
+            ),
+        },
+    ];
 
     return (
         <>
@@ -57,28 +123,7 @@ export function PaginaCursos() {
                     { title: "Semestres", value: totalSemesters.toString(), cor: "amarelo" },
                     { title: "Inativos", value: totalInactiveCourses.toString(), cor: "vermelho" },
                 ]}
-                columns={[
-                    ...columns,
-                    {
-                        key: "actions",
-                        header: "Ações",
-                        width: "180px",
-                        align: "center",
-                        render: (row) => (
-                            <div className="flex gap-2 justify-center">
-                                <button
-                                    onClick={() => handdleStatusUpdate(row.id)}
-                                    className="px-2 py-1 bg-yellow-500 text-white rounded-sm"
-                                    disabled={updatingCourseId === row.id}
-                                >
-                                    {updatingCourseId === row.id
-                                        ? "Atualizando..."
-                                        : (row.ativo ? "Desativar" : "Ativar")}
-                                </button>
-                            </div>
-                        ),
-                    },
-                ]}
+                columns={columns}
                 data={data ?? []}
                 dataDesactivated={dataDesactivated ?? []}
                 rowKey={(row) => row.id}
@@ -109,5 +154,5 @@ export function PaginaCursos() {
                 </>
             )}
         </>
-    )
+    );
 }

@@ -22,6 +22,7 @@ type AdminCrudPageProps<T> = {
     emptyPlaceholder?: ReactNode;
     primaryActionLabel?: string;
     onPrimaryAction?: () => void;
+    onRowClick?: (row: T) => void;
     children?: ReactNode;
     showTable?: boolean;
 }
@@ -38,6 +39,7 @@ export function AdminCrudPage<T>({
     emptyPlaceholder,
     primaryActionLabel,
     onPrimaryAction,
+    onRowClick,
     children,
     showTable = true,
 }: AdminCrudPageProps<T>) {
@@ -101,6 +103,7 @@ export function AdminCrudPage<T>({
                                 columns={columns}
                                 data={desactivated ? dataDesactivated : data}
                                 rowKey={rowKey}
+                                onRowClick={onRowClick}
                                 emptyPlaceholder={emptyPlaceholder}
                             />
                         </div>
