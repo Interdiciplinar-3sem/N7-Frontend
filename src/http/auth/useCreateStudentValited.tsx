@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { API_URL } from "../api"
 import type { ResponseLoginType } from "../types/responseLoginType"
+import { checkCookies } from "../../hooks/useCheckCookies";
 
 export const useConfirmEmail = (token: string) => {
     const queryClient = useQueryClient();
@@ -25,7 +26,11 @@ export const useConfirmEmail = (token: string) => {
             return text.trim() ? JSON.parse(text) : { message: "", token: "" };
         },
 
-        onSuccess: async () => {
+        onSuccess: async (data) => {
+            const cookiesWork = checkCookies();
+            if (!cookiesWork && data.token) {
+                localStorage.setItem("accessToken", data.token);
+            }
             queryClient.setQueryData(["user-auth"], { status: true });
             await queryClient.invalidateQueries({ queryKey: ["user-auth"] });
         }

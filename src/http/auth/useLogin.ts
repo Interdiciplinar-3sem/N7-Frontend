@@ -4,6 +4,7 @@ import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { ResponseLoginType } from "../types/responseLoginType"
 import { useNavigate } from "react-router-dom"
+import { checkCookies } from "../../hooks/useCheckCookies"
 
 export const useLogin = () => {
     const navigate = useNavigate();
@@ -45,14 +46,14 @@ export const useLogin = () => {
 
             return result;
         },
-         onSuccess: async () => {
-            queryClient.setQueryData(["user-auth"], {
-                status: true,
-            });
-
+        onSuccess: async (data) => {
+            const cookiesWork = checkCookies();
+            if (!cookiesWork && data.token) {
+                localStorage.setItem("accessToken", data.token);
+            }
+            queryClient.setQueryData(["user-auth"], { status: true });
             await queryClient.invalidateQueries({ queryKey: ["user-auth"] });
-
-            navigate("/feed", { replace: true})
+            navigate("/feed", { replace: true });
         }
     })
 }
