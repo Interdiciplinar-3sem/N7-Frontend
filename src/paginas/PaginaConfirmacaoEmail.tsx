@@ -1,15 +1,15 @@
-// src/paginas/PaginaConfirmacaoEmail.tsx
 import { useEffect, useRef } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { ConfirmEmailError, useConfirmEmail } from "../http/auth/useCreateStudentValited";
 import { FeedbackCard, type EstadoFeedback } from "../componentes/ui/FeedBackCard";
 
 export function PaginaConfirmacaoEmail() {
+    const { type } = useParams();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
 
-    const { mutate, isPending, isSuccess, isError, error } = useConfirmEmail();
+    const { mutate, isPending, isSuccess, isError, error } = useConfirmEmail(type);
 
     const ignorar = useRef(false);
 

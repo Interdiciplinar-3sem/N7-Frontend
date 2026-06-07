@@ -11,6 +11,14 @@ import { StudentEditForm } from "../../componentes/admin/adminStudentEditForm";
 import type { ResponseGetUserType } from "../../http/types/responseGetUserType";
 import { Overlay } from "../../componentes/overlay";
 import { useAdminPreviewer } from "../../layout/layoutAdmin";
+import {
+    GraduationCap,
+    Shield,
+    BookOpen,
+} from "lucide-react";
+
+import { AdminUserFormRoleOptions } from "../../componentes/admin/adminUserFormRoleOptions";
+import { ProfessorForm } from "../../componentes/admin/adminProfessorForm";
 
 type UserRow = ResponseGetUserType & {
     ativo?: boolean;
@@ -190,6 +198,7 @@ export function PaginaUserPainel() {
                                     setIsEditForm(false);
                                     setEditingUserId(null);
                                     setEditingStudent(null);
+                                    setUserRole("");
                                 }}
                             >
                                 <X size={16} />
@@ -201,6 +210,7 @@ export function PaginaUserPainel() {
                                 setIsEditForm(false);
                                 setEditingUserId(null);
                                 setEditingStudent(null);
+                                setUserRole("");
                             }}
                         />
                     </div>
@@ -210,8 +220,7 @@ export function PaginaUserPainel() {
             {isPostForm && (
                 <>
                     <Overlay />
-                    <div className="fixed z-100 top-1/2 left-1/2 w-[94vw] max-w-4xl max-h-[92vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-gray-200 bg-gray-50 p-4 shadow-2xl">
-                        <div className="flex flex-col items-center w-full h-full relative p-4">
+                    <div className="fixed z-100 h-full top-0 right-0 w-[94vw] max-w-lg overflow-y-auto rounded-2xl border border-gray-200 bg-gray-50 p-4 shadow-2xl">                        <div className="flex flex-col items-center w-full h-full relative p-4">
                             <button
                                 className="ml-auto mb-4 p-1 bg-gray-300 text-gray-700 rounded-md"
                                 onClick={() => {
@@ -221,25 +230,34 @@ export function PaginaUserPainel() {
                             >
                                 <X size={16} />
                             </button>
-                            <h4 className="font-semibold mb-2">Formulário de criação de usuário</h4>
+                            <h4 className="font-semibold mb-2">Formulários de criação de usuários</h4>
 
                             {userRole === "" && (
-                                <div className="flex flex-col sm:flex-row justify-between h-full w-full gap-4 p-4 max-h-40">
-                                    <div className="w-full h-full flex-1 bg-red-900/50 rounded-2xl shadow-2xl flex justify-center items-center">
-                                        <button className="px-3 py-2 text-white rounded-md" onClick={() => setUserRole("ALUNO")}>
-                                            Criar aluno
-                                        </button>
-                                    </div>
-                                    <div className="flex-1 bg-green-900/50 rounded-2xl shadow-2xl flex justify-center items-center">
-                                        <button className="w-full h-full px-3 py-2 text-white rounded-md" onClick={() => setUserRole("ADM")}>
-                                            Criar ADM
-                                        </button>
-                                    </div>
-                                    <div className="flex-1 bg-blue-900/50 rounded-2xl shadow-2xl flex justify-center items-center">
-                                        <button className="w-full h-full px-3 py-2 text-white rounded-md" onClick={() => setUserRole("PROFESSOR")}>
-                                            Criar professor
-                                        </button>
-                                    </div>
+                                <div className="flex flex-col gap-4 w-full max-w-md mx-auto">
+    
+                                    <AdminUserFormRoleOptions
+                                        title="Criar Aluno"
+                                        description="Cadastrar estudantes na plataforma"
+                                        icon={<GraduationCap size={24} />}
+                                        color="red"
+                                        onClick={() => setUserRole("ALUNO")}
+                                    />
+
+                                    <AdminUserFormRoleOptions
+                                        title="Criar Administrador"
+                                        description="Gerenciar usuários e permissões"
+                                        icon={<Shield size={24} />}
+                                        color="green"
+                                        onClick={() => setUserRole("ADM")}
+                                    />
+
+                                    <AdminUserFormRoleOptions
+                                        title="Criar Professor"
+                                        description="Vincular professores às matérias"
+                                        icon={<BookOpen size={24} />}
+                                        color="blue"
+                                        onClick={() => setUserRole("PROFESSOR")}
+                                    />
                                 </div>
                             )}
 
@@ -251,7 +269,9 @@ export function PaginaUserPainel() {
                                     <ADMform setIsPostForm={setIsPostForm} setUserRole={setUserRole} />
                                 </div>
                             )}
-                            {userRole === "PROFESSOR" && <div>Em breve</div>}
+                            {userRole === "PROFESSOR" && (
+                                <ProfessorForm setIsPostForm={setIsPostForm} setUserRole={setUserRole} />
+                            )}
                         </div>
                     </div>
                 </>

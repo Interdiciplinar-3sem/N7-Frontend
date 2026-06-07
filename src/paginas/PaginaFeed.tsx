@@ -156,7 +156,7 @@ export function PaginaFeed() {
                             Carregando mais...
                         </div>
                     )}
-                    {!hasNextPage && activeTab === "seguindo" && (
+                    {items.length > 0 && !hasNextPage && activeTab === "seguindo" && (
                         <div className="col-span-full text-center text-sm text-gray-400 py-4">
                             <h2>Você chegou ao fim do feed.</h2>
                             <button 

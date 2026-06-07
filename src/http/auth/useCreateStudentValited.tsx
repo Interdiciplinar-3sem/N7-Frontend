@@ -14,8 +14,11 @@ export class ConfirmEmailError extends Error {
     }
 }
 
-async function confirmEmail(token: string): Promise<{ message: string; token: string }> {
-    const url = `${API_URL}/user/email?token=${encodeURIComponent(token)}`;
+async function confirmEmail(token: string, type?: string): Promise<{ message: string; token: string }> {
+    console.log(type)
+    const url = type === "professor"
+        ? `${API_URL}/adm/professor?token=${encodeURIComponent(token)}`
+        : `${API_URL}/user/email?token=${encodeURIComponent(token)}`;
 
     if (!token) {
         throw new ConfirmEmailError(400, "TOKEN_VAZIO", "Token ausente — o link pode estar incompleto.");
@@ -49,9 +52,9 @@ async function confirmEmail(token: string): Promise<{ message: string; token: st
     return data as { message: string; token: string };
 }
 
-export function useConfirmEmail() {
+export function useConfirmEmail(type?: string) {
     return useMutation({
-        mutationFn: (token: string) => confirmEmail(token),
+        mutationFn: (token: string) => confirmEmail(token, type),
         retry: false,
     });
 }
