@@ -1,45 +1,40 @@
 import { useEffect } from "react"
-import { useQuery } from "@tanstack/react-query"
-import type { ResponseGetSummaryType } from "../types/responseGetSummary";
+import { useInfiniteQuery } from "@tanstack/react-query"
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
+import type { ResponseGetSummaryType } from "../types/responseGetSummary";
+
+type PagedResponse = {
+  data: ResponseGetSummaryType[]
+  page: number
+  size: number
+  totalElements: number
+}
 
 export const useGetFeed = (id: number) => {
     const { showError } = useToast()
 
-    const query = useQuery({
+    const query = useInfiniteQuery({
         queryKey: ["get-feed", id],
-        queryFn: async (): Promise<ResponseGetSummaryType[]> => {
-            const response = await authFecth(`${API_URL}/feed/me?limit=20`)
+        queryFn: async ({ pageParam = 0 }): Promise<PagedResponse> => {
+            const response = await authFecth(`${API_URL}/feed/me?limit=20&offset=${pageParam}`)
+            
             if(!response.ok){
                 throw new Error("Erro ao buscar feed!");
             }
-
-            const responseBody = await response.text();
-            const parsed: any = responseBody.trim() ? JSON.parse(responseBody) : { data: [] };
-
-            const list: any[] = Array.isArray(parsed) ? parsed : (parsed.data ?? []);
-
-            const data: ResponseGetSummaryType[] = list.map((item) => ({
-                studentId: item.studentId,
-                summaryId: item.summaryId,
-                titulo: item.titulo,
-                conteudo: item.conteudo,
-                reports: item.reports ?? 0,
-                ativo: item.ativo,
-                studentUrl: item.studentUrl ?? "/avatares/default.svg",
-                studentNome: item.studentNome,
-                totalCurtidas: item.totalCurtidas ?? 0,
-                subjectId: item.subjectId,
-                subjectNome: item.subjectNome,
-                publico: item.publico,
-                tags: item.tags
-            }))
-
-            return data;
+            return response.json();
         },
+
+         initialPageParam: 0,
+
+        getNextPageParam: (lastPage) => {
+            const fetched = lastPage.page * lastPage.size + lastPage.data.length
+            if (fetched >= lastPage.totalElements) return undefined
+            return lastPage.page + 1
+        },
+
         staleTime: 1000 * 60 * 5,
         retry: false,
         enabled: !!id
