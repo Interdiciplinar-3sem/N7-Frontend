@@ -14,9 +14,6 @@ export function PaginaFeed() {
     const navigate = useNavigate();
     const parentContext = useOutletContext<ContextPropsType>();
 
-    // navigate() não pode ser chamado no corpo do render — causa o warning
-    // "Cannot update a component while rendering a different component".
-    // O useEffect garante que o redirecionamento ocorra após o render terminar.
     useEffect(() => {
         if (parentContext.role === "ADM") {
             navigate("/painel", { replace: true });
@@ -26,27 +23,17 @@ export function PaginaFeed() {
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
     const [selectedResumoId, setSelectedResumoId] = useState<number | null>(null);
 
-    // --- Queries ---
-
-    // "seguindo": tem paginação real (InfiniteQuery)
     const {
         data: resumosFeedPaged,
         fetchNextPage: fetchNextFeed,
         hasNextPage: hasNextFeed,
         isFetchingNextPage: isFetchingFeed,
     } = useGetFeed(parentContext.studentId);
-
-    // "explorar" e "ranking": ainda são listas simples — tratamos como página única
+    
     const { data: resumosExplorarRaw } = useGetSummaryActivated();
     const { data: resumosRankingRaw } = useGetRanking(parentContext.studentId);
 
-    // Sidebar
     const { data: following } = useGetFollowingMe(parentContext.studentId);
-
-    // --- Normalização ---
-    // Todas as abas expõem o mesmo formato: item[]
-    // Para as rotas sem paginação, simplesmente usamos o array direto.
-    // Para o feed paginado, achatamos as páginas.
 
     const itemsPorAba = {
         explorar: resumosExplorarRaw ?? [],
@@ -56,10 +43,6 @@ export function PaginaFeed() {
 
     const items = itemsPorAba[activeTab];
 
-    // --- Scroll infinito ---
-    // Só faz sentido na aba "seguindo" por enquanto,
-    // mas a estrutura já está pronta para as outras quando o backend evoluir.
-
     const sentinelaRef = useRef<HTMLDivElement>(null);
 
     const fetchNextPage    = activeTab === "seguindo" ? fetchNextFeed    : undefined;
@@ -67,11 +50,12 @@ export function PaginaFeed() {
     const isFetchingNextPage = activeTab === "seguindo" ? isFetchingFeed : false;
 
     useEffect(() => {
-        if (!fetchNextPage) return; // aba sem paginação: não registra observer
+        if (!fetchNextPage) return;
 
         const observer = new IntersectionObserver(
             (entries) => {
                 if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+                    console.log("Buscando próxima página do feed...");
                     fetchNextPage();
                 }
             },
@@ -82,7 +66,6 @@ export function PaginaFeed() {
         return () => observer.disconnect();
     }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-    // --- Mensagens vazias por aba ---
     const emptyMessages = {
         explorar:  "Nosso sistema está vazio. Seja o primeiro a criar um resumo!",
         seguindo:  "Você não está seguindo ninguém ainda.",
@@ -93,7 +76,6 @@ export function PaginaFeed() {
         <main className="w-full h-full flex justify-around pt-16">
             <section className="lg:w-2/3 min-h-screen p-6 mb-20 sm:mb-0 flex flex-col">
 
-                {/* Tabs */}
                 <div className="min-h-15 flex items-center justify-between mx-6 mb-6 bg-[#F8FAFC] shadow-lg rounded-lg">
                     <nav className="w-full">
                         <ul role="tablist" className="flex flex-col xs:flex-row gap-2 p-2 text-sm items-center">
@@ -112,8 +94,6 @@ export function PaginaFeed() {
                         </ul>
                     </nav>
                 </div>
-
-                {/* Grid de cards */}
                 <section className="lg:w-full min-h-screen p-6 mb-20 sm:mb-0 sm:grid sm:grid-cols-2 flex flex-col sm:grid-flow-dense gap-8 grid-auto-rows-[180px]">
                     {items.length === 0 ? (
                         <div className="col-span-full text-center text-gray-400">
@@ -145,7 +125,6 @@ export function PaginaFeed() {
                         })
                     )}
 
-                    {/* Placeholders para completar o grid quando há poucos cards */}
                     {items.length > 0 && items.length < 6 &&
                         Array.from({ length: 6 - items.length }).map((_, i) => {
                             const index = items.length + i;
@@ -170,12 +149,27 @@ export function PaginaFeed() {
                         })
                     }
 
-                    {/* Sentinela — ativo em todas as abas; só dispara onde há paginação */}
                     <div ref={sentinelaRef} className="h-4 col-span-full" />
 
                     {isFetchingNextPage && (
                         <div className="col-span-full text-center text-sm text-gray-400 py-4">
                             Carregando mais...
+                        </div>
+                    )}
+                    {!hasNextPage && activeTab === "seguindo" && (
+                        <div className="col-span-full text-center text-sm text-gray-400 py-4">
+                            <h2>Você chegou ao fim do feed.</h2>
+                            <button 
+                                onClick={() => {
+                                    window.scrollTo({
+                                        top: 0,
+                                        behavior: "smooth",
+                                    });
+                                }}
+                                className="mt-2 px-4 py-2 bg-blue-600/90 text-white rounded-md hover:bg-blue-700 transition"
+                            >
+                              Subir até o topo
+                           </button>
                         </div>
                     )}
                 </section>
@@ -188,7 +182,6 @@ export function PaginaFeed() {
                 )}
             </section>
 
-            {/* Sidebar */}
             <section className="hidden min-w-72 xl:w-96 lg:flex lg:flex-col gap-3">
                 <div className="flex items-center justify-between gap-3">
                     <h2>Seguindo:</h2>
