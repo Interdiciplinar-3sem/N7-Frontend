@@ -4,7 +4,6 @@ import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 import type { ResponseGetCourseSubjectsType } from "../types/responseGetCourseSubjects";
 import { useToast } from "../../contexto/toastContext";
-import { getErrorMessage } from "../utils/getErrorMessage";
 
 export const useGetCourseSubjectsSemesterMe = (
     userId: number,
@@ -35,9 +34,9 @@ export const useGetCourseSubjectsSemesterMe = (
 
     useEffect(() => {
         if (query.isError) {
-            showError(getErrorMessage(query.error, "Erro ao carregar matérias"))
+            showError("Erro ao carregar matérias")
         }
-    }, [query.error, query.isError, showError])
+    }, [query.error, query.isError])
 
     return query
 }

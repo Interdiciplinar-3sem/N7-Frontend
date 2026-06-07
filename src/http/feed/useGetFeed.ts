@@ -1,9 +1,6 @@
-import { useEffect } from "react"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
-import { useToast } from "../../contexto/toastContext"
-import { getErrorMessage } from "../utils/getErrorMessage"
 import type { ResponseGetSummaryType } from "../types/responseGetSummary";
 
 type PagedResponse = {
@@ -14,9 +11,7 @@ type PagedResponse = {
 }
 
 export const useGetFeed = (id: number) => {
-    const { showError } = useToast()
-
-    const query = useInfiniteQuery({
+    return useInfiniteQuery({
         queryKey: ["get-feed", id],
         queryFn: async ({ pageParam = 0 }): Promise<PagedResponse> => {
             const response = await authFecth(`${API_URL}/feed/me?limit=20&offset=${pageParam}`)
@@ -39,12 +34,4 @@ export const useGetFeed = (id: number) => {
         retry: false,
         enabled: !!id
     })
-
-    useEffect(() => {
-        if (query.isError) {
-            showError(getErrorMessage(query.error, "Erro ao carregar feed"))
-        }
-    }, [query.error, query.isError, showError])
-
-    return query
 }

@@ -24,6 +24,6 @@ export const useUpdateTag = () => {
             queryClient.invalidateQueries({ queryKey: ["get-tags-desactivated"] });
             queryClient.invalidateQueries({ queryKey: ["get-tag-by-id"] });
         },
-        onError: (err: any) => showError(err.message),
+        onError: () => showError("Erro ao atualizar o nome da tag"),
     });
 };

@@ -25,8 +25,8 @@ export const useSoftDeleteTag = () => {
             queryClient.invalidateQueries({ queryKey: ["get-all-tags"] });
             queryClient.invalidateQueries({ queryKey: ["get-tags-desactivated"] });
         },
-        onError: (error: any) => {
-            showError(error.message || "Erro ao atualizar o status da tag");
+        onError: () => {
+            showError("Erro ao atualizar o status da tag");
         }
     });
 };

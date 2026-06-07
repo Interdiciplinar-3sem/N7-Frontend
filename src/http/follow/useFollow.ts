@@ -2,7 +2,6 @@ import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useToast } from "../../contexto/toastContext"
-import { getErrorMessage } from "../utils/getErrorMessage"
 
 export const useFollow = (targetStudentId: number, currentUserId: number) => {
     const queryClient = useQueryClient();
@@ -55,8 +54,8 @@ export const useFollow = (targetStudentId: number, currentUserId: number) => {
             await queryClient.invalidateQueries({ queryKey: ["get-feed", currentUserId] })
             showSuccess(result.message || "Agora você está seguindo este usuário")
         },
-        onError: (error) => {
-            showError(getErrorMessage(error, "Erro ao seguir usuário"))
+        onError: () => {
+            showError("Erro ao seguir usuário")
         },
     })
 }
