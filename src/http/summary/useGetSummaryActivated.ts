@@ -6,14 +6,14 @@ import { API_URL } from "../api";
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 
-export const useGetSummaryActivated = () => {
+export const useGetSummaryActivated = (searchTerm?: string) => {
     const { showError } = useToast()
 
     const query = useQuery({
         queryKey: ["get-summary-activated"],
         queryFn: async (): Promise<ResponseGetSummaryType[]> => {
             const response = await authFecth(`${API_URL}/resumos/ativos?limit=20`)
-            if(!response.ok){
+            if (!response.ok) {
                 throw new Error("Erro ao buscar resumo!");
             }
 
@@ -41,12 +41,17 @@ export const useGetSummaryActivated = () => {
         staleTime: 1000 * 60 * 5,
         retry: false
     })
-
+    const filteredData = searchTerm?.trim()
+        ? query.data?.filter((item) =>
+            item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.studentNome?.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        : query.data
     useEffect(() => {
         if (query.isError) {
             showError(getErrorMessage(query.error, "Erro ao carregar resumos"))
         }
     }, [query.error, query.isError, showError])
 
-    return query
+    return { ...query, data: filteredData }
 }

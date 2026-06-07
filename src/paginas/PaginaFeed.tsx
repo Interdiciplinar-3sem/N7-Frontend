@@ -9,24 +9,27 @@ import { useGetFollowingMe } from "../http/follow/useGetFollowingMe";
 import { Link } from "react-router-dom";
 import { useGetSummaryActivated } from "../http/summary/useGetSummaryActivated";
 import { ViweSummary } from "../componentes/ViweSummary";
+import { useSearchParams } from "react-router-dom";
 
 export function PaginaFeed() {
     const navigate = useNavigate();
     const parentContext = useOutletContext<ContextPropsType>();
-    if(parentContext.role === "ADM") {
+    const [searchParams] = useSearchParams();
+    const searchTerm = searchParams.get("busca") ?? undefined;
+    if (parentContext.role === "ADM") {
         navigate("/painel")
     }
 
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
-    const {data: resumosRanking} = useGetRanking(parentContext.studentId)
-    const {data: resumos} = useGetSummaryActivated();
-    const {data: resumosFeed} = useGetFeed(parentContext.studentId);
-    const {data: following} = useGetFollowingMe(parentContext.studentId);
+    const { data: resumosRanking } = useGetRanking(parentContext.studentId)
+    const { data: resumos } = useGetSummaryActivated(searchTerm);
+    const { data: resumosFeed } = useGetFeed(parentContext.studentId);
+    const { data: following } = useGetFollowingMe(parentContext.studentId);
     const [selectedResumoId, setSelectedResumoId] = useState<number | null>(null);
 
     const resumosArray = activeTab === "explorar" ? resumos : activeTab === "seguindo" ? resumosFeed : resumosRanking;
     const items = resumosArray ?? [];
-    
+
     return (
         <main className="w-full h-full flex justify-around pt-16">
             <section className="lg:w-2/3 min-h-screen p-6 mb-20 sm:mb-0
@@ -36,7 +39,7 @@ export function PaginaFeed() {
                     <nav className="w-full">
                         <ul role="tablist" className=" flex flex-col xs:flex-row gap-2 p-2 text-sm items-center">
                             <li role="presentation">
-                                 <button
+                                <button
                                     onClick={() => setActiveTab("explorar")}
                                     role="tab"
                                     aria-selected="false"
@@ -68,7 +71,7 @@ export function PaginaFeed() {
                         </ul>
                     </nav>
                 </div>
-                
+
                 <section className={`
                     lg:w-full min-h-screen p-6 mb-20 sm:mb-0
                     sm:grid sm:grid-cols-2 flex flex-col sm:grid-flow-dense gap-8 grid-auto-rows-[180px]
@@ -81,11 +84,11 @@ export function PaginaFeed() {
                         </div>
                     ) : (
                         items.map((resumo, index) => {
-                            let formato:'quadrado' | 'horizontal' | 'vertical' = "quadrado";
-                            if(index % 5 === 0) formato = "horizontal";
-                            if(index % 5 === 3) formato = "vertical";
+                            let formato: 'quadrado' | 'horizontal' | 'vertical' = "quadrado";
+                            if (index % 5 === 0) formato = "horizontal";
+                            if (index % 5 === 3) formato = "vertical";
 
-                            let cores:("verde" | "salmao" | "rosa" | "azul")[] = ["verde", "salmao", "rosa", "azul"]
+                            let cores: ("verde" | "salmao" | "rosa" | "azul")[] = ["verde", "salmao", "rosa", "azul"]
                             let cor = cores[index % cores.length]
 
                             return (
@@ -96,12 +99,12 @@ export function PaginaFeed() {
 
                     {items.length > 0 && items.length < 6 && Array.from({ length: 6 - items.length }).map((_, i) => {
                         const index = items.length + i;
-                        let formato:'quadrado' | 'horizontal' | 'vertical' = "quadrado";
-                        if(index % 5 === 0) formato = "horizontal";
-                        if(index % 5 === 3) formato = "vertical";
+                        let formato: 'quadrado' | 'horizontal' | 'vertical' = "quadrado";
+                        if (index % 5 === 0) formato = "horizontal";
+                        if (index % 5 === 3) formato = "vertical";
 
                         return (
-                            <CardResumo key={`ph-${i}`} summaryId={i} setViewSummary={setSelectedResumoId} titulo={""} texto={""} formato={formato} cor={"invisivel" as any} invisivel={true} imageUrl={""} studentName={""}/>
+                            <CardResumo key={`ph-${i}`} summaryId={i} setViewSummary={setSelectedResumoId} titulo={""} texto={""} formato={formato} cor={"invisivel" as any} invisivel={true} imageUrl={""} studentName={""} />
                         )
                     })}
 
@@ -122,33 +125,33 @@ export function PaginaFeed() {
                 {following?.map((s: any) => {
 
                     return (
-                        <CardPerfil key={s.studentId} studentId={s.studentId} className="" nome={s.name} seguidores={s.seguidores} semestre={s.semestre} url={s.studentUrl}/>
+                        <CardPerfil key={s.studentId} studentId={s.studentId} className="" nome={s.name} seguidores={s.seguidores} semestre={s.semestre} url={s.studentUrl} />
                     )
                 })}
-                {following && following.length >=10 && (
+                {following && following.length >= 10 && (
                     <div className="flex items-center justify-start gap-3">
                         <Link
-                        to="/feed/students"
-                        className="w-72 rounded-full border text-center border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 hover:text-zinc-900"
+                            to="/feed/students"
+                            className="w-72 rounded-full border text-center border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-50 hover:text-zinc-900"
                         >
                             ver +
                         </Link>
                     </div>
                 )}
-                 
+
 
                 <div className="min-h-20 min-w-20 relative z-51 flex gap-1 text-xs">
-                    
-                      <a className="hover:underline" href="#">Sobre</a>
-                      <h2>.</h2>
-                      <a className="hover:underline">Ajuda</a>
-                      <a className="hover:underline" href="#">Contato</a>
-                      <h2>.</h2>
-                      <a className="hover:underline">API</a>
-                      <a className="hover:underline" href="#">Termos</a>
-                      <h2>.</h2>
-                      <a className="hover:underline">Privacidade</a>
-              
+
+                    <a className="hover:underline" href="#">Sobre</a>
+                    <h2>.</h2>
+                    <a className="hover:underline">Ajuda</a>
+                    <a className="hover:underline" href="#">Contato</a>
+                    <h2>.</h2>
+                    <a className="hover:underline">API</a>
+                    <a className="hover:underline" href="#">Termos</a>
+                    <h2>.</h2>
+                    <a className="hover:underline">Privacidade</a>
+
                 </div>
             </section>
         </main>

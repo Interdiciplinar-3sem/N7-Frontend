@@ -19,9 +19,17 @@ type SideBarProps = {
     links?: LinkItem[]
 }
 
-export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: SideBarProps){
+export function SideBar({ role, setIsOptionsFormOpen, isOptionsFormOpen, links }: SideBarProps) {
     const [sideBar, setSideBar] = useState(false);
     const [searchBar, setSearchBar] = useState(false);
+    const [searchInput, setSearchInput] = useState("");
+
+    const handleSidebarSearch = () => {
+        if (searchInput.trim()) {
+            navigate(`/feed?busca=${encodeURIComponent(searchInput.trim())}`);
+            setSearchBar(false);
+        }
+    };
 
     const navigate = useNavigate()
 
@@ -30,22 +38,22 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
     }
 
     const handdleMouseEnter = () => {
-        if(window.innerWidth >= 640) setSideBar(true)
+        if (window.innerWidth >= 640) setSideBar(true)
     }
 
     const handdleSearchBar = () => {
-        if(window.innerWidth >= 640) { setSearchBar(!searchBar); }
-        else if (window.innerWidth < 640) { 
+        if (window.innerWidth >= 640) { setSearchBar(!searchBar); }
+        else if (window.innerWidth < 640) {
             handdleNavigate("/busca");
         }
     }
 
-    const defaultLinks: LinkItem[] = [  
-        { key: "search", label: "Pesquisar...", icon: <Search className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, onClick: handdleSearchBar, position: "top" },
-        { key: "create", label: "Criar resumo", icon: <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, onClick: () => setIsOptionsFormOpen?.(!(isOptionsFormOpen ?? false)), position: "top" },
-        { key: "feed", label: "Feed", to: "/feed", icon: <Bookmark className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" },
-        { key: "class", label: "Turmas", to: "/turmas", icon: <Coffee className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" },
-        { key: "profile", label: "User", to: "/perfil", icon: <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "bottom" }
+    const defaultLinks: LinkItem[] = [
+        { key: "search", label: "Pesquisar...", icon: <Search className="h-4 w-4 xxs:h-auto xxs:w-auto" />, onClick: handdleSearchBar, position: "top" },
+        { key: "create", label: "Criar resumo", icon: <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto" />, onClick: () => setIsOptionsFormOpen?.(!(isOptionsFormOpen ?? false)), position: "top" },
+        { key: "feed", label: "Feed", to: "/feed", icon: <Bookmark className="h-4 w-4 xxs:h-auto xxs:w-auto" />, position: "top" },
+        { key: "class", label: "Turmas", to: "/turmas", icon: <Coffee className="h-4 w-4 xxs:h-auto xxs:w-auto" />, position: "top" },
+        { key: "profile", label: "User", to: "/perfil", icon: <User className="h-4 w-4 xxs:h-auto xxs:w-auto" />, position: "bottom" }
     ];
 
     const allLinks = links ?? defaultLinks;
@@ -53,12 +61,12 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
     const bottomLinks = allLinks.filter(l => l.position === "bottom");
 
     return (
-         <header 
+        <header
             className={` bg-white
                 z-80 hover:z-90
                 fixed bottom-0 left-0 right-0 sm:top-0 sm:bottom-0 sm:right-auto sm:h-screen md:bg-transparent
             `}>
-            <section 
+            <section
                 onMouseEnter={() => handdleMouseEnter()}
                 onMouseLeave={() => setSideBar(false)}
                 className={`
@@ -89,13 +97,13 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
                             {topLinks.map((item) => (
                                 <li
                                     key={item.key ?? item.label}
-                                    onClick={item.key !== "search" ? () => { item.onClick?.(); if(item.to) handdleNavigate(item.to); } : undefined}
+                                    onClick={item.key !== "search" ? () => { item.onClick?.(); if (item.to) handdleNavigate(item.to); } : undefined}
                                     className={`flex gap-2 py-1 grou
                                     ${!(item.key === "search" && searchBar) && "sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full transition-all"}
                                 `}
                                 >
                                     {item.key === "search" ? (
-                                        <button className="cursor-pointer" onClick={() => { item.onClick?.(); if(item.to) handdleNavigate(item.to); }}>
+                                        <button className="cursor-pointer" onClick={() => { item.onClick?.(); if (item.to) handdleNavigate(item.to); }}>
                                             {item.icon}
                                         </button>
                                     ) : (
@@ -108,14 +116,16 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
                                         <>
                                             <input
                                                 type="text"
+                                                value={searchInput}
+                                                onChange={(e) => setSearchInput(e.target.value)}
+                                                onKeyDown={(e) => e.key === "Enter" && handleSidebarSearch()}
                                                 placeholder="Pesquisar..."
-                                                className={`text-sm bg-[#F8F8F6] border-white/50 shadow-sm placeholder-white/60 text-black rounded-md px-2 py-1 outline-none w-full transition-opacity duration-200 ${
-                                                    searchBar && sideBar ? "block opacity-100 delay-100" : " hidden opacity-0"
-                                                }`}
+                                                className={`text-sm bg-[#F8F8F6] border-white/50 shadow-sm placeholder-white/60 text-black rounded-md px-2 py-1 outline-none w-full transition-opacity duration-200 ${searchBar && sideBar ? "block opacity-100 delay-100" : " hidden opacity-0"
+                                                    }`}
                                             />
 
-                                            <button type="button" className={` border border-white/50 shadow-sm text-xs bg-[#F8F8F6] text-black rounded-md p-2 max-w-15 flex items-center justify-center transition-opacity duration-200
-                                                ${ searchBar && sideBar ? "block opacity-100 delay-100" : " hidden opacity-0"}
+                                            <button type="button" onClick={handleSidebarSearch} className={` border border-white/50 shadow-sm text-xs bg-[#F8F8F6] text-black rounded-md p-2 max-w-15 flex items-center justify-center transition-opacity duration-200
+                                                ${searchBar && sideBar ? "block opacity-100 delay-100" : " hidden opacity-0"}
                                             `}>
                                                 Pesquisar
                                             </button>
@@ -135,12 +145,12 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
                             ))}
                             {role === "ADM" && (
                                 <li
-        
+
                                     onClick={() => handdleNavigate("/painel")}
                                     className={`flex gap-2 py-1 group sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full transition-all"}
                                 `}
                                 >
-                                     <div className="cursor-pointer">
+                                    <div className="cursor-pointer">
                                         {<ToolCase />}
                                     </div>
 
@@ -150,12 +160,12 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
                                         </button>
                                     }
 
-                                </li>  
+                                </li>
                             )}
                         </ul>
                     </div>
 
-                     {role === "ALUNO" && (
+                    {role === "ALUNO" && (
                         <section className={`
                             gap-2
                             flex  ${sideBar ? "sm:flex sm:items-center" : "sm:flex-col"}
@@ -163,24 +173,24 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
                             ${sideBar ? "items-start p-0 gap-4" : "items-center justify-center p-2"}
                             sm:hover:bg-[#DAE8FF] sm:hover:p-2 sm:hover:text-black sm:hover:scale-105 sm:hover:font-bold transform transition-transform cursor-pointer sm:hover:shadow-lg sm:hover:w-full
                         `}
-                        onClick={() => {
-                            handdleNavigate("/perfil"); 
-                        }}
+                            onClick={() => {
+                                handdleNavigate("/perfil");
+                            }}
                         >
                             <div className="bg-white p-2 text-black font-semibold rounded-[100%] xxs:w-10 flex items-center justify-center sm:hover:scale-105 sm:hover:font-bold transform cursor-pointer">
-                                    {bottomLinks[0]?.icon ?? <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>}
+                                {bottomLinks[0]?.icon ?? <User className="h-4 w-4 xxs:h-auto xxs:w-auto" />}
                             </div>
                             {sideBar &&
                                 <h3>{bottomLinks[0]?.label ?? "User"}</h3>
-                            } 
+                            }
                         </section>
-                     )}
-                     {role === "ADM" && (
+                    )}
+                    {role === "ADM" && (
                         <div className={`flex items-center ${sideBar ? "justify-start" : "justify-center"} px-1`}>
                             <ButtonLogOut />
                         </div>
-                     )}
-                    
+                    )}
+
                 </nav>
             </section>
         </header>

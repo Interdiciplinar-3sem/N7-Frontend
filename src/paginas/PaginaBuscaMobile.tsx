@@ -8,12 +8,15 @@ export function PaginaBuscaMobile() {
     const navigate = useNavigate();
     const [inputValue, setInputValue] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
-    const { data: resumos, isPending } = useGetAllSummary();
+    const { data: resumos, isPending } = useGetAllSummary(searchTerm);
 
     const handleSearch = (event: React.FormEvent) => {
         event.preventDefault();
         setSearchTerm(inputValue);
+        console.log("searchTerm:", inputValue);
+        console.log("resumos:", resumos);
     };
+    
 
     return (
         <main className="min-h-screen w-screen overflow-x-hidden bg-linear-to-b from-white via-[#F6F9FF] to-[#EAF1FF] px-4 py-6 flex flex-col items-center">
