@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import z from "zod";
 import { useEmailValidation } from "../../http/auth/useEmailValidation";
+import { DOMINIOS_PERMITIDOS } from "../../types/DominiosPermitidosType";
 
 type FormSignUpProps = {
     setIsEmailValid: React.Dispatch<React.SetStateAction<null | string>>;
@@ -11,16 +12,9 @@ type FormSignUpProps = {
 export function FormSignUp({ setIsEmailValid }: FormSignUpProps) {
     const { mutateAsync: signUp, isPending  } = useEmailValidation();
 
-    const DOMINIOS_PERMITIDOS = [
-        "@aluno.cps.sp.gov.br",
-        "@fatec.sp.gov.br",
-        "@cps.sp.gov.br"
-    ];
-
     const formSchema = z.object({
         nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
-        email: z.string()
-            .email("Email inválido")
+        email: z.string("Email inválido")
             .refine((email) => {
                 return DOMINIOS_PERMITIDOS.some(dominio => email.endsWith(dominio));
             }, {

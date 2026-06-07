@@ -175,7 +175,7 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
                             } 
                         </section>
                      )}
-                     {role === "ADM" && (
+                     {role!== "ALUNO" && (
                         <div className={`flex items-center ${sideBar ? "justify-start" : "justify-center"} px-1`}>
                             <ButtonLogOut />
                         </div>

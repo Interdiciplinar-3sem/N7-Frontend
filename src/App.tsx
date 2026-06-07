@@ -39,7 +39,7 @@ export function App() {
           <Routes>
             <Route element={<PaginaInicial />} path='/' />
             <Route element={<PaginaCadastro />} path='/cadastro' />
-            <Route path="/confirm-email" element={<PaginaConfirmacaoEmail />} />
+            <Route path="/confirm-email/:type" element={<PaginaConfirmacaoEmail />} />
             <Route element={<PaginaLogin />} path='/login' />
               <Route element={<ProtectedRoute />}>
                 <Route element={<LayoutNetwork />}>
