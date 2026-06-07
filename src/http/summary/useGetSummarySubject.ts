@@ -4,7 +4,6 @@ import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 import type { ResponseGetSummaryType } from "../types/responseGetSummary";
 import { useToast } from "../../contexto/toastContext";
-import { getErrorMessage } from "../utils/getErrorMessage";
 
 export const useGetSummarySubjectId = (
     subjectId: number,
@@ -31,9 +30,9 @@ export const useGetSummarySubjectId = (
 
     useEffect(() => {
         if (query.isError) {
-            showError(getErrorMessage(query.error, "Erro ao carregar resumos da matéria"))
+            showError("Erro ao carregar resumos da matéria");
         }
-    }, [query.error, query.isError, showError])
+    }, [query.error, query.isError])
 
     return query
 }

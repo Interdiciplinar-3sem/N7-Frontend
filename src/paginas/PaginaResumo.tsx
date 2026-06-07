@@ -117,7 +117,7 @@ export function PaginaResumo() {
             } else {
                 await update({
                     titulo: data.titulo,
-                    materiaId: Number(data.materiaId),
+                    subjectId: Number(data.materiaId),
                     conteudo,
                     publico: isPublic ?? false,
                     tags_ids: selectedTagIds.map(Number)

@@ -5,7 +5,6 @@ import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 import type { ResponseGetTagsType } from "../types/responseGetTagsType";
 import { useToast } from "../../contexto/toastContext";
-import { getErrorMessage } from "../utils/getErrorMessage";
 
 export const useGetTagById = (id: number) => {
     const { showError } = useToast();
@@ -20,8 +19,8 @@ export const useGetTagById = (id: number) => {
     });
 
     useEffect(() => {
-        if (query.isError) showError(getErrorMessage(query.error, "Erro ao buscar tag"));
-    }, [query.error, query.isError, showError]);
+        if (query.isError) showError("Erro ao buscar tag");
+    }, [query.error, query.isError]);
 
     return query;
 };

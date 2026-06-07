@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+// src/paginas/PaginaConfirmacaoEmail.tsx
+import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import { useConfirmEmail } from "../http/auth/useCreateStudentValited";
+import { ConfirmEmailError, useConfirmEmail } from "../http/auth/useCreateStudentValited";
 import { FeedbackCard, type EstadoFeedback } from "../componentes/ui/FeedBackCard";
 
 export function PaginaConfirmacaoEmail() {
@@ -8,33 +9,50 @@ export function PaginaConfirmacaoEmail() {
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
 
-    const { mutate, isPending, isSuccess, isError, error } = useConfirmEmail(token ?? "");
+    const { mutate, isPending, isSuccess, isError, error } = useConfirmEmail();
+
+    const ignorar = useRef(false);
 
     useEffect(() => {
-        if (token) mutate();
-    }, []);
+        if (!token) return;
 
-    useEffect(() => {
-        if (isSuccess) {
-            setTimeout(() => navigate("/feed", { replace: true }), 2000);
-        }
+        ignorar.current = false;
 
-        if (error?.message === "Essa conta já foi confirmada.") {
-            navigate("/feed", { replace: true });
-        }
-    }, [isSuccess, error]);
+        mutate(token, {
+            onSuccess: () => {
+                if (ignorar.current) return;
+                setTimeout(() => navigate("/feed", { replace: true }), 2000);
+            },
+            onError: (err) => {
+                if (ignorar.current) return;
+                if (err instanceof ConfirmEmailError && err.status === 409) {
+                    navigate("/feed", { replace: true });
+                }
+            },
+        });
+
+        return () => {
+            ignorar.current = true;
+        };
+    }, [token]);
 
     const estado: EstadoFeedback = (() => {
-        if (!token || isError) {
-            return {
-                tipo: "erro",
-                mensagem: !token
-                    ? "Link inválido. Nenhum token encontrado."
-                    : (error?.message ?? "Erro desconhecido."),
-            };
+        if (!token) {
+            return { tipo: "erro", mensagem: "Link inválido. Nenhum token encontrado na URL." };
         }
         if (isPending) return { tipo: "carregando" };
-        return { tipo: "sucesso" };
+        if (isSuccess) return { tipo: "sucesso" };
+        if (isError) {
+            if (error instanceof ConfirmEmailError) {
+                if (error.status === 409) return { tipo: "carregando" };
+                if (error.status === 410) return { tipo: "erro", mensagem: "Este link expirou. Faça o cadastro novamente para receber um novo e-mail." };
+                if (error.status === 400) return { tipo: "erro", mensagem: "Link inválido. Solicite um novo cadastro." };
+                if (error.status === 0)   return { tipo: "erro", mensagem: "Sem conexão com o servidor." };
+                return { tipo: "erro", mensagem: error.message || "Erro ao confirmar conta." };
+            }
+            return { tipo: "erro", mensagem: "Erro inesperado ao confirmar conta." };
+        }
+        return { tipo: "carregando" };
     })();
 
     return (

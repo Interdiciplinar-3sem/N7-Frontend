@@ -52,7 +52,7 @@ export const useGetAdminStudent = (
         if (query.isError) {
             showError(getErrorMessage(query.error, "Erro ao carregar perfil"))
         }
-    }, [query.error, query.isError, showError])
+    }, [query.error, query.isError])
 
     return query
 }

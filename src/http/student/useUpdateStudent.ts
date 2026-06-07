@@ -4,8 +4,6 @@ import { API_URL } from "../api"
 import type { RequestUpdateStudentType } from "../types/requestUpdateStudentType"
 import type { ResponseUpdateStudentType } from "../types/responseUpdateStudent"
 import { useToast } from "../../contexto/toastContext"
-import { getErrorMessage } from "../utils/getErrorMessage"
-
 export const useUpdateStudent = (id: number) => {
     const queryClient = useQueryClient();
     const { showError, showSuccess } = useToast()
@@ -54,8 +52,8 @@ export const useUpdateStudent = (id: number) => {
             await queryClient.invalidateQueries({ queryKey: ["get-ranking", id] })
             showSuccess("Perfil atualizado com sucesso")
         },
-        onError: (error) => {
-            showError(getErrorMessage(error, "Erro ao atualizar perfil"))
+        onError: () => {
+            showError("Erro ao atualizar perfil")
         }
     })
 }

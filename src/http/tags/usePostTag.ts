@@ -22,6 +22,6 @@ export const useCreateTag = () => {
             showSuccess("Tag criada com sucesso!");
             queryClient.invalidateQueries({ queryKey: ["tags"] });
         },
-        onError: (err: any) => showError(err.message),
+        onError: () => showError("Erro ao criar nova tag"),
     });
 };

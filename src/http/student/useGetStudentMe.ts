@@ -4,7 +4,6 @@ import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { ResponseGetStudentType } from "../types/responseGetStudentType"
 import { useToast } from "../../contexto/toastContext"
-import { getErrorMessage } from "../utils/getErrorMessage"
 
 export const useGetStudentMe = (
     id: number,
@@ -50,9 +49,9 @@ export const useGetStudentMe = (
 
     useEffect(() => {
         if (query.isError) {
-            showError(getErrorMessage(query.error, "Erro ao carregar seu perfil"))
+        showError("Erro ao carregar seu perfil")
         }
-    }, [query.error, query.isError, showError])
+    }, [query.error, query.isError])
 
     return query
 }

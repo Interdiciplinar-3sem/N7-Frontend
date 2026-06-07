@@ -4,7 +4,6 @@ import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import type { ResponseGetFollowingType } from "../types/responseGetFollwingType"
 import { useToast } from "../../contexto/toastContext"
-import { getErrorMessage } from "../utils/getErrorMessage"
 
 export const useGetFollowers = (currentId: number, targetId: number) => {
     const { showError } = useToast()
@@ -47,9 +46,9 @@ export const useGetFollowers = (currentId: number, targetId: number) => {
 
     useEffect(() => {
         if (query.isError) {
-            showError(getErrorMessage(query.error, "Erro ao carregar lista de seguidores"))
+            showError("Erro ao carregar lista de seguidores")
         }
-    }, [query.error, query.isError, showError])
+    }, [query.error, query.isError])
 
     return query
 }
