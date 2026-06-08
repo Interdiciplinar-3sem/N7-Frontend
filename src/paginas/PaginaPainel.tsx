@@ -1,15 +1,18 @@
 import { Link } from "react-router-dom";
-import { User, PenBox, BookCopy, Tag, ArrowUpRight, Loader2, BookOpenIcon } from "lucide-react";
+import { User, PenBox, BookCopy, Tag, ArrowUpRight, Loader2, BookOpenIcon, ShieldCheck, GraduationCap, Globe } from "lucide-react";
 import { useAdminPreviewer } from "../layout/layoutAdmin";
-import { useGetAllTags } from "../http/tags/useGetAllTags"; 
-import { useGetCourses } from "../http/course/useGetCourse"; 
-import { useGetUser } from "../http/user/useGetUser";
-import { useGetAllSummary } from "../http/summary/useGetAllSummary";
+import { useGetAllTags } from "../http/tags/get/useGetTags";
+import { useGetCourses } from "../http/course/useCourse";
 import { Table, type Column } from "../componentes/ui/Table";
-import { useGetAllSubjects } from "../http/subject/useGetAllSubjects";
+import { useGetAllSubjects } from "../http/subject/useSubjects";
+import { useGetAdminStats } from "../http/admin/useGetAdminDashboardStats"; 
+import { StatCard } from "../componentes/admin/adminStatsCard";
+import { useGetAllSummary } from "../http/summary/get/useGetSummary";
+import { useGetUser } from "../http/user/useUser";
 
 export function PaginaPainel() {
     const { openTag, openUser, openSummary, openCourse, openSubject } = useAdminPreviewer();
+    const { data: stats, isPending: loadingStats } = useGetAdminStats();
 
     const { data: tags, isPending: loadingTags } = useGetAllTags();
     const { data: cursos, isPending: loadingCursos } = useGetCourses();
@@ -17,11 +20,6 @@ export function PaginaPainel() {
     const { data: resumos, isPending: loadingResumos } = useGetAllSummary();
     const { data: materias, isPending: loadingMaterias } = useGetAllSubjects();
 
-    const totalTags = tags?.length ?? 0;
-    const totalCursos = cursos?.length ?? 0;
-    const totalUsuarios = usuarios?.length ?? 0;
-    const totalResumos = resumos?.length ?? 0;
-    const totalMaterias = materias?.length ?? 0;
     const colunasTags: Column<any>[] = [
         {
             key: "name",
@@ -125,48 +123,18 @@ export function PaginaPainel() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-                    <div className="space-y-1">
-                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Usuários</span>
-                        <h3 className="text-2xl font-bold text-gray-900">{loadingUsuarios ? "..." : totalUsuarios}</h3>
-                    </div>
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600"><User size={20} /></div>
-                </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-                    <div className="space-y-1">
-                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Resumos</span>
-                        <h3 className="text-2xl font-bold text-gray-900">{loadingResumos ? "..." : totalResumos}</h3>
-                    </div>
-                    <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600"><PenBox size={20} /></div>
-                </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-                    <div className="space-y-1">
-                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Cursos</span>
-                        <h3 className="text-2xl font-bold text-gray-900">{loadingCursos ? "..." : totalCursos}</h3>
-                    </div>
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600"><BookCopy size={20} /></div>
-                </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-                    <div className="space-y-1">
-                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Tags Criadas</span>
-                        <h3 className="text-2xl font-bold text-gray-900">{loadingTags ? "..." : totalTags}</h3>
-                    </div>
-                    <div className="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600"><Tag size={20} /></div>
-                </div>
-                <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-                    <div className="space-y-1">
-                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Materias Criadas</span>
-                        <h3 className="text-2xl font-bold text-gray-900">{loadingMaterias ? "..." : totalMaterias}</h3>
-                    </div>
-                    <div className="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600"><Tag size={20} /></div>
-                </div>
+                <StatCard label="Usuários Ativos"   ativos={stats?.usuariosAtivos ?? 0}    desativados={stats?.usuariosDesativados}   icon={<User size={20}/>}           iconBg="bg-blue-50"    iconColor="text-blue-600"    loading={loadingStats} />
+                <StatCard label="Alunos Ativos"     ativos={stats?.alunosAtivos ?? 0}      desativados={stats?.alunosDesativados}     icon={<GraduationCap size={20}/>}  iconBg="bg-sky-50"     iconColor="text-sky-600"     loading={loadingStats} />
+                <StatCard label="Resumos Ativos"    ativos={stats?.resumosAtivos ?? 0}     desativados={stats?.resumosDesativados}    icon={<PenBox size={20}/>}         iconBg="bg-indigo-50"  iconColor="text-indigo-600"  loading={loadingStats} />
+                <StatCard label="Cursos Ativos"     ativos={stats?.cursosAtivos ?? 0}      desativados={stats?.cursosDesativados}     icon={<BookCopy size={20}/>}       iconBg="bg-emerald-50" iconColor="text-emerald-600" loading={loadingStats} />
+                <StatCard label="Tags Ativas"       ativos={stats?.tagsAtivas ?? 0}        desativados={stats?.tagsDesativadas}       icon={<Tag size={20}/>}            iconBg="bg-cyan-50"    iconColor="text-cyan-600"    loading={loadingStats} />
+                <StatCard label="Matérias Ativas"   ativos={stats?.materiasAtivas ?? 0}    desativados={stats?.materiasDesativadas}   icon={<BookOpenIcon size={20}/>}   iconBg="bg-amber-50"   iconColor="text-amber-600"   loading={loadingStats} />
+                <StatCard label="Universidades"     ativos={stats?.universidadesAtivas ?? 0} desativados={stats?.universidadesDesativadas} icon={<Globe size={20}/>}     iconBg="bg-violet-50"  iconColor="text-violet-600"  loading={loadingStats} />
+                <StatCard label="Admins"            ativos={stats?.admsAtivos ?? 0}                                                   icon={<ShieldCheck size={20}/>}    iconBg="bg-rose-50"    iconColor="text-rose-600"    loading={loadingStats} />
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                
+
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col h-[380px]">
                     <div className="flex items-center justify-between mb-4 shrink-0">
                         <div className="flex items-center gap-2">
@@ -181,13 +149,7 @@ export function PaginaPainel() {
                         {loadingTags ? (
                             <div className="h-full flex items-center justify-center text-gray-400 text-sm"><Loader2 className="animate-spin mr-2" size={16} /> Carregando...</div>
                         ) : (
-                            <Table 
-                                columns={colunasTags}
-                                data={tags?.slice(0, 5) ?? []}
-                                rowKey={(tag) => tag.id}
-                                onRowClick={(tag) => openTag(tag.id)}
-                                emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhuma tag cadastrada.</div>}
-                            />
+                            <Table columns={colunasTags} data={tags?.slice(0, 5) ?? []} rowKey={(tag) => tag.id} onRowClick={(tag) => openTag(tag.id)} emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhuma tag cadastrada.</div>} />
                         )}
                     </div>
                 </div>
@@ -206,13 +168,7 @@ export function PaginaPainel() {
                         {loadingCursos ? (
                             <div className="h-full flex items-center justify-center text-gray-400 text-sm"><Loader2 className="animate-spin mr-2" size={16} /> Carregando...</div>
                         ) : (
-                            <Table 
-                                columns={colunasCursos}
-                                data={cursos?.slice(0, 5) ?? []}
-                                rowKey={(curso) => curso.id}
-                                onRowClick={(curso) => openCourse(curso.id)}
-                                emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum curso cadastrado.</div>}
-                            />
+                            <Table columns={colunasCursos} data={cursos?.slice(0, 5) ?? []} rowKey={(curso) => curso.id} onRowClick={(curso) => openCourse(curso.id)} emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum curso cadastrado.</div>} />
                         )}
                     </div>
                 </div>
@@ -231,15 +187,11 @@ export function PaginaPainel() {
                         {loadingUsuarios ? (
                             <div className="h-full flex items-center justify-center text-gray-400 text-sm"><Loader2 className="animate-spin mr-2" size={16} /> Carregando...</div>
                         ) : (
-                            <Table 
+                            <Table
                                 columns={colunasUsuarios}
                                 data={usuarios?.slice(0, 5) ?? []}
                                 rowKey={(user) => user.userId}
-                                onRowClick={(user) => {
-                                    if (user.role === "ALUNO" && user.studentId) {
-                                        openUser(user.studentId);
-                                    }
-                                }}
+                                onRowClick={(user) => { if (user.role === "ALUNO" && user.studentId) openUser(user.studentId); }}
                                 emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum usuário cadastrado.</div>}
                             />
                         )}
@@ -260,13 +212,7 @@ export function PaginaPainel() {
                         {loadingResumos ? (
                             <div className="h-full flex items-center justify-center text-gray-400 text-sm"><Loader2 className="animate-spin mr-2" size={16} /> Carregando...</div>
                         ) : (
-                            <Table 
-                                columns={colunasResumos}
-                                data={resumos?.slice(0, 5) ?? []}
-                                rowKey={(r) => r.summaryId}
-                                onRowClick={(r) => openSummary(r.summaryId)}
-                                emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum resumo encontrado.</div>}
-                            />
+                            <Table columns={colunasResumos} data={resumos?.slice(0, 5) ?? []} rowKey={(r) => r.summaryId} onRowClick={(r) => openSummary(r.summaryId)} emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhum resumo encontrado.</div>} />
                         )}
                     </div>
                 </div>
@@ -285,13 +231,7 @@ export function PaginaPainel() {
                         {loadingMaterias ? (
                             <div className="h-full flex items-center justify-center text-gray-400 text-sm"><Loader2 className="animate-spin mr-2" size={16} /> Carregando...</div>
                         ) : (
-                            <Table 
-                                columns={colunasMaterias}
-                                data={materias ?? []}
-                                rowKey={(m) => m.id}
-                                onRowClick={(m) => openSubject(m.id)}
-                                emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhuma matéria cadastrada.</div>}
-                            />
+                            <Table columns={colunasMaterias} data={materias ?? []} rowKey={(m) => m.id} onRowClick={(m) => openSubject(m.id)} emptyPlaceholder={<div className="p-6 text-center text-gray-400">Nenhuma matéria cadastrada.</div>} />
                         )}
                     </div>
                 </div>

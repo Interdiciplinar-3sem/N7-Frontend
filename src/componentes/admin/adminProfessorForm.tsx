@@ -2,11 +2,11 @@ import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, type SetStateAction } from "react";
-import { useGetCourseSubjectsSemester } from "../../http/course/useGetCourseSubjectsSemester";
 import { Loader2 } from "lucide-react";
 import { DOMINIOS_PERMITIDOS } from "../../types/DominiosPermitidosType";
-import { useCreateProfessor } from "../../http/auth/usePostProfessor";
 import { EmailConfirmationStateAdm } from "../forms/EmailConfirmationStateAdm";
+import { useGetCourseSubjectsSemester } from "../../http/course/useCourse";
+import { useCreateProfessor } from "../../http/professor/useProfessor";
 
 type FormProps = {
     setUserRole: React.Dispatch<SetStateAction<"" | "ADM" | "ALUNO" | "PROFESSOR">>,

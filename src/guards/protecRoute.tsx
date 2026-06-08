@@ -13,9 +13,15 @@ export function ProtectedRoute() {
     if (isError || data?.status !== true) {
         return <Navigate to="/login" replace/>;
     }
+
     return (
         <Suspense fallback={<FeedSkeleton />}>
-            <Outlet context={{id: data.id, studentId: data.studentId, role: data.role }}/>
+            <Outlet context={{
+                id: data.id,
+                studentId: data.studentId,
+                professorId: data.professorId,
+                role: data.role
+            }}/>
         </Suspense>
     )
 }

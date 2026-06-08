@@ -1,14 +1,12 @@
-import { useGetUser } from "../../http/user/useGetUser";
 import { useState } from "react";
 import { StudentForm } from "../../componentes/admin/adminStudentForm";
 import { ADMform } from "../../componentes/admin/admForm";
 import { X } from "lucide-react";
 import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
-import { useUpdateActiveStudent } from "../../http/student/StudentUpdateStatus";
-import { useGetUserDesactivated } from "../../http/user/useGetUserDesactivated";
+import { useUpdateActiveStudent } from "../../http/student/useStudent";
 import { StudentEditForm } from "../../componentes/admin/adminStudentEditForm";
-import type { ResponseGetUserType } from "../../http/types/responseGetUserType";
+import type { ResponseGetUserType } from "../../http/user/types/ResponseGetUserType"; 
 import { Overlay } from "../../componentes/overlay";
 import { useAdminPreviewer } from "../../layout/layoutAdmin";
 import {
@@ -19,6 +17,7 @@ import {
 
 import { AdminUserFormRoleOptions } from "../../componentes/admin/adminUserFormRoleOptions";
 import { ProfessorForm } from "../../componentes/admin/adminProfessorForm";
+import { useGetUser, useGetUserDesactivated } from "../../http/user/useUser";
 
 type UserRow = ResponseGetUserType & {
     ativo?: boolean;

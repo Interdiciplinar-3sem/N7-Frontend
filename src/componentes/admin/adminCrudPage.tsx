@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import Table, { type Column } from "../ui/Table";
-import { CardStatics } from "../ui/cardStatics";
+import { StatCard } from "./adminStatsCard";
 import { ArrowLeftRight } from "lucide-react";
 import { ToggleText } from "../ui/toggleText";
 
@@ -8,7 +8,15 @@ export type AdminStatCard = {
     title: string;
     value: string;
     cor: "azul" | "verde" | "amarelo" | "vermelho";
+    icon?: ReactNode;
 }
+
+const corMap: Record<string, { iconBg: string; iconColor: string }> = {
+    azul:     { iconBg: "bg-blue-50",    iconColor: "text-blue-500"   },
+    verde:    { iconBg: "bg-green-50",   iconColor: "text-green-500"  },
+    amarelo:  { iconBg: "bg-yellow-50",  iconColor: "text-yellow-500" },
+    vermelho: { iconBg: "bg-red-50",     iconColor: "text-red-500"    },
+};
 
 type AdminCrudPageProps<T> = {
     title: string;
@@ -72,10 +80,22 @@ export function AdminCrudPage<T>({
                     )}
                 </div>
 
-                <div className="col-span-12 grid grid-cols-1 sm:grid-cols-4 gap-4">
-                    {stats.map((card) => (
-                        <CardStatics key={card.title} title={card.title} value={card.value} cor={card.cor} />
-                    ))}
+                <div className="col-span-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {stats.map((card) => {
+                        const colors = corMap[card.cor] ?? corMap.azul;
+                        const valueNum = parseInt(card.value.replace(/\D/g, "")) || 0;
+                        return (
+                            <StatCard
+                                key={card.title}
+                                label={card.title}
+                                ativos={isNaN(valueNum) ? 0 : valueNum}
+                                icon={card.icon ?? <span className="text-sm font-bold">{card.value.substring(0, 2)}</span>}
+                                iconBg={colors.iconBg}
+                                iconColor={colors.iconColor}
+                                loading={card.value === "carregando..." || card.value === "..."}
+                            />
+                        );
+                    })}
                 </div>
 
                 {children && <div className="col-span-12">{children}</div>}

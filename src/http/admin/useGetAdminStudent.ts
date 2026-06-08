@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
-import type { ResponseGetStudentType } from "../types/responseGetStudentType"
+import type { ResponseGetStudentType } from "../student/types/ResponseGetStudentType" 
 import { useToast } from "../../contexto/toastContext"
 import { getErrorMessage } from "../utils/getErrorMessage"
 

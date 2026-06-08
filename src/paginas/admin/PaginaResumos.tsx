@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
-import { useGetAllSummary } from "../../http/summary/useGetAllSummary";
-import type { ResponseGetSummaryType } from "../../http/types/responseGetSummary";
-import { useUpdateStatusSummary } from "../../http/summary/useUpdateStatusSummary";
-import { useGetSummaryDesactivated } from "../../http/summary/useGetSummaryDesactivated";
+import type { ResponseGetSummaryType } from "../../http/summary/types/ResponseGetSummaryType"; 
 import { useAdminPreviewer } from "../../layout/layoutAdmin";
+import { useGetAllSummary, useGetSummaryDesactivated } from "../../http/summary/get/useGetSummary";
+import { useUpdateStatusSummary } from "../../http/summary/update/useUpdateSummary";
 
 export function PaginaResumos() {
     const { openSummary } = useAdminPreviewer();

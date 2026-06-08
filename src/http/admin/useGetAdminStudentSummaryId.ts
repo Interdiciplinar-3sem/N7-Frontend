@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import type { ResponseGetSummaryType } from "../types/responseGetSummary";
+import type { ResponseGetSummaryType } from "../summary/types/ResponseGetSummaryType"; 
 import { authFecth } from "../authFetch";
 import { API_URL } from "../api";
 

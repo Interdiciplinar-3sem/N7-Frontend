@@ -75,7 +75,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             )}
 
             {confirmOptions && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50">
                     <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
 
                         <h2 className="text-xl font-bold">

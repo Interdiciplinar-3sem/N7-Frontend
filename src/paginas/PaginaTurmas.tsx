@@ -2,11 +2,10 @@ import { useEffect, useMemo, useState } from "react"
 import { BookOpen, GraduationCap } from "lucide-react"
 import type { ContextPropsTypeNetwork } from "../types/contextPropsType"
 import { useOutletContext } from "react-router"
-import { useGetCourseSubjectsSemesterMe } from "../http/course/useGetCourseSubjectsMe"
-import { useGetCourseStudentsSemester } from "../http/course/useGetCourseStudentsSemester"
 import { CardPerfil } from "../componentes/ui/cardPerfil"
-import { useGetSummarySubjectId } from "../http/summary/useGetSummarySubject"
-import { ViweSummary } from "../componentes/ViweSummary"
+import { ViewSummary } from "../componentes/ViewSummary"
+import { useGetCourseStudentsSemester, useGetCourseSubjectsSemesterMe } from "../http/course/useCourse"
+import { useGetSummarySubjectId } from "../http/summary/get/useGetSummary"
 
 const colors = ["bg-[#D8FBE4]", "bg-[#FFE6E0]", "bg-[#FFE2F4]", "bg-[#DAE8FF]", "bg-[#D8FBE4]", "bg-[#FFE6E0]", "bg-[#FFE2F4]", "bg-[#DAE8FF]"]
 
@@ -230,7 +229,7 @@ export function PaginaTurmas() {
       )}
 
       {selectedResumoId && (
-        <ViweSummary
+        <ViewSummary
           id={selectedResumoId}
           materia={selectedTurma?.name}
           onClose={() => setSelectedResumoId(null)}

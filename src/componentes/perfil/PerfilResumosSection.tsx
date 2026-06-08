@@ -1,14 +1,23 @@
-
-import { ArrowUpRight, FileText, Heart } from 'lucide-react'
-import type { ResponseGetSummaryType } from '../../http/types/responseGetSummary'
+import { ArrowUpRight, FileText, Flag, Heart, ShieldOff, Star } from 'lucide-react'
+import type { ResponseGetSummaryType } from '../../http/summary/types/ResponseGetSummaryType' 
+import { SummaryBadge } from '../badge/SummaryBadge'
+import { useToast } from '../../contexto/toastContext'
 
 type PerfilResumosSectionProps = {
+  isOwnProfile: boolean
   studentId?: number
   onOpenResumo: (summaryId: number) => void
   data: ResponseGetSummaryType[] | undefined
+  isAdm?: boolean
+  isProfessor?: boolean
+  onReport?: (id: number) => void
+  onToggleStatus?: (id: number) => void
+  onAssignBadge?: (id: number, hasBadge: boolean) => void
 }
 
-export function PerfilResumosSection({ onOpenResumo, data }: PerfilResumosSectionProps) {
+export function PerfilResumosSection({ onOpenResumo, data, isAdm, isProfessor, onReport, onToggleStatus, onAssignBadge, isOwnProfile }: PerfilResumosSectionProps) {
+  const {confirm, showSuccess} = useToast();
+
   return (
     <div className='w-full flex flex-col gap-4 items-center justify-between'>
       <div className='flex items-center gap-3' />
@@ -20,7 +29,9 @@ export function PerfilResumosSection({ onOpenResumo, data }: PerfilResumosSectio
         </p>
       )}
 
-      {data?.map((resumo) => (
+      {data?.map((resumo) => {
+        const hasProfBadge = resumo.badge?.name?.toLowerCase().includes("professor");
+        return (
         <div
           key={resumo.summaryId}
           onClick={() => onOpenResumo(resumo.summaryId)}
@@ -32,34 +43,7 @@ export function PerfilResumosSection({ onOpenResumo, data }: PerfilResumosSectio
               onOpenResumo(resumo.summaryId)
             }
           }}
-          className="
-            group
-            relative
-            overflow-hidden
-            rounded-2xl
-            border
-            border-slate-200
-            bg-linear-to-br
-            from-white
-            via-[#F7FBFF]
-            to-[#EEF6FF]
-            p-5
-            flex
-            flex-col
-            gap-4
-            shadow-sm
-            text-left
-            transition-all
-            w-full
-            min-w-0
-            hover:-translate-y-1
-            hover:shadow-xl
-            hover:border-blue-200
-            focus:outline-none
-            focus:ring-2
-            focus:ring-blue-400
-            
-          "
+          className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-linear-to-br from-white via-[#F7FBFF] to-[#EEF6FF] p-5 flex flex-col gap-4 shadow-sm text-left transition-all w-full min-w-0 hover:-translate-y-1 hover:shadow-xl hover:border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
@@ -74,6 +58,14 @@ export function PerfilResumosSection({ onOpenResumo, data }: PerfilResumosSectio
                 <h3 className="truncate text-lg font-bold text-slate-900">
                   {resumo.titulo}
                 </h3>
+                {resumo.badge && (
+                  <div className="mt-1">
+                    <SummaryBadge
+                      name={resumo.badge.name}
+                      type={hasProfBadge ? "professor" : "turma"}
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -93,19 +85,75 @@ export function PerfilResumosSection({ onOpenResumo, data }: PerfilResumosSectio
               {resumo.totalCurtidas ?? 0}
             </p>
 
-            <button
-              type="button"
-              onClick={(event) => {
-                event.preventDefault()
-                event.stopPropagation()
-              }}
-              className="rounded-lg bg-rose-500 px-3 py-1.5 text-sm font-semibold text-white transition-all hover:bg-rose-600 hover:shadow-md"
-            >
-              Excluir
-            </button>
+            <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+              {!isAdm && !isProfessor && onReport && !isOwnProfile && (
+                <button
+                  type="button"
+                  onClick={() => onReport(resumo.summaryId)}
+                  className="rounded-lg bg-slate-100 px-2 py-1.5 text-slate-500 hover:bg-red-50 hover:text-red-500 transition-all flex items-center gap-1 text-xs"
+                  title="Reportar"
+                >
+                  <Flag size={12} />
+                </button>
+              )}
+
+              {isAdm && onToggleStatus && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const ok = await confirm({
+                        title: "Desativar resumo?",
+                        message: "Tem certeza?",
+                        confirmText: "Sim, excluir"
+                    });
+
+                    if(!ok) {
+                      return;
+                    }
+                    onToggleStatus(resumo.summaryId)
+                    showSuccess(resumo.ativo ? "Resumo desativado" : "Resumo ativado")
+                  }}
+                  className={`rounded-lg px-2 py-1.5 text-xs font-semibold flex items-center gap-1 transition-all ${resumo.ativo ? "bg-red-50 text-red-500 hover:bg-red-100" : "bg-green-50 text-green-600 hover:bg-green-100"}`}
+                  title={resumo.ativo ? "Desativar" : "Ativar"}
+                >
+                  <ShieldOff size={12} />
+                  {resumo.ativo ? "Desativar" : "Ativar"}
+                </button>
+              )}
+
+              {isProfessor && onAssignBadge && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const ok = await confirm({
+                      title: hasProfBadge
+                        ? "Remover selo de destaque?"
+                        : "Atribuir selo de destaque?",
+                      message: hasProfBadge
+                        ? "Este resumo perderá o selo de destaque atribuído pelo professor."
+                        : "Este resumo será marcado como destacado pelo professor e poderá ganhar mais visibilidade.",
+                      confirmText: hasProfBadge ? "Sim, remover" : "Sim, atribuir",
+                    })
+
+                    if(!ok) {
+                      return;
+                    }
+
+                    onAssignBadge(resumo.summaryId, !!hasProfBadge)
+                    showSuccess(hasProfBadge ? "Selo de destaque removido" : "Selo de destaque atribuído")
+                  }}
+                  className={`rounded-lg px-2 py-1.5 text-xs font-semibold flex items-center gap-1 transition-all ${hasProfBadge ? "bg-violet-100 text-violet-600 hover:bg-violet-200" : "bg-slate-100 text-slate-500 hover:bg-violet-50 hover:text-violet-500"}`}
+                  title={hasProfBadge ? "Remover selo" : "Atribuir selo"}
+                >
+                  <Star size={12} className={hasProfBadge ? "fill-violet-500" : ""} />
+                  {hasProfBadge ? "Remover selo" : "Atribuir selo"}
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      ))}
+        )
+      })}
       </div>
     </div>
   )

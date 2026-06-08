@@ -1,6 +1,6 @@
 import { X, BookOpenIcon, Loader2, FileText } from "lucide-react";
-import { useGetSummarySubjectId } from "../../http/summary/useGetSummarySubject"; 
 import { useAdminPreviewer } from "../../layout/layoutAdmin";
+import { useGetSummarySubjectId } from "../../http/summary/get/useGetSummary";
 
 interface SubjectPreviewerProps {
     subjectId: number | null;

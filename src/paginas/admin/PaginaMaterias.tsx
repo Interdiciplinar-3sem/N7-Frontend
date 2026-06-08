@@ -3,10 +3,8 @@ import { X } from "lucide-react";
 import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
 import { Overlay } from "../../componentes/overlay";
-import { useGetSubjectsDesactivated } from "../../http/subject/useGetSubjectsDesactivated";
-import { useUpdateSubjectStatus } from "../../http/subject/useUpdateSubjectStatus";
-import { useGetAllSubjects } from "../../http/subject/useGetAllSubjects";
-import type { ResponseGetSubjectType } from "../../http/types/responseGetSubjectType";
+import { useGetAllSubjects, useGetSubjectsDesactivated, useUpdateSubjectStatus } from "../../http/subject/useSubjects";
+import type { ResponseGetSubjectType } from "../../http/subject/types/ResponseGetSubjectType";
 
 export function PaginaMaterias() {
     const { data, isPending } = useGetAllSubjects();

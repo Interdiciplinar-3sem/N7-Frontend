@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Footer } from "../componentes/Static/footer";
-import { HomeAbout } from "../componentes/homeAbout";
+import { HomeAbout } from "../componentes/Static/homeAbout";
 import { Hero } from "../componentes/Static/Hero";
 
 export function PaginaInicial() {

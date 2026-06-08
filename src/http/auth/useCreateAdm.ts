@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
 import { useNavigate } from "react-router-dom"
-import type { RequestCreateAdmType } from "../types/requestCreateAdm"
+import type { RequestCreateAdmType } from "./types/RequestCreateAdmType"
 
 export const useCreateAdm = () => {
     const queryClient = useQueryClient();

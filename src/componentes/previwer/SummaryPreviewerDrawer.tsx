@@ -1,9 +1,10 @@
 import { useEffect } from "react"
 import { EditorContent } from "@tiptap/react"
-import { useSummaryEditor } from "../../hooks/useEditorHook" 
-import { GraduationCap, Heart, X, User } from "lucide-react"
+import { useSummaryEditor } from "../../hooks/useEditorHook"
+import { GraduationCap, Heart, X, User, ExternalLink } from "lucide-react"
 import { Overlay } from "../overlay"
 import { useGetAdminSummaryId } from "../../http/admin/useGetAdminStudentSummaryId"
+import { useNavigate } from "react-router-dom"
 
 type SummaryPreviewerDrawerProps = {
     id: number;
@@ -13,6 +14,7 @@ type SummaryPreviewerDrawerProps = {
 export const SummaryPreviewerDrawer = ({ id, onClose }: SummaryPreviewerDrawerProps) => {
     const { data: summary, isPending, isError } = useGetAdminSummaryId(id);
     const editor = useSummaryEditor();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (summary?.conteudo) {
@@ -31,6 +33,12 @@ export const SummaryPreviewerDrawer = ({ id, onClose }: SummaryPreviewerDrawerPr
         return () => window.removeEventListener('keydown', handleKeyDown)
     }, [onClose])
 
+    const handleGoToProfile = () => {
+        if (summary?.studentId) {
+            onClose();
+            navigate(`/perfil/${summary.studentId}`);
+        }
+    };
 
     return (
         <>
@@ -86,7 +94,7 @@ export const SummaryPreviewerDrawer = ({ id, onClose }: SummaryPreviewerDrawerPr
                                     </div>
 
                                     <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-100 sm:col-span-2">
-                                        <div className="h-8 w-8 overflow-hidden rounded-full bg-slate-200">
+                                        <div className="h-8 w-8 overflow-hidden rounded-full bg-slate-200 flex-shrink-0">
                                             {summary?.studentUrl ? (
                                                 <img src={summary.studentUrl} alt={summary.studentNome} className="h-full w-full object-cover" />
                                             ) : (
@@ -95,27 +103,29 @@ export const SummaryPreviewerDrawer = ({ id, onClose }: SummaryPreviewerDrawerPr
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col min-w-0 flex-1">
                                             <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Autor</span>
-                                            <span className="text-sm font-semibold text-slate-700">
+                                            <span className="text-sm font-semibold text-slate-700 truncate">
                                                 {summary?.studentNome}
                                             </span>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">ID Autor</span>
-                                            <span className="text-sm font-semibold text-slate-700">
-                                                {summary?.studentId}
-                                            </span>
-                                        </div>
+                                        {summary?.studentId && (
+                                            <button
+                                                onClick={handleGoToProfile}
+                                                title="Ver perfil do autor"
+                                                className="flex items-center gap-1.5 rounded-lg bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-600 ring-1 ring-sky-200 transition hover:bg-sky-100 flex-shrink-0"
+                                            >
+                                                <ExternalLink size={13} />
+                                                Ver perfil
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
 
-                                {/* Title */}
                                 <h1 className="text-2xl font-extrabold text-slate-900 leading-tight">
                                     {summary?.titulo}
                                 </h1>
 
-                                {/* Editor Content */}
                                 <div className="prose prose-slate max-w-none rounded-2xl border border-slate-100 bg-white p-4 shadow-sm ring-1 ring-slate-50">
                                     <EditorContent editor={editor} className="min-h-[300px]" />
                                 </div>

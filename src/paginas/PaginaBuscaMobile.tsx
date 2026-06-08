@@ -2,7 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { CardResumo } from "../componentes/ui/cardResumo";
-import { useGetAllSummary } from "../http/summary/useGetAllSummary";
+import { useGetAllSummary } from "../http/summary/get/useGetSummary";
 
 export function PaginaBuscaMobile() {
     const navigate = useNavigate();

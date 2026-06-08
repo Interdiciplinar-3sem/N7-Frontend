@@ -4,15 +4,14 @@ import { X, Loader2 } from "lucide-react";
 import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
 import { Overlay } from "../../componentes/overlay";
-import { useGetAllTags } from "../../http/tags/useGetAllTags"; 
-import { useGetTagsDesactivated } from "../../http/tags/useGetAllTagsDesactivated"; 
-import { useSoftDeleteTag } from "../../http/tags/useSoftDeleteTag";
-import { useCreateTag } from "../../http/tags/usePostTag"; 
-import { useAdminPreviewer } from "../../layout/layoutAdmin"; // Import do contexto global
-import type { ResponseGetTagsType } from "../../http/types/responseGetTagsType"; 
+import { useGetAllTags, useGetTagsDesactivated } from "../../http/tags/get/useGetTags"; 
+import { useAdminPreviewer } from "../../layout/layoutAdmin"; 
+import type { ResponseGetTagsType } from "../../http/tags/types/ResponseGetTagsType"; 
+import { useSoftDeleteTag } from "../../http/tags/update/useUpdateTag";
+import { useCreateTag } from "../../http/tags/post/usePostTag";
 
 export function PaginaTags() {
-    const { openTag } = useAdminPreviewer(); // Função do contexto injetada
+    const { openTag } = useAdminPreviewer(); 
     const { data: activeTags, isPending } = useGetAllTags();
     const { data: inactiveTags } = useGetTagsDesactivated();
     const { mutateAsync: softDeleteTag } = useSoftDeleteTag();
@@ -131,7 +130,6 @@ export function PaginaTags() {
                 emptyPlaceholder={
                     <div className="p-6 text-center text-gray-400">Nenhuma tag encontrada</div>
                 }
-                /* Adicionada a lógica para abrir o Drawer de Tags ao clicar na linha */
                 onRowClick={(row) => openTag(row.id)}
             />
 

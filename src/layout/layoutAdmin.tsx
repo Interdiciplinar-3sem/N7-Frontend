@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import { Outlet, useOutletContext } from "react-router-dom";
 import { SideBar } from "../componentes/sideBar";
-import { User, BookCopy, PenBox, BookOpenIcon, Tag, GroupIcon } from "lucide-react";
+import { User, BookCopy, PenBox, BookOpenIcon, Tag, GroupIcon, Bookmark } from "lucide-react";
 import { SummaryPreviewerDrawer } from "../componentes/previwer/SummaryPreviewerDrawer";
 import { UserPreviewDrawer } from "../componentes/previwer/UserPreviewerDrawer";
 import { TagPreviewDrawer } from "../componentes/previwer/TagPreviwerDrawer";
@@ -85,6 +85,7 @@ export function LayoutAdmin() {
     const closeSubject = useCallback(() => setPreviewSubjectId(null), []);
 
     const links = [
+        { key: "Feed",   label: "feed",    to: "/feed",         icon: <Bookmark     className="h-4 w-4 xxs:h-auto xxs:w-auto" /> },
         { key: "geral",   label: "geral",    to: "/painel",         icon: <GroupIcon     className="h-4 w-4 xxs:h-auto xxs:w-auto" /> },
         { key: "alunos",   label: "Usuarios", to: "/painel/user",    icon: <User         className="h-4 w-4 xxs:h-auto xxs:w-auto" /> },
         { key: "resumos",  label: "Resumos",  to: "/painel/resumos", icon: <PenBox       className="h-4 w-4 xxs:h-auto xxs:w-auto" /> },

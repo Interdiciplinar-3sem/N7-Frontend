@@ -1,7 +1,7 @@
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
-import { authFecth } from "../authFetch"
 import { API_URL } from "../api"
-import type { ResponseGetBiosType } from "../types/responseGetBiosType"
+import type { ResponseGetBiosType } from "./types/ResponseGetBiosType"
+import { request } from "../httpClient"
 
 export const useGetBios = (
     options?: Omit<UseQueryOptions<ResponseGetBiosType[]>, "queryKey" | "queryFn">
@@ -9,23 +9,7 @@ export const useGetBios = (
     return useQuery({
         queryKey: ["get-bio"],
         queryFn: async (): Promise<ResponseGetBiosType[]> => {
-            try {
-                const response = await authFecth(`${API_URL}/bio`)
-
-                if (!response.ok) {
-                    const body = await response.text().catch(() => "");
-                    throw new Error(`Erro ao buscar bio (${response.status}): ${body}`);
-                }
-    
-                const responseBody = await response.text();
-                const result: ResponseGetBiosType[] = responseBody.trim()
-                    ? JSON.parse(responseBody)
-                    : [];
-    
-                return result;
-            } catch {
-                throw new Error("Erro ao buscar bio")
-            }
+            return await request(`${API_URL}/bio`)
         },
         ...options,
         staleTime: 1000 * 60 * 5,

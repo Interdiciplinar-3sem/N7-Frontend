@@ -2,8 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import z from "zod"
-import { useUpdateStudent } from "../../http/student/useUpdateStudent"
-import { useGetStudent } from "../../http/student/useGetStudent"
+import { useGetStudent, useUpdateStudent } from "../../http/student/useStudent"
 
 type StudentEditFormProps = {
     studentId: number

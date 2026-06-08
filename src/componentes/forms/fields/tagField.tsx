@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useGetAllTags } from "../../../http/tags/useGetAllTags"
-import type { ResponseGetTagsType } from "../../../http/types/responseGetTagsType";
+import { useGetAllTags } from "../../../http/tags/get/useGetTags"
+import type { ResponseGetTagsType } from "../../../http/tags/types/ResponseGetTagsType"; 
 
 type TagFieldProps = {
     setSelectedTagIds: React.Dispatch<React.SetStateAction<number[]>>,

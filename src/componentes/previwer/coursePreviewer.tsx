@@ -1,7 +1,7 @@
 import { X, BookOpen, Loader2, GraduationCap } from "lucide-react";
 import { useState } from "react";
-import { useGetCourseSubjectsSemester } from "../../http/course/useGetCourseSubjectsSemester"; 
 import { useAdminPreviewer } from "../../layout/layoutAdmin";
+import { useGetCourseSubjectsSemester } from "../../http/course/useCourse";
 
 interface CoursePreviewerProps {
     courseId: number | null;

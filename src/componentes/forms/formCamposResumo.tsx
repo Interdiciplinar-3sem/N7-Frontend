@@ -1,6 +1,6 @@
     import type { UseFormReturn } from "react-hook-form";
     import { TagField } from "./fields/tagField";
-    import type { ResponseGetCourseSubjectsType } from "../../http/types/responseGetCourseSubjects";
+    import type { ResponseGetCourseSubjectsType } from "../../http/course/types/ResponseGetCourseSubjectsType"; 
 
     type FormValues = {
         titulo: string;

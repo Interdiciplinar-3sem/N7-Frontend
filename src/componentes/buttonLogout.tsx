@@ -1,4 +1,4 @@
-import { useLogout } from "../http/auth/useLogout"
+import { useLogout } from "../http/auth/useAuth"
 
 export function ButtonLogOut() {
 

@@ -1,9 +1,9 @@
-import { X, GraduationCap, Calendar, Mail, FileText, User as UserIcon } from "lucide-react";
-
-import { useGetSummaryStudentId } from "../../http/summary/useGetSummaryStudentId";
+import { X, GraduationCap, Calendar, Mail, FileText, User as UserIcon, ExternalLink } from "lucide-react";
+import { useGetSummaryStudentId } from "../../http/summary/get/useGetSummary"; 
 import { Overlay } from "../overlay";
 import { useEffect } from "react";
 import { useGetAdminStudent } from "../../http/admin/useGetAdminStudent";
+import { useNavigate } from "react-router-dom";
 
 type UserPreviewDrawerProps = {
     studentId: number;
@@ -14,6 +14,7 @@ type UserPreviewDrawerProps = {
 export function UserPreviewDrawer({ studentId, onClose, onOpenSummary }: UserPreviewDrawerProps) {
     const { data: student, isPending: isStudentPending } = useGetAdminStudent(studentId);
     const { data: summaries, isPending: isSummariesPending } = useGetSummaryStudentId(studentId);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -23,17 +24,21 @@ export function UserPreviewDrawer({ studentId, onClose, onOpenSummary }: UserPre
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [onClose]);
 
+    const handleGoToProfile = () => {
+        onClose();
+        navigate(`/perfil/${studentId}`);
+    };
+
     return (
         <>
             <Overlay onClose={onClose} />
             <div className="fixed inset-y-0 right-0 z-[110] w-full max-w-md bg-white shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col border-l border-gray-100">
-                {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-50 bg-gray-50/50">
                     <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
                         <UserIcon className="w-5 h-5 text-blue-600" />
                         Perfil do Usuário
                     </h3>
-                    <button 
+                    <button
                         onClick={onClose}
                         className="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-500"
                     >
@@ -49,7 +54,6 @@ export function UserPreviewDrawer({ studentId, onClose, onOpenSummary }: UserPre
                         </div>
                     ) : student ? (
                         <div className="space-y-6">
-                            {/* Avatar & Basic Info */}
                             <div className="flex flex-col items-center text-center">
                                 <div className="w-24 h-24 rounded-full bg-blue-50 border-4 border-white shadow-md overflow-hidden mb-4">
                                     {student.avatar?.url ? (
@@ -65,9 +69,16 @@ export function UserPreviewDrawer({ studentId, onClose, onOpenSummary }: UserPre
                                     <Mail size={14} />
                                     {"Email não informado"}
                                 </div>
+
+                                <button
+                                    onClick={handleGoToProfile}
+                                    className="mt-3 flex items-center gap-2 rounded-xl bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-600 ring-1 ring-blue-200 transition hover:bg-blue-100"
+                                >
+                                    <ExternalLink size={14} />
+                                    Ver perfil completo
+                                </button>
                             </div>
 
-                            {/* Details Grid */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
                                     <div className="text-blue-600 mb-2">
@@ -89,7 +100,6 @@ export function UserPreviewDrawer({ studentId, onClose, onOpenSummary }: UserPre
                                 </div>
                             </div>
 
-                            {/* Bio */}
                             {student.bio && (
                                 <div className="space-y-2">
                                     <h5 className="text-sm font-bold text-gray-800 uppercase tracking-wide">Sobre</h5>
@@ -99,7 +109,6 @@ export function UserPreviewDrawer({ studentId, onClose, onOpenSummary }: UserPre
                                 </div>
                             )}
 
-                            {/* Stats */}
                             <div className="flex justify-around py-4 border-y border-gray-100">
                                 <div className="text-center">
                                     <div className="text-lg font-bold text-gray-900">{student.seguidores}</div>
@@ -112,12 +121,11 @@ export function UserPreviewDrawer({ studentId, onClose, onOpenSummary }: UserPre
                                 </div>
                                 <div className="w-px bg-gray-100"></div>
                                 <div className="text-center">
-                                    <div className="text-lg font-bold text-gray-900">{student.pontuação || 0}</div>
+                                    <div className="text-lg font-bold text-gray-900">{student.pontuacao || 0}</div>
                                     <div className="text-xs text-gray-500">Pontos</div>
                                 </div>
                             </div>
 
-                            {/* Summaries Section */}
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <h5 className="text-sm font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
