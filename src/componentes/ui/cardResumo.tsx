@@ -1,5 +1,8 @@
 import { Heart } from "lucide-react";
+import { useState } from "react";
 import {tv, type VariantProps} from "tailwind-variants"
+import { useAuth } from "../../http/auth/useAuth";
+import { useLikeSummary } from "../../http/likes/useLikeSummary";
 
 const cardStyle = tv({
     base: "group relative z-51 flex flex-col overflow-hidden rounded-3xl border border-white/60 p-5 sm:p-6 text-slate-900 shadow-[0_12px_30px_-18px_rgba(15,23,42,0.55)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_38px_-18px_rgba(15,23,42,0.55)]",
@@ -38,7 +41,15 @@ type CardProps = VariantProps<typeof cardStyle> & {
 }
 
 export function CardResumo({summaryId, titulo, texto, imageUrl, studentName, className, formato, cor, curtidas, setViewSummary }: CardProps) {
+
     const isVertical = formato === "vertical";
+    
+    const { data: auth } = useAuth();
+    
+    const { mutate } = useLikeSummary();
+
+    const [likes, setLikes] = useState(curtidas ?? 0);
+    const [liked, setLiked] = useState(false);
 
     return (
         <div onClick={() => setViewSummary && setViewSummary(summaryId)} className={cardStyle({formato, cor, className})}>
@@ -49,13 +60,33 @@ export function CardResumo({summaryId, titulo, texto, imageUrl, studentName, cla
                         resumo
                     </span>
 
+                {auth?.status === true && (
                     <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+
+                            const wasLiked = liked;
+
+                            setLiked(!wasLiked);
+                            setLikes(prev => wasLiked ? prev - 1 : prev + 1);
+
+                            mutate(summaryId, {
+                                onError: () => {
+                                    setLiked(wasLiked);
+                                    setLikes(prev => wasLiked ? prev + 1 : prev - 1);
+                                }
+                            });
+                        }}
                         className="flex items-center gap-1 rounded-full bg-white/70 px-3 py-1 text-sm font-semibold text-slate-700 transition hover:bg-white"
                         aria-label="Curtir resumo"
                     >
-                        <Heart size={16} className="group-hover:scale-110 transition-transform" />
-                        <span>{curtidas ?? 0}</span>
+                        <Heart
+                            size={16}
+                            className="group-hover:scale-110 transition-transform"
+                        />
+                        <span>{likes}</span>
                     </button>
+                )}
                 </div>
 
                 <h2 className={`mt-3 line-clamp-2 font-semibold leading-tight text-slate-900 ${isVertical ? "text-[1.45rem]" : "text-[1.35rem]"}`}>
