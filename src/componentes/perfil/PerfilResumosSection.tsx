@@ -55,7 +55,7 @@ export function PerfilResumosSection({ onOpenResumo, data, isAdm, isProfessor, o
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
                   Resumo
                 </p>
-                <h3 className="truncate text-lg font-bold text-slate-900">
+                <h3 className="text-lg font-bold text-slate-900">
                   {resumo.titulo}
                 </h3>
                 {resumo.badge && (

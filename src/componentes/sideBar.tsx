@@ -19,7 +19,7 @@ type SideBarProps = {
     links?: LinkItem[]
 }
 
-export function SideBar({role, links}: SideBarProps){
+export function SideBar({role, links,  setIsOptionsFormOpen, isOptionsFormOpen,}: SideBarProps){
     const [sideBar, setSideBar] = useState(false);
     const [searchBar, setSearchBar] = useState(false);
 
@@ -47,7 +47,7 @@ export function SideBar({role, links}: SideBarProps){
         { key: "profile", label: "User", to: "/perfil", icon: <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "bottom" }
     ];
 
-    role === "ALUNO" && defaultLinks.push({ key: "create", label: "Criar resumo", to: "/criar-resumo", icon: <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" });
+    role === "ALUNO" && defaultLinks.push( { key: "create", label: "Criar resumo", icon: <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, onClick: () => setIsOptionsFormOpen?.(!(isOptionsFormOpen ?? false)), position: "top" },);
 
     const allLinks = links ?? defaultLinks;
     const topLinks = allLinks.filter(l => l.position !== "bottom");

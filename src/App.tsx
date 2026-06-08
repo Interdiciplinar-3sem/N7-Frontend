@@ -17,8 +17,8 @@ import { PaginaCursos } from './paginas/admin/PaginaCursos'
 import { PaginaMaterias } from './paginas/admin/PaginaMaterias'
 import { PaginaTags } from './paginas/admin/PaginaTags'
 import { PaginaTurmas } from './paginas/PaginaTurmas'
-import { PaginaResumo } from './paginas/PaginaResumo'
 import { PaginaConfirmacaoEmail } from './paginas/PaginaConfirmacaoEmail'
+import { PaginaCriacaoResumoWrapper } from './paginas/PaginaCriacaoResumoWrapper'
 
 export default App;
 
@@ -43,8 +43,8 @@ export function App() {
             <Route element={<PaginaLogin />} path='/login' />
               <Route element={<ProtectedRoute />}>
                 <Route element={<LayoutNetwork />}>
-                  <Route element={<PaginaResumo />} path='/resumo' />
-                  <Route element={<PaginaResumo />} path='/resumo/:id' />
+                  <Route element={<PaginaCriacaoResumoWrapper />} path='/resumo' />
+                  <Route element={<PaginaCriacaoResumoWrapper />} path='/resumo/:id' /> 
                   <Route element={<PaginaPerfil />} path='/perfil' />
                   <Route element={<PaginaPerfil />} path='/perfil/:studentId' />
                   <Route element={<PaginaFeed />} path='/feed' />

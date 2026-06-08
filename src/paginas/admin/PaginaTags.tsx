@@ -1,4 +1,3 @@
-// src/paginas/admin/PaginaTags.tsx
 import { useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";

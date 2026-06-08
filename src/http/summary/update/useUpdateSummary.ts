@@ -3,15 +3,18 @@ import { request } from "../../httpClient";
 import { API_URL } from "../../api";
 import type { RequestUpdateSummaryType } from "../types/RequestUpdateSummaryType";
 import type { ResponseUpdateSummaryType } from "../types/ResponseUpdateSummaryType";
+import { useToast } from "../../../contexto/toastContext";
 
 const invalidateSummaryQueries = async (
     queryClient: ReturnType<typeof useQueryClient>
 ) => {
     await queryClient.invalidateQueries({ queryKey: ["get-summary"] });
     await queryClient.invalidateQueries({ queryKey: ["get-summary-desactivated"] });
+    await queryClient.invalidateQueries({ queryKey: ["get-summary-activated"] });
     await queryClient.invalidateQueries({ queryKey: ["get-summaries-me"] });
     await queryClient.invalidateQueries({ queryKey: ["get-summaries-student"] });
     await queryClient.invalidateQueries({ queryKey: ["get-summaries-subject"] });
+    
 };
 
 export const useAssignBadge = () => {
@@ -36,6 +39,7 @@ export const useAssignBadge = () => {
 
 export const useReportSummary = () => {
     const queryClient = useQueryClient();
+    const { showError } = useToast();
 
     return useMutation({
         mutationKey: ["report-summary"],
@@ -48,6 +52,9 @@ export const useReportSummary = () => {
             queryClient.invalidateQueries({
                 queryKey: ["get-summary"],
             }),
+        onError: (error) => {
+            showError(error instanceof Error ? error.message : "Erro ao reportar resumo.");
+        }
     });
 };
 

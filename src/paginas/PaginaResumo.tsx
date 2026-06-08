@@ -3,6 +3,7 @@ import { EditorContent } from "@tiptap/react";
 import { GraduationCap, Heart, ArrowLeft, ArrowRight } from "lucide-react";
 import { useSummaryEditor } from "../hooks/useEditorHook";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import type { ContextPropsType } from "../types/contextPropsType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -13,6 +14,11 @@ import { useUpdateStatusSummary, useUpdateSummary } from "../http/summary/update
 import { useGetSummaryId } from "../http/summary/get/useGetSummary";
 import { usePostSummary } from "../http/summary/post/usePostSummary";
 import { useGetCourseSubjectsSemesterMe } from "../http/course/useCourse";
+import { SummaryActionBar } from "../componentes/Summaryactionbar";
+import { UserPreviewDrawer } from "../componentes/previwer/UserPreviewerDrawer";
+import { useReportSummary } from "../http/summary/update/useUpdateSummary";
+import { useAssignProfessorBadge, useRemoveProfessorBadge } from "../http/professor/useProfessor";
+import { useSummaryActions } from "../hooks/useSummaryActionBar";
 
 const formSchema = z.object({
     titulo: z.string().min(3, "O título deve ter ao menos 3 letras"),
@@ -29,11 +35,16 @@ export function PaginaResumo() {
     const summaryId = Number(id) || 0;
     const isCreating = summaryId === 0;
     const [mobileStep, setMobileStep] = useState<1 | 2>(1);
+    const [previewAuthorId, setPreviewAuthorId] = useState<number | null>(null);
 
     const { data: resumo, isPending: isPendingSummary, isError, error } = useGetSummaryId(summaryId);
     const { mutateAsync: deleteSummary } = useUpdateStatusSummary();
     const { mutateAsync: update, isPending: isPendingUpdate } = useUpdateSummary(summaryId);
     const { mutateAsync: summaryPost, isPending: isPendingCreate } = usePostSummary();
+    const { mutateAsync: reportSummary } = useReportSummary();
+    const { mutateAsync: assignBadge } = useAssignProfessorBadge();
+    const { mutateAsync: removeBadge } = useRemoveProfessorBadge();
+    const { handleDesactiveSummary, handleReportSummary, handleBadge } = useSummaryActions(() => navigate("/feed"));
 
     if (!isCreating && ((resumo?.publico === false && resumo.studentId !== parentContext.studentId) || error?.message === "400")) {
         navigate("/feed");
@@ -156,6 +167,13 @@ export function PaginaResumo() {
         setIsPublic(nextValue);
     };
 
+    const role = parentContext.role;
+    const isAdm = role === "ADM";
+    const isProfessor = role === "PROFESSOR";
+
+    const hasBadge = !!resumo?.badge;
+    const isProfessorBadge = resumo?.badge?.name?.toLowerCase().includes("professor");
+
     const sharedFormProps = {
         form,
         subjects,
@@ -167,6 +185,11 @@ export function PaginaResumo() {
         onSubmit: handdleForm,
         onDelete: handleDelete,
         onVisibility: handleVisibility,
+    };
+
+    const handleOpenAuthorSummary = (id: number) => {
+        setPreviewAuthorId(null);
+        navigate(`/resumo/${id}`);
     };
 
     return (
@@ -184,13 +207,18 @@ export function PaginaResumo() {
                         <section className="flex flex-col w-full sm:flex-3 rounded-2xl gap-2 bg-white p-1 md:p-4 shadow-lg overflow-hidden">
                             {!isCreating && (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                                    <div className="flex items-center gap-2 rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-slate-200">
+                                    <button
+                                        type="button"
+                                        onClick={() => resumo?.studentId && setPreviewAuthorId(resumo.studentId)}
+                                        className="flex items-center gap-2 rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-slate-200 hover:ring-blue-300 hover:bg-blue-50/30 transition text-left"
+                                    >
                                         <div
                                             className="min-w-10 min-h-10 rounded-full bg-cover bg-center bg-zinc-300 pointer-events-none"
                                             style={{ backgroundImage: resumo?.studentUrl ? `url(${resumo.studentUrl})` : 'none' }}
                                         />
                                         <span className="font-medium text-gray-700 text-sm truncate">{resumo?.studentNome}</span>
-                                    </div>
+                                    </button>
+
                                     <div className="flex items-center gap-2 rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-slate-200">
                                         <GraduationCap className="h-4 w-4 text-sky-600 shrink-0" />
                                         <span className="font-medium text-black text-sm truncate">{resumo?.subjectNome}</span>
@@ -224,6 +252,25 @@ export function PaginaResumo() {
                                     <ArrowRight className="h-4 w-4" />
                                 </button>
                             )}
+
+                            {!isCreating && !isOwner && !isPendingSummary && !isError && (
+                                <SummaryActionBar
+                                    id={summaryId}
+                                    role={role}
+                                    isActive={resumo?.ativo}
+                                    hasBadge={hasBadge}
+                                    isProfessorBadge={isProfessorBadge}
+                                    onReport={(id) => handleReportSummary(id, reportSummary)}
+                                    onToggleLike={undefined}
+                                    onDesactive={isAdm ? (id) => handleDesactiveSummary(id, deleteSummary) : undefined}
+                                    onAssignBadge={isProfessor
+                                        ? (id, hasBadge) => handleBadge(id, hasBadge, assignBadge, removeBadge)
+                                        : undefined
+                                    }
+                                    showId={false}
+                                    className="rounded-xl mt-1"
+                                />
+                            )}
                         </section>
 
                         {isOwner && (
@@ -250,6 +297,15 @@ export function PaginaResumo() {
                         )}
                     </div>
                 </div>
+            )}
+
+            {previewAuthorId !== null && createPortal(
+                <UserPreviewDrawer
+                    studentId={previewAuthorId}
+                    onClose={() => setPreviewAuthorId(null)}
+                    onOpenSummary={handleOpenAuthorSummary}
+                />,
+                document.body
             )}
         </main>
     );

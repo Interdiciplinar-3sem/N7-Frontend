@@ -9,12 +9,15 @@ import { ViewSummary } from "../componentes/ViewSummary";
 import { useGetFollowingMe } from "../http/follow/useFollow";
 import { useReportSummary, useUpdateStatusSummary } from "../http/summary/update/useUpdateSummary";
 import { useAssignProfessorBadge, useRemoveProfessorBadge } from "../http/professor/useProfessor";
+import { useSummaryActions } from "../hooks/useSummaryActionBar";
 
 export function PaginaFeed() {
     const parentContext = useOutletContext<ContextPropsType>();
 
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
     const [selectedResumoId, setSelectedResumoId] = useState<number | null>(null);
+
+    const { handleDesactiveSummary, handleReportSummary, handleBadge } = useSummaryActions(setSelectedResumoId);
 
     const {
         data: resumosFeedPaged,
@@ -44,8 +47,9 @@ export function PaginaFeed() {
     const { mutateAsync: assignBadge } = useAssignProfessorBadge();
     const { mutateAsync: removeBadge } = useRemoveProfessorBadge();
 
-    const isAdm = parentContext.role === "ADM";
-    const isProfessor = parentContext.role === "PROFESSOR";
+    const role = parentContext.role;
+    const isAdm = role === "ADM";
+    const isProfessor = role === "PROFESSOR";
 
     const itemsPorAba = {
         explorar: resumosExplorarPaged?.pages.flatMap((p) => p.data) ?? [],
@@ -73,6 +77,8 @@ export function PaginaFeed() {
         ranking:  isFetchingRanking,
     }[activeTab];
 
+    const selectedResumo = items.find((r) => r.summaryId === selectedResumoId) ?? null;
+
     const sentinelaRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -84,7 +90,6 @@ export function PaginaFeed() {
             },
             { threshold: 0.1 }
         );
-
         if (sentinelaRef.current) observer.observe(sentinelaRef.current);
         return () => observer.disconnect();
     }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
@@ -95,7 +100,7 @@ export function PaginaFeed() {
         ranking:   "Ainda não há resumos suficientes para aparecer no ranking.",
     };
 
-    const tabs = parentContext.role === "PROFESSOR"
+    const tabs = isProfessor
         ? (["explorar", "ranking"] as const)
         : (["explorar", "seguindo", "ranking"] as const);
 
@@ -149,15 +154,6 @@ export function PaginaFeed() {
                                     studentName={resumo.studentNome}
                                     curtidas={resumo.totalCurtidas}
                                     badge={resumo.badge}
-                                    isAdm={isAdm}
-                                    isProfessor={isProfessor}
-                                    isActive={resumo.ativo}
-                                    onReport={(id) => reportSummary(id)}
-                                    onToggleStatus={isAdm ? (id) => toggleSummaryStatus(id) : undefined}
-                                    onAssignBadge={isProfessor ? (id) => {
-                                        const hasProfBadge = resumo.badge?.name?.toLowerCase().includes("professor");
-                                        if (hasProfBadge) removeBadge(id); else assignBadge(id);
-                                    } : undefined}
                                 />
                             );
                         })
@@ -208,10 +204,18 @@ export function PaginaFeed() {
                     )}
                 </section>
 
-                {selectedResumoId && (
+                {selectedResumoId !== null && (
                     <ViewSummary
                         id={selectedResumoId}
+                        role={role}
                         onClose={() => setSelectedResumoId(null)}
+                        isActive={selectedResumo?.ativo}
+                        onReport={(id) => handleReportSummary(id, reportSummary)}
+                        onSoftDeleteSumary={isAdm ? (id) => handleDesactiveSummary(id, toggleSummaryStatus) : undefined}
+                        onAssignBadge={isProfessor
+                            ? (id, hasBadge) => handleBadge(id, hasBadge, assignBadge, removeBadge)
+                            : undefined
+                        }
                     />
                 )}
             </section>
