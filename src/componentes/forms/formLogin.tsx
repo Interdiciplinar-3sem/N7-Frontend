@@ -56,15 +56,10 @@ export function FormLogin() {
 
     return (
         <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#78a3ff]/70 via-[#286fbd]/90 to-[#78a3ff]/70 relative overflow-hidden">
-
-            {/* Bolas */}
             <div className="absolute top-[-80px] right-[-80px] w-80 h-80 rounded-full bg-white opacity-3" />
             <div className="absolute bottom-[-60px] left-[-40px] w-56 h-56 rounded-full bg-white opacity-4" />
-
-            {/* * card quase transparente */}
             <div className="relative w-full max-w-md mx-4 bg-white/10 backdrop-blur-xl border border-white/25 rounded-3xl p-10 shadow-2xl">
 
-                {/* LOGO*/}
                 <section className="w-full flex items-start justify-between mb-10">
                     <div className="mb-8">
                         <span className="text-2xl font-bold text-white">
@@ -82,12 +77,10 @@ export function FormLogin() {
                 <h1 className="text-2xl font-semibold text-white mb-6">Entrar</h1>
 
                 <form onSubmit={form.handleSubmit(handdlerLogin)} className="space-y-4">
-                    {/* ── Campo E-mail ──────────────────────────────────────────── */}
                     <div>
                         <label className="block text-xs font-medium text-white/70 mb-2 uppercase tracking-wider">
                             E-mail
                         </label>
-                        {/** icone dentro do campo */}
                         <div className="flex items-center gap-3 bg-white/15 border border-white/25 rounded-xl px-4 focus-within:border-white/60 focus-within:bg-white/20 transition-all duration-200">
                             <svg className="w-4 h-4 text-white/50 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -107,7 +100,6 @@ export function FormLogin() {
                         )}
                     </div>
 
-                    {/*  Campo Senha */}
                     <div>
                         <label className="block text-xs font-medium text-white/70 mb-2 uppercase tracking-wider">
                             Senha
@@ -130,7 +122,6 @@ export function FormLogin() {
                         )}
                     </div>
 
-                    {/* Erro geral  */}
                     {form.formState.errors.root && (
                         <div className="bg-red-500/20 border border-red-400/40 rounded-xl px-4 py-3">
                             <p className="text-red-200 text-sm">{form.formState.errors.root.message}</p>
@@ -148,7 +139,6 @@ export function FormLogin() {
                         {form.formState.isSubmitting ? "Entrando..." : "Entrar"}
                     </button>
 
-                    {/* Link para cadastro */}
                     <p className="text-center text-xs text-white/50 pt-1">
                         Não tem conta?{" "}
                         <Link to="/cadastro" className="text-[#aac9f7] font-semibold hover:text-white transition-colors">

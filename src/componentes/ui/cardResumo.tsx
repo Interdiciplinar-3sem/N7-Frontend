@@ -1,4 +1,4 @@
-import { Flag, Heart, ShieldOff, Star } from "lucide-react";
+import { Heart } from "lucide-react";
 import { tv, type VariantProps } from "tailwind-variants"
 import { SummaryBadge } from "../badge/SummaryBadge";
 import type { SummaryBadgeType } from "../../http/summary/types/ResponseGetSummaryType";
@@ -38,15 +38,9 @@ type CardProps = VariantProps<typeof cardStyle> & {
     curtidas?: number;
     badge?: SummaryBadgeType | null;
     setViewSummary?: (id: number) => void;
-    isAdm?: boolean;
-    isProfessor?: boolean;
-    isActive?: boolean;
-    onReport?: (id: number) => void;
-    onToggleStatus?: (id: number) => void;
-    onAssignBadge?: (id: number) => void;
 }
 
-export function CardResumo({summaryId, titulo, texto, imageUrl, studentName, className, formato, cor, curtidas, badge, setViewSummary, isAdm, isProfessor, isActive, onReport, onToggleStatus, onAssignBadge }: CardProps) {
+export function CardResumo({summaryId, titulo, texto, imageUrl, studentName, className, formato, cor, curtidas, badge, setViewSummary }: CardProps) {
     const isVertical = formato === "vertical";
     const hasBadge = !!badge;
     const isProfessorBadge = badge?.name?.toLowerCase().includes("professor");
@@ -80,18 +74,25 @@ export function CardResumo({summaryId, titulo, texto, imageUrl, studentName, cla
                     </div>
                 </div>
 
-                <h2 className={`mt-3 line-clamp-2 font-semibold leading-tight text-slate-900 ${isVertical ? "text-[1.45rem]" : "text-[1.35rem]"}`}>
+                <h2
+                     className={`mt-3 line-clamp-2 font-semibold leading-tight text-slate-900
+                    ${
+                        isVertical
+                        ? "text-base sm:text-lg md:text-xl lg:text-[1.45rem]"
+                        : "text-sm sm:text-base md:text-lg lg:text-[1.35rem]"
+                    }`}
+                    >
                     {titulo}
                 </h2>
 
-                <p className={`${isVertical ? "line-clamp-10" : "line-clamp-4"} mt-2 text-sm leading-relaxed text-slate-700 sm:text-[15px]`}>
+                <p className={`${isVertical ? "sm:line-clamp-10" : "hidden sm:block sm:line-clamp-4"}  mt-2 text-sm leading-relaxed text-slate-700 sm:text-[15px]`}>
                     {texto}
                 </p>
             </div>
 
             <div className={`relative w-full min-h-10 ${isVertical ? "mt-5" : "mt-4"}`}>
                 <hr className="border-slate-800/15" />
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-[13px] text-slate-700">
+                <div className="mt-3 flex flex-wrap items-center justify-center sm:justify-between gap-3 text-[13px] text-slate-700">
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1.5">
                             <div
@@ -106,42 +107,6 @@ export function CardResumo({summaryId, titulo, texto, imageUrl, studentName, cla
                         <span className="rounded-md bg-white/60 px-2 py-1 text-xs font-semibold text-slate-800">
                             leitura rapida
                         </span>
-
-                        {/* Botão de report — visível para alunos */}
-                        {onReport && !isAdm && !isProfessor && (
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onReport(summaryId); }}
-                                className="rounded-full bg-white/70 p-1.5 text-slate-500 hover:bg-red-50 hover:text-red-500 transition"
-                                title="Reportar resumo"
-                                aria-label="Reportar resumo"
-                            >
-                                <Flag size={13} />
-                            </button>
-                        )}
-
-                        {/* Botão de desativar — visível para ADM */}
-                        {isAdm && onToggleStatus && (
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onToggleStatus(summaryId); }}
-                                className={`rounded-full p-1.5 transition ${isActive ? "bg-white/70 text-red-500 hover:bg-red-50" : "bg-green-100 text-green-600 hover:bg-green-200"}`}
-                                title={isActive ? "Desativar resumo" : "Ativar resumo"}
-                                aria-label="Alternar status do resumo"
-                            >
-                                <ShieldOff size={13} />
-                            </button>
-                        )}
-
-                        {/* Botão de atribuir selo — visível para Professor */}
-                        {isProfessor && onAssignBadge && (
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onAssignBadge(summaryId); }}
-                                className={`rounded-full p-1.5 transition ${isProfessorBadge ? "bg-violet-100 text-violet-600 hover:bg-violet-200" : "bg-white/70 text-slate-500 hover:bg-violet-50 hover:text-violet-500"}`}
-                                title={isProfessorBadge ? "Remover selo do professor" : "Atribuir selo do professor"}
-                                aria-label="Atribuir selo do professor"
-                            >
-                                <Star size={13} className={isProfessorBadge ? "fill-violet-500" : ""} />
-                            </button>
-                        )}
                     </div>
                 </div>
             </div>

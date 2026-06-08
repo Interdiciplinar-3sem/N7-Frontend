@@ -7,7 +7,8 @@ type PerfilInfoProps = {
 
 export function PerfilInfo({ user, isOwnProfile }: PerfilInfoProps) {
   return (
-    <div className="flex-1">
+    
+    <div className="flex flex-col items-center md:items-start flex-1">
       <h2 className="text-xs lg:text-2xl font-bold">
         {user.nome || 'Nome do usuário'}
       </h2>

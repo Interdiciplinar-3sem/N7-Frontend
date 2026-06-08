@@ -1,4 +1,3 @@
-// src/http/auth/useCreateStudentValited.tsx
 import { useMutation } from "@tanstack/react-query";
 import { API_URL } from "../api";
 

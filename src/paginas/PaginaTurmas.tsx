@@ -230,6 +230,7 @@ export function PaginaTurmas() {
 
       {selectedResumoId && (
         <ViewSummary
+          role={parentContext?.role}
           id={selectedResumoId}
           materia={selectedTurma?.name}
           onClose={() => setSelectedResumoId(null)}

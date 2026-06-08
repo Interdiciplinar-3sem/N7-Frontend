@@ -1,10 +1,11 @@
 import { useEffect } from "react"
 import { EditorContent } from "@tiptap/react"
 import { useSummaryEditor } from "../../hooks/useEditorHook"
-import { GraduationCap, Heart, X, User, ExternalLink } from "lucide-react"
+import { GraduationCap, Heart, X } from "lucide-react"
 import { Overlay } from "../overlay"
 import { useGetAdminSummaryId } from "../../http/admin/useGetAdminStudentSummaryId"
 import { useNavigate } from "react-router-dom"
+import { StudentPreviewProfile } from "./studentPreviewProfile"
 
 type SummaryPreviewerDrawerProps = {
     id: number;
@@ -93,33 +94,12 @@ export const SummaryPreviewerDrawer = ({ id, onClose }: SummaryPreviewerDrawerPr
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-100 sm:col-span-2">
-                                        <div className="h-8 w-8 overflow-hidden rounded-full bg-slate-200 flex-shrink-0">
-                                            {summary?.studentUrl ? (
-                                                <img src={summary.studentUrl} alt={summary.studentNome} className="h-full w-full object-cover" />
-                                            ) : (
-                                                <div className="flex h-full w-full items-center justify-center text-slate-400">
-                                                    <User size={16} />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="flex flex-col min-w-0 flex-1">
-                                            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Autor</span>
-                                            <span className="text-sm font-semibold text-slate-700 truncate">
-                                                {summary?.studentNome}
-                                            </span>
-                                        </div>
-                                        {summary?.studentId && (
-                                            <button
-                                                onClick={handleGoToProfile}
-                                                title="Ver perfil do autor"
-                                                className="flex items-center gap-1.5 rounded-lg bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-600 ring-1 ring-sky-200 transition hover:bg-sky-100 flex-shrink-0"
-                                            >
-                                                <ExternalLink size={13} />
-                                                Ver perfil
-                                            </button>
-                                        )}
-                                    </div>
+                                    <StudentPreviewProfile
+                                        studentNome={summary?.studentNome || "Desconecido"}
+                                        studentUrl={summary?.studentUrl}
+                                        studentId={summary?.studentId}
+                                        handleGoToProfile={handleGoToProfile}
+                                    />
                                 </div>
 
                                 <h1 className="text-2xl font-extrabold text-slate-900 leading-tight">

@@ -95,15 +95,11 @@ export function usePaginaPerfil() {
   const bios = biosQuery.data ? biosQuery.data.filter((bio) => bio.ativo) : []
 
  const isPending =
-  isPrivilegedViewingStudent
-    ? otherPerfil.isPending
-    : isAluno
-      ? (isOwnProfile ? myPerfil.isPending : otherPerfil.isPending)
-      : isProfessor
-        ? (isOwnProfile
-            ? myProfessorPerfil.isPending
-            : otherProfessorPerfil.isPending)
-        : false
+    (isPrivilegedViewingStudent || (isAluno && !isOwnProfile)) ? otherPerfil.isPending
+    : (isAluno && isOwnProfile)                                ? myPerfil.isPending
+    : (isProfessor && isOwnProfile)                            ? myProfessorPerfil.isPending
+    : (isProfessor && !isOwnProfile)                           ? otherProfessorPerfil.isPending
+    : false;
 
   const { mutateAsync: updateStudent } = useUpdateStudent(viewerStudentId || profileStudentId)
   const { mutateAsync: followUser, isPending: isFollowingPending } = useFollow(profileStudentId, parentContext?.id)

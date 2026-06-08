@@ -1,5 +1,5 @@
 import { X, GraduationCap, Calendar, Mail, FileText, User as UserIcon, ExternalLink } from "lucide-react";
-import { useGetSummaryStudentId } from "../../http/summary/get/useGetSummary"; 
+import { useGetSummaryStudentId } from "../../http/summary/get/useGetSummary";
 import { Overlay } from "../overlay";
 import { useEffect } from "react";
 import { useGetAdminStudent } from "../../http/admin/useGetAdminStudent";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 type UserPreviewDrawerProps = {
     studentId: number;
     onClose: () => void;
+    /** Callback chamado ao clicar em um resumo. Pode navegar, abrir modal ou qualquer outra ação. */
     onOpenSummary: (summaryId: number) => void;
 }
 

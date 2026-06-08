@@ -1,4 +1,3 @@
-// src/componentes/previwer/TagPreviewDrawer.tsx
 import { useEffect, useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import { useGetTagById } from "../../http/tags/get/useGetTags";
@@ -31,10 +30,8 @@ export function TagPreviewDrawer({ id, onClose }: TagPreviewDrawerProps) {
 
     return (
         <>
-            {/* Backdrop */}
             <div className="fixed inset-0 bg-black/30 z-40 transition-opacity" onClick={onClose} />
             
-            {/* Painel do Drawer */}
             <div className="fixed right-0 top-0 h-screen w-[400px] bg-white border-l border-gray-200 shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-200">
                 <div className="p-4 border-b border-gray-100 flex items-center justify-between">
                     <h3 className="font-semibold text-gray-900">Editar Tag</h3>
