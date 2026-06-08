@@ -2,11 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { useState } from "react";
-import { useSummaryPost } from "../../http/summary/usePostSummary";
 import { useToast } from "../../contexto/toastContext";
-import { useGetCourseSubjectsSemesterMe } from "../../http/course/useGetCourseSubjectsMe";
 import type { ContextPropsType } from "../../types/contextPropsType";
 import { TagField } from "./fields/tagField";
+import { usePostSummary } from "../../http/summary/post/usePostSummary";
+import { useGetCourseSubjectsSemesterMe } from "../../http/course/useCourse";
 
 type FormResumoProps = {
     setIsFormOpen: React.Dispatch<React.SetStateAction<boolean>>,
@@ -18,7 +18,7 @@ export function FormResumo({setIsFormOpen, parentContext}: FormResumoProps) {
     const summaryId = Number(id) || 0;
 
     const [isPublic, setIsPublic] = useState(true)
-    const {mutateAsync: summaryPost, isPending} = useSummaryPost();
+    const {mutateAsync: summaryPost, isPending} = usePostSummary();
     const { showSuccess } = useToast();
     const { data: subjects } = useGetCourseSubjectsSemesterMe(summaryId);
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([])

@@ -19,7 +19,7 @@ type SideBarProps = {
     links?: LinkItem[]
 }
 
-export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: SideBarProps){
+export function SideBar({role, links}: SideBarProps){
     const [sideBar, setSideBar] = useState(false);
     const [searchBar, setSearchBar] = useState(false);
 
@@ -41,12 +41,13 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
     }
 
     const defaultLinks: LinkItem[] = [  
-        { key: "search", label: "Pesquisar...", icon: <Search className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, onClick: handdleSearchBar, position: "top" },
-        { key: "create", label: "Criar resumo", icon: <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, onClick: () => setIsOptionsFormOpen?.(!(isOptionsFormOpen ?? false)), position: "top" },
+        { key: "search", label: "Pesquisar...", icon: <Search className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, onClick: handdleSearchBar, position: "top" },  
         { key: "feed", label: "Feed", to: "/feed", icon: <Bookmark className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" },
         { key: "class", label: "Turmas", to: "/turmas", icon: <Coffee className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" },
         { key: "profile", label: "User", to: "/perfil", icon: <User className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "bottom" }
     ];
+
+    role === "ALUNO" && defaultLinks.push({ key: "create", label: "Criar resumo", to: "/criar-resumo", icon: <FilePlusIcon className="h-4 w-4 xxs:h-auto xxs:w-auto"/>, position: "top" });
 
     const allLinks = links ?? defaultLinks;
     const topLinks = allLinks.filter(l => l.position !== "bottom");
@@ -155,7 +156,7 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
                         </ul>
                     </div>
 
-                     {role === "ALUNO" && (
+                     {role !== "ADM" && (
                         <section className={`
                             gap-2
                             flex  ${sideBar ? "sm:flex sm:items-center" : "sm:flex-col"}
@@ -175,7 +176,7 @@ export function SideBar({role, setIsOptionsFormOpen, isOptionsFormOpen, links}: 
                             } 
                         </section>
                      )}
-                     {role!== "ALUNO" && (
+                     {role === "ADM" && (
                         <div className={`flex items-center ${sideBar ? "justify-start" : "justify-center"} px-1`}>
                             <ButtonLogOut />
                         </div>

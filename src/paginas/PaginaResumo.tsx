@@ -1,19 +1,18 @@
 import { useNavigate, useOutletContext, useParams } from "react-router";
 import { EditorContent } from "@tiptap/react";
 import { GraduationCap, Heart, ArrowLeft, ArrowRight } from "lucide-react";
-import { useGetSummaryId } from "../http/summary/useGetSummaryId";
 import { useSummaryEditor } from "../hooks/useEditorHook";
 import { useEffect, useState } from "react";
 import type { ContextPropsType } from "../types/contextPropsType";
-import { useGetCourseSubjectsSemesterMe } from "../http/course/useGetCourseSubjectsMe";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { useUpdateSummary } from "../http/summary/useUpdateSummary";
 import { useToast } from "../contexto/toastContext";
-import { useUpdateStatusSummary } from "../http/summary/useUpdateStatusSummary";
-import { useSummaryPost } from "../http/summary/usePostSummary";
 import { SummaryFormFields } from "../componentes/forms/formCamposResumo";
+import { useUpdateStatusSummary, useUpdateSummary } from "../http/summary/update/useUpdateSummary";
+import { useGetSummaryId } from "../http/summary/get/useGetSummary";
+import { usePostSummary } from "../http/summary/post/usePostSummary";
+import { useGetCourseSubjectsSemesterMe } from "../http/course/useCourse";
 
 const formSchema = z.object({
     titulo: z.string().min(3, "O título deve ter ao menos 3 letras"),
@@ -24,7 +23,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function PaginaResumo() {
     const navigate = useNavigate();
-    const { showError, showSuccess } = useToast();
+    const { showError, showSuccess, confirm } = useToast();
     const parentContext = useOutletContext<ContextPropsType>();
     const { id } = useParams();
     const summaryId = Number(id) || 0;
@@ -34,8 +33,7 @@ export function PaginaResumo() {
     const { data: resumo, isPending: isPendingSummary, isError, error } = useGetSummaryId(summaryId);
     const { mutateAsync: deleteSummary } = useUpdateStatusSummary();
     const { mutateAsync: update, isPending: isPendingUpdate } = useUpdateSummary(summaryId);
-    const { mutateAsync: summaryPost, isPending: isPendingCreate } = useSummaryPost();
-    const { confirm } = useToast();
+    const { mutateAsync: summaryPost, isPending: isPendingCreate } = usePostSummary();
 
     if (!isCreating && ((resumo?.publico === false && resumo.studentId !== parentContext.studentId) || error?.message === "400")) {
         navigate("/feed");

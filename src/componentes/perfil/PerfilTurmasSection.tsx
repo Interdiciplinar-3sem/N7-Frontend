@@ -1,4 +1,4 @@
-import type { ResponseGetCourseSubjectsType } from '../../http/types/responseGetCourseSubjects'
+import type { ResponseGetCourseSubjectsType } from "../../http/course/types/ResponseGetCourseSubjectsType" 
 
 type PerfilTurmasSectionProps = {
   turmas: ResponseGetCourseSubjectsType[]

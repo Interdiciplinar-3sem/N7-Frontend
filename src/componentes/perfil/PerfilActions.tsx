@@ -1,7 +1,10 @@
 import { Botao } from '../ui/Botao'
 import { ButtonLogOut } from '../buttonLogout' 
+import { useToast } from '../../contexto/toastContext'
 
 type PerfilActionsProps = {
+  isAdm: boolean
+  isAluno: boolean
   isFollowingPending: boolean
   isUnfollowingPending: boolean
   isOwnProfile: boolean
@@ -10,10 +13,12 @@ type PerfilActionsProps = {
   toUnFollow: () => Promise<{message: string}>
   onToggleForm: () => void
   onToggleBioPicker: () => void
-  onToggleCreateResumo: () => void
+  onToggleCreateResumo?: () => void 
 }
 
 export function PerfilActions({
+  isAdm,
+  isAluno,
   isOwnProfile,
   isFollowing,
   onToggleForm,
@@ -24,12 +29,39 @@ export function PerfilActions({
   isFollowingPending,
   isUnfollowingPending
 }: PerfilActionsProps) {
-  return (
+  const { confirm } = useToast();
+ 
+ return (
     <div className="flex flex-col gap-3 mt-10 md:mt-0 pointer-events-auto pb-6 md:pb-0">
-      {!isOwnProfile ? (
-        <Botao onClick={ isFollowing ? toUnFollow : toFollow}>
-          {isUnfollowingPending ? "deixando de seguir" : isFollowingPending ? "seguindo" : (isFollowing ? 'Deixar de seguir' : 'Seguir')}
+      {!isOwnProfile && isAluno ? (
+        <Botao onClick={isFollowing ? toUnFollow : toFollow}>
+          {isUnfollowingPending
+            ? "deixando de seguir"
+            : isFollowingPending
+              ? "seguindo"
+              : isFollowing
+                ? "Deixar de seguir"
+                : "Seguir"}
         </Botao>
+      ) : isAdm ? (
+        <>
+          <Botao
+            onClick={async () => {
+              const ok = await confirm({
+                  title: "Desativar resumo?",
+                  message: "Tem certeza?",
+                  confirmText: "Sim, excluir"
+              });
+
+              if(!ok) {
+                return;
+              }
+            }}
+            cor="bg-red-400"
+          >
+            Desativar Perfil
+          </Botao>
+        </>
       ) : (
         <>
           <Botao
@@ -48,17 +80,19 @@ export function PerfilActions({
             Escolher bio
           </Botao>
 
-          <Botao
-            onClick={onToggleCreateResumo}
-            cor="bg-blue-600"
-            corHover="hover:bg-blue-700 hover:shadow-md"
-          >
-            Criar resumo
-          </Botao>
+          {onToggleCreateResumo && (
+            <Botao
+              onClick={onToggleCreateResumo}
+              cor="bg-blue-600"
+              corHover="hover:bg-blue-700 hover:shadow-md"
+            >
+              Criar resumo
+            </Botao>
+          )}
 
           <ButtonLogOut />
         </>
       )}
-    </div>
-  )
+  </div>
+)
 }

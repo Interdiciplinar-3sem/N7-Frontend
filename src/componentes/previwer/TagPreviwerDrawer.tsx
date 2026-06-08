@@ -1,8 +1,8 @@
 // src/componentes/previwer/TagPreviewDrawer.tsx
 import { useEffect, useState } from "react";
 import { X, Loader2 } from "lucide-react";
-import { useGetTagById } from "../../http/tags/useGetTagById";
-import { useUpdateTag } from "../../http/tags/useUpdateTag";
+import { useGetTagById } from "../../http/tags/get/useGetTags";
+import { useUpdateTag } from "../../http/tags/update/useUpdateTag";
 
 type TagPreviewDrawerProps = {
     id: number;

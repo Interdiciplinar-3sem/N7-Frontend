@@ -29,8 +29,7 @@ export function FormSignUp({ setIsEmailValid }: FormSignUpProps) {
             message: "Senhas não conferem",
             path: ["senha"], 
         }
-);
-
+    );
 
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {

@@ -3,11 +3,8 @@ import { X } from "lucide-react";
 import { AdminCrudPage } from "../../componentes/admin/adminCrudPage";
 import type { Column } from "../../componentes/ui/Table";
 import { Overlay } from "../../componentes/overlay";
-import { useGetCoursesDesactivated } from "../../http/course/useGetCoursesDesactivated";
-import { useUpdateCourseStatus } from "../../http/course/useUpdateCourseStatus";
-import { useGetCourseSubjects } from "../../http/course/useGetCourseSubjects";
-import { useGetCourses } from "../../http/course/useGetCourse";
-import type { ResponseGetCourseType } from "../../http/types/responseGetCourse";
+import { useGetCourses, useGetCoursesDesactivated, useGetCourseSubjects, useUpdateCourseStatus } from "../../http/course/useCourse";
+import type { ResponseGetCourseType } from "../../http/course/types/ResponseGetCourseType"; 
 
 export function PaginaCursos() {
     const { data, isPending } = useGetCourses();

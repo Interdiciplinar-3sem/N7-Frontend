@@ -1,88 +1,114 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useOutletContext, useParams } from "react-router"
-import { useGetCourseSubjectsSemester } from "../http/course/useGetCourseSubjectsSemester"
-import { useGetCourseSubjectsSemesterMe } from "../http/course/useGetCourseSubjectsMe"
+import { useOutletContext, useParams } from "react-router"
+import { useGetCourseSubjectsSemester, useGetCourseSubjectsSemesterMe } from "../http/course/useCourse" 
 import { useGetBios } from "../http/bio/useGetBio"
-import { useGetStudent } from "../http/student/useGetStudent"
-import { useGetStudentMe } from "../http/student/useGetStudentMe"
-import { useUpdateStudent } from "../http/student/useUpdateStudent"
+import { useGetStudent } from "../http/student/useStudent"
+import { useGetStudentMe } from "../http/student/useStudent" 
+import { useUpdateStudent } from "../http/student/useStudent"
 import type { ContextPropsTypeNetwork } from "../types/contextPropsType"
 import type { AvatarOption } from "../types/AvatarTypes"
 import type { PerfilUser } from "../componentes/perfil/types"
 import { usePaginaPerfilModais } from "./usePaginaPerfilModais"
 import { useFollow } from "../http/follow/useFollow"
-import { useUnFollow } from "../http/follow/useUnFollow"
-import { useGetFollowers } from "../http/follow/useGetFollowers"
-import { useGetFollowing } from "../http/follow/useGetFollowing"
-import { useGetSummaryMe } from "../http/summary/useGetSummaryMe"
-import { useGetSummaryStudentId } from "../http/summary/useGetSummaryStudentId"
+import { useUnFollow } from "../http/follow/useFollow" 
+import { useGetFollowers } from "../http/follow/useFollow" 
+import { useGetFollowing } from "../http/follow/useFollow" 
+import { useGetSummaryMe } from "../http/summary/get/useGetSummary" 
+import { useGetSummaryStudentId } from "../http/summary/get/useGetSummary" 
+
+import { useGetProfessorMe, useGetProfessorById } from "../http/professor/useProfessor"
 
 export function usePaginaPerfil() {
   const { modais, filteredAvatars, handlers } = usePaginaPerfilModais()
   const parentContext = useOutletContext<ContextPropsTypeNetwork>()
-  const navigate = useNavigate()
   const { studentId: routeId } = useParams<{ studentId?: string }>()
 
-  const viewerStudentId = parentContext?.studentId ?? 0
-  const profileStudentId = Number(routeId ?? viewerStudentId)
-  const isOwnProfile = profileStudentId === viewerStudentId
-  const isAluno = parentContext?.role === "ALUNO"
+  const role = parentContext?.role
+  const isAluno = role === "ALUNO"
+  const isProfessor = role === "PROFESSOR"
+  const isAdm = role === "ADM"
+  const isPrivilegedViewingStudent = (isProfessor || isAdm) && !!routeId
 
-  useEffect(() => {
-    if (parentContext?.role !== "ALUNO") {
-      navigate("/feed")
-    }
-  }, [parentContext?.role, navigate])
+  const viewerStudentId = parentContext?.studentId ?? 0
+  const profileStudentId = Number(routeId ?? (isAluno ? viewerStudentId : 0))
+  const isOwnProfile = isAluno
+    ? profileStudentId === viewerStudentId
+    : isProfessor && !routeId
 
   const myPerfil = useGetStudentMe(viewerStudentId, {
-    enabled: isAluno && isOwnProfile && !!viewerStudentId
+    enabled: isAluno && isOwnProfile && !!viewerStudentId,
+  })
+  const otherPerfil = useGetStudent(profileStudentId, {
+
+    enabled: (isAluno && !isOwnProfile && !!profileStudentId)
+          || (isPrivilegedViewingStudent && !!profileStudentId),
   })
 
-  const otherPerfil = useGetStudent(profileStudentId, {
-    enabled: isAluno && !isOwnProfile && !!profileStudentId
+  const myProfessorPerfil = useGetProfessorMe({
+    enabled: isProfessor && isOwnProfile,
+  })
+  const otherProfessorPerfil = useGetProfessorById(Number(routeId ?? 0), {
+    enabled: isProfessor && !isOwnProfile && !!routeId && !isPrivilegedViewingStudent,
   })
 
   const summaryCurrent = useGetSummaryMe({
-    enabled: isOwnProfile && !!viewerStudentId
+    enabled: isAluno && isOwnProfile && !!viewerStudentId,
   })
+
   const summaryOther = useGetSummaryStudentId(profileStudentId, {
-    enabled: !isOwnProfile && !!profileStudentId
+    enabled: (isAluno && !isOwnProfile && !!profileStudentId)
+          || (isPrivilegedViewingStudent && !!profileStudentId),
   })
+  const resumoData = isAluno
+    ? (isOwnProfile ? summaryCurrent.data : summaryOther.data)
+    : isPrivilegedViewingStudent
+      ? summaryOther.data
+      : []
 
-  const resumoData = isOwnProfile ? summaryCurrent.data : summaryOther.data
-  const resumoIsPending = isOwnProfile ? summaryCurrent.isPending : summaryOther.isPending
+  const follwers = useGetFollowers(viewerStudentId, profileStudentId)
+  const follwing = useGetFollowing(viewerStudentId, profileStudentId)
 
-  const studentData = isOwnProfile ? myPerfil.data : otherPerfil.data
-  const isPending = isOwnProfile ? myPerfil.isPending : otherPerfil.isPending
-
-  const follwers = useGetFollowers(viewerStudentId, profileStudentId);
-  const follwing = useGetFollowing(viewerStudentId, profileStudentId);
+  const studentData = isAluno
+    ? (isOwnProfile ? myPerfil.data : otherPerfil.data)
+    : isPrivilegedViewingStudent
+      ? otherPerfil.data
+      : undefined
 
   const currentCourseId = studentData?.course?.id ?? 0
   const currentSemester = studentData?.semestre ?? 0
 
   const myCourseSubjects = useGetCourseSubjectsSemesterMe(viewerStudentId, {
-    enabled: isAluno && isOwnProfile && !!viewerStudentId
+    enabled: (isAluno && isOwnProfile && !!viewerStudentId) || (isPrivilegedViewingStudent && !!currentCourseId && !!currentSemester),
   })
+  const otherCourseSubjects = useGetCourseSubjectsSemester(currentCourseId, currentSemester, {
+    enabled: (isAluno && !isOwnProfile && !!currentCourseId && !!currentSemester) || (isPrivilegedViewingStudent && !!currentCourseId && !!currentSemester),
+  })
+  
+  const subjects =
+  isOwnProfile && isAluno
+    ? (myCourseSubjects.data ?? [])
+    : (otherCourseSubjects.data ?? [])
 
   const biosQuery = useGetBios({
-    enabled: isAluno && modais.openBioPicker && !!profileStudentId
+    enabled: isAluno && modais.openBioPicker && !!profileStudentId,
   })
-  
-  const otherCourseSubjects = useGetCourseSubjectsSemester(currentCourseId, currentSemester, {
-    enabled: isAluno && !isOwnProfile && !!currentCourseId && !!currentSemester
-  })
-  
-  const subjects = isOwnProfile ? (myCourseSubjects.data ?? []) : (otherCourseSubjects.data ?? [])
-  const isLoadingSubjects = isOwnProfile ? myCourseSubjects.isPending : otherCourseSubjects.isPending
-  
-  const { mutateAsync: updateStudent } = useUpdateStudent(viewerStudentId || profileStudentId)
-  const currentUserId = parentContext?.id ?? ""
-  
-  const {mutateAsync: followUser, isPending: isFollowingPending} = useFollow(profileStudentId, currentUserId)
-  const {mutateAsync: unfollowUser, isPending: isUnfollowingPending} = useUnFollow(profileStudentId, currentUserId)
-  
   const bios = biosQuery.data ? biosQuery.data.filter((bio) => bio.ativo) : []
+
+ const isPending =
+  isPrivilegedViewingStudent
+    ? otherPerfil.isPending
+    : isAluno
+      ? (isOwnProfile ? myPerfil.isPending : otherPerfil.isPending)
+      : isProfessor
+        ? (isOwnProfile
+            ? myProfessorPerfil.isPending
+            : otherProfessorPerfil.isPending)
+        : false
+
+  const { mutateAsync: updateStudent } = useUpdateStudent(viewerStudentId || profileStudentId)
+  const { mutateAsync: followUser, isPending: isFollowingPending } = useFollow(profileStudentId, parentContext?.id)
+  const { mutateAsync: unfollowUser, isPending: isUnfollowingPending } = useUnFollow(profileStudentId, parentContext?.id)
+  const isFollowing = Boolean(studentData?.seguidoPeloCurrentUser)
 
   const [user, setUser] = useState<PerfilUser>({
     nome: "",
@@ -91,14 +117,12 @@ export function usePaginaPerfil() {
     descricao: "",
     seguidores: 0,
     seguindo: 0,
-    avatar: null
+    avatar: null,
   })
 
   useEffect(() => {
-    if (!studentData) {
-      return
-    }
-
+    if (!studentData) return
+    if (!isAluno && !isPrivilegedViewingStudent) return
     setUser((prev) => ({
       ...prev,
       nome: studentData.nome,
@@ -107,43 +131,47 @@ export function usePaginaPerfil() {
       descricao: studentData.bio ?? "",
       avatar: studentData.avatar ?? null,
       seguidores: studentData.seguidores,
-      seguindo: studentData.seguindo
+      seguindo: studentData.seguindo,
     }))
-  }, [studentData])
+  }, [studentData, isAluno, isPrivilegedViewingStudent])
 
-  const toggleResumoForm = () => {
-    parentContext?.setIsOptionsFormOpen?.(!parentContext?.isOptionsFormOpen)
-  }
+  const professorData = isProfessor
+    ? (isOwnProfile ? myProfessorPerfil.data : otherProfessorPerfil.data)
+    : undefined
 
-  const isFollowing = Boolean(studentData?.seguidoPeloCurrentUser)
+  useEffect(() => {
+    if (!professorData || !isProfessor) return
+    setUser((prev) => ({
+      ...prev,
+      nome: professorData.nome,
+      curso: professorData.subject?.name ?? "",
+      faculdade: "",
+      descricao: professorData.bio ?? "",
+      avatar: professorData.avatar ?? null,
+      seguidores: 0,
+      seguindo: 0,
+    }))
+  }, [professorData, isProfessor])
+
+  const toggleResumoForm = isAluno
+    ? () => parentContext?.setIsOptionsFormOpen?.(!parentContext?.isOptionsFormOpen)
+    : undefined
 
   const submitEditForm = async (formData: FormData) => {
     await updateStudent({
       nome: (formData.get("nome") as string) || undefined,
-      bio: (formData.get("descricao") as string) || undefined
+      bio: (formData.get("descricao") as string) || undefined,
     })
-
     const nome = (formData.get("nome") as string) || user.nome
     const curso = (formData.get("curso") as string) || user.curso
     const faculdade = (formData.get("faculdade") as string) || user.faculdade
     const descricao = (formData.get("descricao") as string) || user.descricao
-
-    setUser((prev) => ({
-      ...prev,
-      nome,
-      curso,
-      faculdade,
-      descricao
-    }))
-
+    setUser((prev) => ({ ...prev, nome, curso, faculdade, descricao }))
     handlers.closeEditForm()
   }
 
   const selectAvatar = async (avatar: AvatarOption) => {
-    await updateStudent({
-      avatarUrl: avatar.url
-    })
-
+    await updateStudent({ avatarUrl: avatar.url })
     setUser((prev) => ({
       ...prev,
       avatar: {
@@ -151,36 +179,31 @@ export function usePaginaPerfil() {
         title: avatar.title,
         male: avatar.group === "male" ? "male" : null,
         url: avatar.url,
-        description: avatar.description
-      }
+        description: avatar.description,
+      },
     }))
-
     handlers.closeAvatarPicker()
   }
 
   const selectBio = async (bioDescription: string) => {
-    await updateStudent({
-      bio: bioDescription
-    })
-
-    setUser((prev) => ({
-      ...prev,
-      descricao: bioDescription
-    }))
-
+    await updateStudent({ bio: bioDescription })
+    setUser((prev) => ({ ...prev, descricao: bioDescription }))
     handlers.closeBioPicker()
   }
 
   return {
     user,
+    professorData,
     resumoData,
-    resumoIsPending,
     follwers,
     follwing,
     subjects,
     isOwnProfile,
     isAluno,
-    isPending: isPending || isLoadingSubjects,
+    isProfessor,
+    isAdm,
+    isPrivilegedViewingStudent,
+    isPending,
     isFollowing,
     isFollowingPending,
     isUnfollowingPending,
@@ -206,6 +229,6 @@ export function usePaginaPerfil() {
       closeFotoMenu: handlers.closeFotoMenu,
       followUser,
       unfollowUser,
-    }
+    },
   }
 }

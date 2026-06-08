@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { ResponseGetBiosType } from '../../http/types/responseGetBiosType'
+import type { ResponseGetBiosType } from '../../http/bio/types/ResponseGetBiosType' 
 import { DicesIcon } from 'lucide-react'
 
 type BioViewMode = 'list' | 'carousel'

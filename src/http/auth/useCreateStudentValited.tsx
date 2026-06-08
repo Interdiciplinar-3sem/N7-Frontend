@@ -15,7 +15,6 @@ export class ConfirmEmailError extends Error {
 }
 
 async function confirmEmail(token: string, type?: string): Promise<{ message: string; token: string }> {
-    console.log(type)
     const url = type === "professor"
         ? `${API_URL}/adm/professor?token=${encodeURIComponent(token)}`
         : `${API_URL}/user/email?token=${encodeURIComponent(token)}`;

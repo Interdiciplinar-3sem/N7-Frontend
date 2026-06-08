@@ -15,7 +15,6 @@ export function CardPerfil({studentId, nome, semestre, seguidores, url, classNam
     const navigate = useNavigate();
 
     const handleRedirect = () => {
-        console.log(studentId)
         navigate(`/perfil/${studentId}`);
         onSelectUser?.();
     }
