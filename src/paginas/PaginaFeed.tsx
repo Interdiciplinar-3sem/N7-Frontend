@@ -18,7 +18,7 @@ export function PaginaFeed() {
     const searchTerm = searchParams.get("busca") ?? undefined;
     if (parentContext.role === "ADM") {
         navigate("/painel")
-    }
+    }  
 
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
     const { data: resumosRanking } = useGetRanking(parentContext.studentId)
