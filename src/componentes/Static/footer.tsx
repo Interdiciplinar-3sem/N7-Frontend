@@ -35,7 +35,7 @@ const equipe = [
     },
     {
       "id": 4,
-      "name": "Eduardo Coiato",
+      "name": "Eduardo Coiado",
       "role": "",
       "description": "",
       "avatar": "/avatares/male-4.svg",
@@ -45,7 +45,7 @@ const equipe = [
     },
     {
       "id": 5,
-      "name": "Gabriel Atenes",
+      "name": "Gabriel Atanes",
       "role": "",
       "description": "",
       "avatar": "/avatares/male-5.svg",

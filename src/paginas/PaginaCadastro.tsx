@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FormSignUp } from "../componentes/forms/formUserStudent";
 import { useNavigate } from "react-router";
-import { HomeIcon } from "lucide-react";
+import { AlertTriangle, HomeIcon } from "lucide-react";
 import { EmailConfirmationState } from "../componentes/forms/EmailConfirmationState";
 
 export function PaginaCadastro() {
@@ -65,6 +65,28 @@ export function PaginaCadastro() {
                                     />
                                 ))}
                             </div>
+                            
+                            <div className="max-w-[220px] rounded-xl border border-white/15 bg-white/5 p-4 backdrop-blur-sm">
+                                <p className="text-[11px] font-semibold uppercase tracking-wide text-[#aac9f7] mb-2">
+                                    Cadastro de Professores
+                                </p>
+
+                                <p className="text-xs text-white/80 leading-relaxed">
+                                    Professores interessados em criar uma conta devem solicitar acesso pelo e-mail:
+                                </p>
+
+                                <a
+                                    href="mailto:jose.xavier.dev@gmail.com"
+                                    className="mt-2 block text-sm font-medium text-[#aac9f7] hover:text-white transition-colors break-all"
+                                >
+                                    jose.xavier.dev@gmail.com
+                                </a>
+
+                                <p className="font-bold mt-3 text-[11px] text-yellow-300/60">
+                                    O link de confirmação expira em até <span className="font-semibold text-yellow-300/80">2 dias</span>.
+                                </p>
+                            </div>
+
                         </div>
                         <div className="flex-1 w-full">
                             <FormSignUp setIsEmailValid={setIsEmailValid} />
