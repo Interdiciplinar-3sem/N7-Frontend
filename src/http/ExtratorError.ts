@@ -6,7 +6,7 @@ export async function extractError(
 ): Promise<ApiError> {
     try {
         const body = await parseResponse<any>(response);
-
+       
         if (typeof body === "string") {
             return new ApiError(
                 response.status,

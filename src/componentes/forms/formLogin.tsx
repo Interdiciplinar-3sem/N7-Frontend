@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import z from "zod";
 import { useLogin } from "../../http/auth/useAuth";
 import { HomeIcon } from "lucide-react";
+import type { ApiError } from "../../http/apiError";
 
 export function FormLogin() {
     const navigate = useNavigate()
@@ -31,25 +32,15 @@ export function FormLogin() {
 
     const handdlerLogin = async (data: z.infer<typeof formSchema>) => {
         try {
-
             await login({
                 email: data.email,
                 senha: data.senha
             })
-
-
-        } catch (error) {
-            let parsed: { message: string }
-
-            try {
-                parsed = JSON.parse((error as Error).message)
-            } catch {
-                parsed = { message: "Erro ao tentar fazer login." }
-            }
-
+        } catch (error: ApiError | any) {
+            
             form.setError("root", {
                 type: "manual",
-                message: parsed.message
+                message: error.message
             })
         }
     }
@@ -123,8 +114,8 @@ export function FormLogin() {
                     </div>
 
                     {form.formState.errors.root && (
-                        <div className="bg-red-500/20 border border-red-400/40 rounded-xl px-4 py-3">
-                            <p className="text-red-200 text-sm">{form.formState.errors.root.message}</p>
+                        <div className="bg-red-500/20 border border-red-400/40 rounded-xl p-1 sm:px-4 sm:py-3">
+                            <p className="text-red-200 text-xs sm:text-sm">{form.formState.errors.root.message}</p>
                         </div>
                     )}
 
