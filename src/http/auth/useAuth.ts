@@ -101,10 +101,6 @@ export const useLogin = () => {
                 { status: true }
             );
 
-            await queryClient.invalidateQueries({
-                queryKey: ["user-auth"],
-            });
-
             navigate("/feed", {
                 replace: true,
             });
