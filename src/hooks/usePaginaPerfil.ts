@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useOutletContext, useParams } from "react-router"
+import { useOutletContext, useParams } from "react-router-dom"
 import { useGetCourseSubjectsSemester, useGetCourseSubjectsSemesterMe } from "../http/course/useCourse" 
 import { useGetBios } from "../http/bio/useGetBio"
 import { useGetStudent } from "../http/student/useStudent"

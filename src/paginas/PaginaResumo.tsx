@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext, useParams } from "react-router";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { EditorContent } from "@tiptap/react";
 import { GraduationCap, Heart, ArrowLeft, ArrowRight } from "lucide-react";
 import { useSummaryEditor } from "../hooks/useEditorHook";

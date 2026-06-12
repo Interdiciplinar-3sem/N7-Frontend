@@ -69,7 +69,7 @@ export const useLogout = () => {
     });
 };
 
-export const useLogin = () => {
+export const useLogin = () => { 
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -90,20 +90,18 @@ export const useLogin = () => {
             const cookiesWork = checkCookies();
 
             if (!cookiesWork && data.token) {
-                localStorage.setItem(
-                    "accessToken",
-                    data.token
-                );
+                localStorage.setItem("accessToken", data.token);
             }
 
-            queryClient.setQueryData(
-                ["user-auth"],
-                { status: true }
-            );
-
-            navigate("/feed", {
-                replace: true,
+            queryClient.setQueryData(["user-auth"], {
+                status: data.status,
+                id: data.id,
+                studentId: data.studentId,
+                professorId: data.professorId,
+                role: data.role,
             });
+
+            navigate("/feed", { replace: true });
         },
     });
 };

@@ -1,5 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_URL } from "../api";
+import { checkCookies } from "../../hooks/useCheckCookies";
+import { authFecth } from "../authFetch"; 
 
 export class ConfirmEmailError extends Error {
     readonly status: number;
@@ -13,7 +15,15 @@ export class ConfirmEmailError extends Error {
     }
 }
 
-async function confirmEmail(token: string, type?: string): Promise<{ message: string; token: string }> {
+async function confirmEmail(token: string, type?: string): Promise<{
+    message: string;
+    token: string;
+    status: boolean;
+    id: number;
+    studentId: number | null;
+    professorId: number | null;
+    role: string;
+}> {
     const url = type === "professor"
         ? `${API_URL}/adm/professor?token=${encodeURIComponent(token)}`
         : `${API_URL}/user/email?token=${encodeURIComponent(token)}`;
@@ -24,7 +34,7 @@ async function confirmEmail(token: string, type?: string): Promise<{ message: st
 
     let response: Response;
     try {
-        response = await fetch(url, { method: "POST", credentials: "include" });
+        response = await authFecth(url, { method: "POST" });
     } catch {
         throw new ConfirmEmailError(0, "NETWORK_ERROR", "Não foi possível conectar ao servidor.");
     }
@@ -47,12 +57,27 @@ async function confirmEmail(token: string, type?: string): Promise<{ message: st
         throw new ConfirmEmailError(data.status ?? response.status, data.code ?? "UNKNOWN", data.message ?? "Erro ao confirmar email.");
     }
 
-    return data as { message: string; token: string };
+    return data as unknown as { message: string; token: string; status: boolean; id: number; studentId: number | null; professorId: number | null; role: string };
 }
 
 export function useConfirmEmail(type?: string) {
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: (token: string) => confirmEmail(token, type),
         retry: false,
+        onSuccess: (data) => {
+            const cookiesWork = checkCookies();
+            if (!cookiesWork && data.token) {
+                localStorage.setItem("accessToken", data.token);
+            }
+            queryClient.setQueryData(["user-auth"], {
+                status: data.status,
+                id: data.id,
+                studentId: data.studentId,
+                professorId: data.professorId,
+                role: data.role,
+            });
+        },
     });
 }

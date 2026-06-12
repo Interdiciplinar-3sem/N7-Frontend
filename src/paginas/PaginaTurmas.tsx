@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { BookOpen, GraduationCap, Loader2 } from "lucide-react"
 import type { ContextPropsTypeNetwork } from "../types/contextPropsType"
-import { useOutletContext } from "react-router"
+import { useOutletContext } from "react-router-dom"
 import { CardPerfil } from "../componentes/ui/cardPerfil"
 import { ViewSummary } from "../componentes/ViewSummary"
 import { useGetCourseSubjectsSemesterMe } from "../http/course/useCourse"
