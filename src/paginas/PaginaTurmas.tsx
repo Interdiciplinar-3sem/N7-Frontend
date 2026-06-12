@@ -1,11 +1,18 @@
 import { useEffect, useMemo, useState } from "react"
-import { BookOpen, GraduationCap } from "lucide-react"
+import { BookOpen, GraduationCap, Loader2 } from "lucide-react"
 import type { ContextPropsTypeNetwork } from "../types/contextPropsType"
 import { useOutletContext } from "react-router"
 import { CardPerfil } from "../componentes/ui/cardPerfil"
 import { ViewSummary } from "../componentes/ViewSummary"
-import { useGetCourseStudentsSemester, useGetCourseSubjectsSemesterMe } from "../http/course/useCourse"
+import { useGetCourseSubjectsSemesterMe } from "../http/course/useCourse"
 import { useGetSummarySubjectId } from "../http/summary/get/useGetSummary"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import { request } from "../http/httpClient"
+import { API_URL } from "../http/api"
+import type { ResponseGetCourseStudentsType } from "../http/course/types/ResponseGetCourseStudentsType"
+import { useInfiniteScrollSentinel } from "../http/follow/useFollow"
+import { useLikeSummary } from "../http/likes/useLikeSummary"
+import { useSummaryActions } from "../hooks/useSummaryActionBar"
 
 const colors = ["bg-[#D8FBE4]", "bg-[#FFE6E0]", "bg-[#FFE2F4]", "bg-[#DAE8FF]", "bg-[#D8FBE4]", "bg-[#FFE6E0]", "bg-[#FFE2F4]", "bg-[#DAE8FF]"]
 
@@ -15,6 +22,29 @@ const tabOptions = [
 ] as const
 
 const semesterOptions = [1, 2, 3, 4, 5, 6]
+const PAGE_SIZE = 20
+
+async function fetchStudentsPage(courseId: number, semestre: number, pageParam: number) {
+  const limit = (pageParam + 1) * PAGE_SIZE
+  const all = await request<ResponseGetCourseStudentsType[]>(
+    `${API_URL}/courses/${courseId}/semestres/${semestre}/students?limit=${limit}`
+  )
+  const slice = all.slice(pageParam * PAGE_SIZE)
+  const nextLimit = slice.length === PAGE_SIZE ? pageParam + 1 : undefined
+  return { data: slice, nextLimit }
+}
+
+function useGetCourseStudentsSemesterInfinite(courseId: number, semestre: number) {
+  return useInfiniteQuery({
+    queryKey: ["courseStudentsInfinite", courseId, semestre],
+    queryFn: ({ pageParam = 0 }) => fetchStudentsPage(courseId, semestre, pageParam as number),
+    initialPageParam: 0,
+    getNextPageParam: (last) => last.nextLimit,
+    staleTime: 1000 * 60 * 15,
+    retry: 2,
+    enabled: !!courseId && !!semestre,
+  })
+}
 
 export function PaginaTurmas() {
   const parentContext = useOutletContext<ContextPropsTypeNetwork>()
@@ -23,17 +53,15 @@ export function PaginaTurmas() {
   const [selectedTurmaId, setSelectedTurmaId] = useState<number | null>(null)
   const [selectedResumoId, setSelectedResumoId] = useState<number | null>(null)
   const [selectedSemester, setSelectedSemester] = useState<number | null>(null)
+  const { handleLikeSummary } = useSummaryActions(setSelectedResumoId)
+  const { mutateAsync: toggleLike } = useLikeSummary()
+  const isAluno = parentContext?.role === "ALUNO"
 
   useEffect(() => {
-    if (!turmas?.length) {
-      return
-    }
+    if (!turmas?.length) return
 
     const hasValidSelection = selectedTurmaId ? turmas.some((turma) => turma.id === selectedTurmaId) : false
-
-    if (!hasValidSelection) {
-      setSelectedTurmaId(turmas[0].id)
-    }
+    if (!hasValidSelection) setSelectedTurmaId(turmas[0].id)
   }, [selectedTurmaId, turmas])
 
   const selectedTurma = useMemo(
@@ -45,16 +73,24 @@ export function PaginaTurmas() {
   const semesterToExplore = selectedSemester ?? semester
 
   useEffect(() => {
-    if (!semesterOptions.length) {
-      return
-    }
-
+    if (!semesterOptions.length) return
     if (selectedSemester === null || !semesterOptions.includes(selectedSemester)) {
       setSelectedSemester(selectedTurma?.semestre ?? semesterOptions[0])
     }
   }, [selectedSemester, selectedTurma?.semestre])
 
-  const { data: students, isPending: isStudentsPending } = useGetCourseStudentsSemester(1, semesterToExplore)
+  const {
+    data: studentsData,
+    isPending: isStudentsPending,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetCourseStudentsSemesterInfinite(1, semesterToExplore)
+
+  const students = studentsData?.pages.flatMap(p => p.data) ?? []
+
+  const sentinelRef = useInfiniteScrollSentinel(fetchNextPage, hasNextPage, isFetchingNextPage)
+
   const { data: resumos, isPending } = useGetSummarySubjectId(selectedTurmaId ?? 0)
 
   return (
@@ -67,7 +103,7 @@ export function PaginaTurmas() {
               Turmas do semestre
             </span>
             <div>
-              <h1 className="text-2xl font-semibold text-zinc-900 md:text-3xl">Explore os resumos econtre alunos da sua e de outras turmas</h1>
+              <h1 className="text-2xl font-semibold text-zinc-900 md:text-3xl">Explore os resumos e encontre alunos da sua e de outras turmas</h1>
               <p className="text-sm text-zinc-500">Navegue pelas turmas e descubra novos conhecimentos</p>
             </div>
           </div>
@@ -179,7 +215,7 @@ export function PaginaTurmas() {
             </div>
           ) : (
             <div className="space-y-4">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">Estudantes da plataforma</p>
                 </div>
@@ -222,6 +258,20 @@ export function PaginaTurmas() {
                     className="w-full max-w-none"
                   />
                 ))}
+
+                <div ref={sentinelRef} className="h-4 w-full" aria-hidden />
+
+                {isFetchingNextPage && (
+                  <div className="flex justify-center py-4">
+                    <Loader2 className="h-5 w-5 animate-spin text-zinc-400" />
+                  </div>
+                )}
+
+                {!hasNextPage && !isFetchingNextPage && students.length > 0 && (
+                  <p className="text-center text-xs text-zinc-400 py-2">
+                    Todos os alunos deste semestre foram carregados.
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -230,10 +280,12 @@ export function PaginaTurmas() {
 
       {selectedResumoId && (
         <ViewSummary
+          studentId={parentContext?.studentId!}
           role={parentContext?.role}
           id={selectedResumoId}
           materia={selectedTurma?.name}
           onClose={() => setSelectedResumoId(null)}
+          onToggleLike={isAluno ? (id, hasLiked) => handleLikeSummary(id, hasLiked, toggleLike) : undefined}
         />
       )}
     </main>

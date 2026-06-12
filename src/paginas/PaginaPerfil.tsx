@@ -17,13 +17,21 @@ import { ShieldOff } from 'lucide-react'
 import { useReportSummary, useUpdateStatusSummary } from '../http/summary/update/useUpdateSummary'
 import { useAssignProfessorBadge, useRemoveProfessorBadge } from '../http/professor/useProfessor'
 import { useSummaryActions } from '../hooks/useSummaryActionBar'
+import { useOutletContext } from 'react-router-dom'
+import type { ContextPropsType } from '../types/contextPropsType'
+import { useLikeSummary } from "../http/likes/useLikeSummary"
+import { PerfilResumosLikesSection } from '../componentes/perfil/PerfilResumosLikesSection'
+import { useInfiniteScrollSentinel } from '../http/follow/useFollow'
+import type { ResponseGetFollowingType } from '../http/follow/types/ResponseGetFollowingType'
 
 export function PaginaPerfil() {
+    const parentContext = useOutletContext<ContextPropsType>();
     const { mutateAsync: reportSummary } = useReportSummary()
     const { mutateAsync: toggleSummaryStatus } = useUpdateStatusSummary()
     const { mutateAsync: assignBadge } = useAssignProfessorBadge()
     const { mutateAsync: removeBadge } = useRemoveProfessorBadge()
     const { mutateAsync: toggleStudentStatus } = useToggleStudentStatusByStudentId()
+    const { mutateAsync: toggleLike } = useLikeSummary()
 
     const {
         user,
@@ -51,9 +59,25 @@ export function PaginaPerfil() {
 
     const role = isAdm ? "ADM" : isProfessor ? "PROFESSOR" : "ALUNO"
     const selectedResumo = resumoData?.find((r: any) => r.summaryId === selectedResumoId) ?? null
+    const { handleDesactiveSummary, handleReportSummary, handleBadge, handleLikeSummary } = useSummaryActions(setSelectedResumoId);
 
-    const others = openFollowersList ? follwers.data : follwing.data
-    const { handleDesactiveSummary, handleReportSummary, handleBadge } = useSummaryActions(setSelectedResumoId);
+    const followersList = follwers.data?.pages.flatMap(p => p.data) ?? []
+    const followersSentinelRef = useInfiniteScrollSentinel(
+        follwers.fetchNextPage,
+        follwers.hasNextPage,
+        follwers.isFetchingNextPage
+    )
+
+    const followingList = follwing.data?.pages.flatMap(p => p.data) ?? []
+    const followingSentinelRef = useInfiniteScrollSentinel(
+        follwing.fetchNextPage,
+        follwing.hasNextPage,
+        follwing.isFetchingNextPage
+    )
+
+    const currentSentinelRef = openFollowersList ? followersSentinelRef : followingSentinelRef
+    const currentList = openFollowersList ? followersList : followingList
+    const currentQuery = openFollowersList ? follwers : follwing
 
     return (
         <main className="w-full min-h-screen p-4">
@@ -120,18 +144,15 @@ export function PaginaPerfil() {
                         data={resumoData ?? []}
                         studentId={actions.profileStudentId}
                         onOpenResumo={(summaryId) => setSelectedResumoId(summaryId)}
-                        isAdm={isAdm}
-                        isProfessor={isProfessor}
                         isOwnProfile={isOwnProfile}
-                        onReport={(id) => reportSummary(id)}
-                        onToggleStatus={isAdm ? (id) => toggleSummaryStatus(id) : undefined}
-                        onAssignBadge={isProfessor
-                            ? (id, hasBadge) => hasBadge ? removeBadge(id) : assignBadge(id)
-                            : undefined
-                        }
                     />
 
                     <PerfilTurmasSection turmas={subjects ?? []} />
+
+                    <PerfilResumosLikesSection
+                        isOwnProfile={isOwnProfile}
+                        onOpenResumo={(summaryId) => setSelectedResumoId(summaryId)}
+                    />
 
                     {isProfessor && professorData?.subject && (
                         <div className="max-w-225 mx-auto mt-6 bg-white rounded-xl p-6 shadow-sm">
@@ -151,15 +172,50 @@ export function PaginaPerfil() {
                     {selectedResumoId !== null && (
                         <ViewSummary
                             id={selectedResumoId}
+                            studentId={parentContext.studentId}
                             role={role}
                             onClose={() => setSelectedResumoId(null)}
                             isActive={selectedResumo?.ativo}
+                            onToggleLike={isAluno ? (id, hasLiked) => handleLikeSummary(id, hasLiked, toggleLike) : undefined}
                             onReport={!isOwnProfile ? (id) => handleReportSummary(id, reportSummary) : undefined}
                             onSoftDeleteSumary={isAdm ? (id) => handleDesactiveSummary(id, toggleSummaryStatus) : undefined}
                             onAssignBadge={isProfessor
                                 ? (id, hasBadge) => handleBadge(id, hasBadge, assignBadge, removeBadge)
                                 : undefined
                             }
+                        />
+                    )}
+
+                    {isAluno && (
+                        <StudentsListPage
+                            setOpenFollowersList={modais.setOpenFollowersList}
+                            setOpenFollowingList={modais.setOpenFollowingList}
+                            title={openFollowersList ? "Seguidores" : "Seguindo"}
+                            isOpen={openFollowersList || openFollowingList}
+                            description="Lista de usuários que seguem este perfil"
+                            backLabel="Voltar ao perfil"
+                            isPending={currentQuery.isPending}
+                            pendingLabel="Carregando usuários"
+                            items={currentList}
+                            emptyMessage={openFollowersList ? "Nenhum seguidor encontrado." : "Nenhum usuário seguido encontrado."}
+                            sentinelRef={currentSentinelRef}
+                            isFetchingNextPage={currentQuery.isFetchingNextPage}
+                            hasNextPage={currentQuery.hasNextPage}
+                            renderItem={(user: ResponseGetFollowingType) => (
+                                <CardPerfil
+                                    onSelectUser={() => {
+                                        modais.setOpenFollowersList(false)
+                                        modais.setOpenFollowingList(false)
+                                    }}
+                                    key={user.studentId}
+                                    studentId={user.studentId}
+                                    nome={user.name}
+                                    seguidores={user.seguidores}
+                                    semestre={user.semestre}
+                                    url={user.studentUrl}
+                                    className="w-full max-w-none"
+                                />
+                            )}
                         />
                     )}
 
@@ -189,36 +245,6 @@ export function PaginaPerfil() {
                                 onSelectBio={(bio) => actions.selectBio(bio.description)}
                             />
                         </>
-                    )}
-
-                    {isAluno && (
-                        <StudentsListPage
-                            setOpenFollowersList={modais.setOpenFollowersList}
-                            setOpenFollowingList={modais.setOpenFollowingList}
-                            title={openFollowersList ? "Seguidores" : "Seguindo"}
-                            isOpen={openFollowersList || openFollowingList}
-                            description="Lista de usuários que seguem este perfil"
-                            backLabel="Voltar ao perfil"
-                            isPending={isPending}
-                            pendingLabel="Carregando usuários"
-                            items={others}
-                            emptyMessage={openFollowersList ? "Nenhum seguidor encontrado." : "Nenhum usuário seguido encontrado."}
-                            renderItem={(user) => (
-                                <CardPerfil
-                                    onSelectUser={() => {
-                                        modais.setOpenFollowersList(false)
-                                        modais.setOpenFollowingList(false)
-                                    }}
-                                    key={user.studentId}
-                                    studentId={user.studentId}
-                                    nome={user.name}
-                                    seguidores={user.seguidores}
-                                    semestre={user.semestre}
-                                    url={user.studentUrl}
-                                    className="w-full max-w-none"
-                                />
-                            )}
-                        />
                     )}
                 </section>
             </div>

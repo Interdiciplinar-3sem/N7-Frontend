@@ -27,7 +27,6 @@ const cardStyle = tv({
     }
 })
 
-
 type CardProps = VariantProps<typeof cardStyle> & {
     summaryId: number;
     titulo: string;
@@ -40,13 +39,13 @@ type CardProps = VariantProps<typeof cardStyle> & {
     setViewSummary?: (id: number) => void;
 }
 
-export function CardResumo({summaryId, titulo, texto, imageUrl, studentName, className, formato, cor, curtidas, badge, setViewSummary }: CardProps) {
+export function CardResumo({ summaryId, titulo, texto, imageUrl, studentName, className, formato, cor, curtidas, badge, setViewSummary }: CardProps) {
     const isVertical = formato === "vertical";
     const hasBadge = !!badge;
     const isProfessorBadge = badge?.name?.toLowerCase().includes("professor");
 
     return (
-        <div onClick={() => setViewSummary && setViewSummary(summaryId)} className={cardStyle({formato, cor, className})}>
+        <div onClick={() => setViewSummary && setViewSummary(summaryId)} className={cardStyle({ formato, cor, className })}>
 
             <div className={`relative flex h-full flex-col ${isVertical ? "gap-4" : "justify-between"}`}>
                 <div className="flex items-start justify-between gap-3">
@@ -75,13 +74,12 @@ export function CardResumo({summaryId, titulo, texto, imageUrl, studentName, cla
                 </div>
 
                 <h2
-                     className={`mt-3 line-clamp-2 font-semibold leading-tight text-slate-900
-                    ${
-                        isVertical
+                    className={`mt-3 line-clamp-2 font-semibold leading-tight text-slate-900
+                    ${isVertical
                         ? "text-base sm:text-lg md:text-xl lg:text-[1.45rem]"
                         : "text-sm sm:text-base md:text-lg lg:text-[1.35rem]"
                     }`}
-                    >
+                >
                     {titulo}
                 </h2>
 

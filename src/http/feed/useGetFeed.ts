@@ -85,3 +85,41 @@ export const useGetSummaryActivated = () => {
         retry: false,
     });
 };
+
+type SearchParams = {
+    busca?: string;
+    subjectId?: number;
+    tagId?: number;
+    semestre?: number;
+};
+ 
+export const useSearchSummaries = ({ busca, subjectId, tagId, semestre }: SearchParams) => {
+    return useInfiniteQuery({
+        queryKey: ["search-summaries", busca, subjectId, tagId, semestre],
+ 
+        queryFn: async ({ pageParam = 0 }): Promise<PagedResponse> => {
+            const params = new URLSearchParams();
+            params.set("page", String(pageParam));
+            params.set("size", "20");
+            if (busca?.trim())  params.set("busca",     busca.trim());
+            if (subjectId)      params.set("subjectId", String(subjectId));
+            if (tagId)          params.set("tagId",     String(tagId));
+            if (semestre)       params.set("semestre",  String(semestre));
+ 
+            return request<PagedResponse>(
+                `${API_URL}/resumos/ativos?${params.toString()}`
+            );
+        },
+ 
+        initialPageParam: 0,
+ 
+        getNextPageParam: (lastPage, allPages) => {
+            const totalCarregado = allPages.reduce((acc, p) => acc + p.data.length, 0);
+            if (totalCarregado >= lastPage.total) return undefined;
+            return lastPage.page + 1;
+        },
+        enabled: true,
+        staleTime: 1000 * 60 * 2,
+        retry: false,
+    });
+};
