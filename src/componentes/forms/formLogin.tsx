@@ -136,6 +136,12 @@ export function FormLogin() {
                             Cadastre-se
                         </Link>
                     </p>
+                    <p className="text-center text-xs text-white/50 pt-1">
+                        Esqueceu sua senha?{" "}
+                        <Link to="/esqueci-senha" className="text-[#aac9f7] font-semibold hover:text-white transition-colors">
+                            Redefinir senha
+                        </Link>
+                    </p>
                 </form>
             </div>
         </main>

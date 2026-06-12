@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
-import { ConfirmEmailError, useConfirmEmail } from "../http/auth/useCreateStudentValited";
-import { FeedbackCard, type EstadoFeedback } from "../componentes/ui/FeedBackCard";
+import { ConfirmEmailError, useConfirmEmail } from "../../http/auth/useCreateStudentValited";
+import { FeedbackCard, type EstadoFeedback } from "../../componentes/ui/FeedBackCard";
 
 export function PaginaConfirmacaoEmail() {
     const { type } = useParams();
