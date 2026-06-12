@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { PaginaInicial } from './paginas/PaginaInicial'
-import { PaginaCadastro } from './paginas/PaginaCadastro'
-import { PaginaLogin } from './paginas/PaginaLogin'
+import { PaginaInicial } from './paginas/static/PaginaInicial'
+import { PaginaCadastro } from './paginas/auth/PaginaCadastro'
+import { PaginaLogin } from './paginas/auth/PaginaLogin'
 import { PaginaPerfil } from './paginas/PaginaPerfil'
 import { PaginaPainel } from './paginas/PaginaPainel'
 import { PaginaFeed } from './paginas/PaginaFeed'
@@ -17,8 +17,10 @@ import { PaginaCursos } from './paginas/admin/PaginaCursos'
 import { PaginaMaterias } from './paginas/admin/PaginaMaterias'
 import { PaginaTags } from './paginas/admin/PaginaTags'
 import { PaginaTurmas } from './paginas/PaginaTurmas'
-import { PaginaConfirmacaoEmail } from './paginas/PaginaConfirmacaoEmail'
+import { PaginaConfirmacaoEmail } from './paginas/auth/PaginaConfirmacaoEmail'
 import { PaginaCriacaoResumoWrapper } from './paginas/PaginaCriacaoResumoWrapper'
+import { PaginaEsqueciSenha } from './paginas/auth/PaginaEsqueciSenha'
+import { PaginaRedefinirSenha } from './paginas/auth/PaginaRedefinirSenha'
 
 export default App;
 
@@ -41,6 +43,8 @@ export function App() {
             <Route element={<PaginaInicial />} path='/' />
             <Route element={<PaginaCadastro />} path='/cadastro' />
             <Route path="/confirm-email/:type" element={<PaginaConfirmacaoEmail />} />
+            <Route element={<PaginaEsqueciSenha />} path='/esqueci-senha' />
+            <Route element={<PaginaRedefinirSenha />} path='/redefinir-senha' />
             <Route element={<PaginaLogin />} path='/login' />
             <Route element={<ProtectedRoute />}>
               <Route element={<LayoutNetwork />}>

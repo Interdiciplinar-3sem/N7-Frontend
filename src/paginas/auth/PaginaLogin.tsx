@@ -1,4 +1,4 @@
-import { FormLogin } from "../componentes/forms/formLogin";
+import { FormLogin } from "../../componentes/forms/formLogin";
 
 
 export function PaginaLogin() {
