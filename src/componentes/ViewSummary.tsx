@@ -3,7 +3,7 @@ import { Overlay } from "./overlay"
 import {
     Expand, GraduationCap, Heart, X
 } from "lucide-react"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import { EditorContent } from "@tiptap/react"
 import { useSummaryEditor } from "../hooks/useEditorHook"
 import { SummaryBadge } from "./badge/SummaryBadge"
