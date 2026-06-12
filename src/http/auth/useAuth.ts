@@ -9,8 +9,6 @@ import { checkCookies } from "../../hooks/useCheckCookies"
 import { request } from "../httpClient"
 import { ApiError } from "../apiError"
 
-localStorage.removeItem("accessToken");
-
 const UNAUTHENTICATED_USER: ResponseAuthType = {
     status: false,
     id: null,
@@ -40,7 +38,7 @@ export const useAuth = () => {
                 throw error
             }
         },
-        staleTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60 * 3,
         refetchInterval: 1000 * 60 * 5,
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
@@ -64,6 +62,7 @@ export const useLogout = () => {
         },
 
         onSuccess: async () => {
+            localStorage.removeItem("accessToken");
             queryClient.clear();
             navigate("/login", { replace: true });
         },

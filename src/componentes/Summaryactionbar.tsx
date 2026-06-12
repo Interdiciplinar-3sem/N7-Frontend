@@ -5,12 +5,13 @@ type Role = "ALUNO" | "PROFESSOR" | "ADM";
 export type SummaryActionBarProps = {
     id: number;
     role: Role | string;
+    isOwner?: boolean;
     isActive?: boolean;
     isLiked?: boolean;
     hasBadge?: boolean;
     isProfessorBadge?: boolean;
     onReport?: (id: number) => void;
-    onToggleLike?: (id: number) => void;
+    onToggleLike?: (id: number, hasLiked: boolean) => void
     onDesactive?: (id: number) => void;
     onAssignBadge?: (id: number, hasBadge: boolean) => void;
     showId?: boolean;
@@ -21,8 +22,9 @@ export type SummaryActionBarProps = {
 export function SummaryActionBar({
     id,
     role,
+    isOwner,
     isActive,
-    isLiked,
+    isLiked = false,
     hasBadge = false,
     isProfessorBadge = false,
     onReport,
@@ -37,7 +39,7 @@ export function SummaryActionBar({
     const isAluno = role === "ALUNO";
 
     const hasAnyAction =
-        (isAluno && (onToggleLike || onReport)) ||
+        (isAluno && !isOwner && (onToggleLike || onReport)) ||
         (isProfessor && onAssignBadge) ||
         (isAdm && onDesactive);
 
@@ -55,7 +57,7 @@ export function SummaryActionBar({
                 {isAluno && onToggleLike && (
                     <button
                         type="button"
-                        onClick={() => onToggleLike(id)}
+                        onClick={() => onToggleLike(id, isLiked)}
                         className={`
                             inline-flex items-center gap-1.5
                             rounded-full px-3 py-1.5

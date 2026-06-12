@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
+import { Loader2 } from "lucide-react";
 
 type StudentsListPageProps<T> = {
   setOpenFollowersList?: (open: boolean) => void;
@@ -12,6 +13,9 @@ type StudentsListPageProps<T> = {
   pendingLabel?: string;
   emptyMessage: string;
   renderItem: (item: T) => ReactNode;
+  sentinelRef?: RefObject<HTMLDivElement | null>;
+  isFetchingNextPage?: boolean;
+  hasNextPage?: boolean;
 };
 
 export function StudentsListPage<T>({
@@ -26,15 +30,18 @@ export function StudentsListPage<T>({
   pendingLabel = "Carregando...",
   emptyMessage,
   renderItem,
+  sentinelRef,
+  isFetchingNextPage,
+  hasNextPage,
 }: StudentsListPageProps<T>) {
 
-  if(!isOpen) {
+  if (!isOpen) {
     return null;
   }
 
   const handdleClose = () => {
-    if(setOpenFollowersList) setOpenFollowersList(false);
-    if(setOpenFollowingList) setOpenFollowingList(false);
+    if (setOpenFollowersList) setOpenFollowersList(false);
+    if (setOpenFollowingList) setOpenFollowingList(false);
   }
 
   return (
@@ -59,7 +66,25 @@ export function StudentsListPage<T>({
               {pendingLabel}
             </div>
           ) : items?.length ? (
-            <div className="grid gap-3">{items.map(renderItem)}</div>
+            <>
+              <div className="grid gap-3">{items.map(renderItem)}</div>
+
+              {sentinelRef && (
+                <div ref={sentinelRef} className="h-4 w-full" aria-hidden />
+              )}
+
+              {isFetchingNextPage && (
+                <div className="flex justify-center py-2">
+                  <Loader2 className="h-5 w-5 animate-spin text-zinc-400" />
+                </div>
+              )}
+
+              {!hasNextPage && !isFetchingNextPage && (
+                <p className="text-center text-xs text-zinc-400">
+                  Todos os usuários foram carregados.
+                </p>
+              )}
+            </>
           ) : (
             <div className="rounded-2xl border border-dashed border-zinc-200 bg-white px-6 py-10 text-center text-zinc-500">
               {emptyMessage}

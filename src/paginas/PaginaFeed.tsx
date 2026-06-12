@@ -10,14 +10,17 @@ import { useGetFollowingMe } from "../http/follow/useFollow";
 import { useReportSummary, useUpdateStatusSummary } from "../http/summary/update/useUpdateSummary";
 import { useAssignProfessorBadge, useRemoveProfessorBadge } from "../http/professor/useProfessor";
 import { useSummaryActions } from "../hooks/useSummaryActionBar";
+import { useLikeSummary } from "../http/likes/useLikeSummary";
 
 export function PaginaFeed() {
     const parentContext = useOutletContext<ContextPropsType>();
+    const isAluno = parentContext.role === "ALUNO" ? true : false;
 
     const [activeTab, setActiveTab] = useState<"explorar" | "seguindo" | "ranking">("explorar");
+    
     const [selectedResumoId, setSelectedResumoId] = useState<number | null>(null);
-
-    const { handleDesactiveSummary, handleReportSummary, handleBadge } = useSummaryActions(setSelectedResumoId);
+    const { handleDesactiveSummary, handleReportSummary, handleBadge, handleLikeSummary } = useSummaryActions(setSelectedResumoId);
+    const { mutateAsync: toggleLike } = useLikeSummary();
 
     const {
         data: resumosFeedPaged,
@@ -41,6 +44,8 @@ export function PaginaFeed() {
     } = useGetRanking();
 
     const { data: following } = useGetFollowingMe(parentContext.studentId);
+    const followingList = following?.pages.flatMap(p => p.data) ?? [];
+    const followingTotal = following?.pages[0]?.total ?? 0;
 
     const { mutateAsync: reportSummary } = useReportSummary();
     const { mutateAsync: toggleSummaryStatus } = useUpdateStatusSummary();
@@ -208,8 +213,10 @@ export function PaginaFeed() {
                     <ViewSummary
                         id={selectedResumoId}
                         role={role}
+                        studentId={parentContext.studentId}
                         onClose={() => setSelectedResumoId(null)}
                         isActive={selectedResumo?.ativo}
+                        onToggleLike={isAluno ? (id, hasLiked) => handleLikeSummary(id, hasLiked, toggleLike) : undefined}
                         onReport={(id) => handleReportSummary(id, reportSummary)}
                         onSoftDeleteSumary={isAdm ? (id) => handleDesactiveSummary(id, toggleSummaryStatus) : undefined}
                         onAssignBadge={isProfessor
@@ -227,7 +234,7 @@ export function PaginaFeed() {
                             <h2>Seguindo:</h2>
                         </div>
 
-                        {following?.map((s: any) => (
+                        {followingList.map((s) => (
                             <CardPerfil
                                 key={s.studentId}
                                 studentId={s.studentId}
@@ -239,7 +246,7 @@ export function PaginaFeed() {
                             />
                         ))}
 
-                        {following && following.length >= 10 && (
+                        {followingTotal >= 10 && (
                             <div className="flex items-center justify-start gap-3">
                                 <Link
                                     to="/feed/students"

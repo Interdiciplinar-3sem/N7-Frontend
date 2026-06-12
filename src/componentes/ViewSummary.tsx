@@ -7,7 +7,7 @@ import { useNavigate } from "react-router"
 import { EditorContent } from "@tiptap/react"
 import { useSummaryEditor } from "../hooks/useEditorHook"
 import { SummaryBadge } from "./badge/SummaryBadge"
-import { useGetSummaryId } from "../http/summary/get/useGetSummary"
+import { useGetSummaryId, useGetLikedSummaryIds } from "../http/summary/get/useGetSummary"
 import { StudentPreviewProfile } from "./previwer/studentPreviewProfile"
 import { SummaryActionBar } from "./Summaryactionbar"
 
@@ -15,32 +15,41 @@ type Role = "ALUNO" | "PROFESSOR" | "ADM"
 
 type ViewSummaryProps = {
     id: number
+    studentId: number
     role: Role | string
     onClose: () => void
     materia?: string
     isActive?: boolean
     isLiked?: boolean
     onReport?: (id: number) => void
-    onToggleLike?: (id: number) => void
     onSoftDeleteSumary?: (id: number) => void
+    onToggleLike?: (id: number, hasLiked: boolean) => void
     onAssignBadge?: (id: number, hasBadge: boolean) => void
 }
 
 export const ViewSummary = ({
     id,
     role,
+    studentId,
     onClose,
     materia,
     isActive,
-    isLiked,
+    isLiked: isLikedProp,
     onReport,
     onToggleLike,
     onSoftDeleteSumary,
     onAssignBadge,
 }: ViewSummaryProps) => {
     const isAdm = role === "ADM"
-
+    const isAluno = role === "ALUNO"
     const { data, isPending, isError } = useGetSummaryId(id)
+
+    const { data: likedIds } = useGetLikedSummaryIds()
+    const isLiked = isLikedProp !== undefined
+        ? isLikedProp
+        : (likedIds?.has(id) ?? false)
+
+    const isOwner = role === "ALUNO" && studentId === data?.studentId
 
     const hasBadge = !!data?.badge
     const isProfessorBadge = data?.badge?.name?.toLowerCase().includes("professor")
@@ -218,8 +227,9 @@ export const ViewSummary = ({
                     <SummaryActionBar
                         id={id}
                         role={role}
+                        isOwner={isOwner}
                         isActive={isActive}
-                        isLiked={isLiked}
+                        isLiked={isAluno ? isLiked : false}
                         hasBadge={hasBadge}
                         isProfessorBadge={isProfessorBadge}
                         onReport={onReport}

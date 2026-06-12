@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FormSignUp } from "../componentes/forms/formUserStudent";
 import { useNavigate } from "react-router";
-import { AlertTriangle, HomeIcon } from "lucide-react";
+import { HomeIcon } from "lucide-react";
 import { EmailConfirmationState } from "../componentes/forms/EmailConfirmationState";
 
 export function PaginaCadastro() {

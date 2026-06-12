@@ -33,6 +33,22 @@ export const useSummaryActions = (setSelectedId: (id: number | null) => void) =>
         showSuccess("Resumo reportado com sucesso.");
     };
 
+
+    const handleLikeSummary = async (
+        id: number,
+        hasLiked: boolean,
+        likeSummary: (id: number) =>  Promise<unknown>
+    ): Promise<void> => {
+        const confirmed = await confirm({
+            title: hasLiked ? "Descurtir Resumo" : "Curtir Resumo",
+            message: `Tem certeza que deseja ${hasLiked ? "descurtir" : "curtir"} este resumo?`
+        });
+        if (!confirmed) return;
+
+        await likeSummary(id);
+        showSuccess(`Resumo ${hasLiked ? "descurtido" : "curtido"} com sucesso.`);
+    };
+
     const handleBadge = async (
         id: number,
         hasBadge: boolean,
@@ -56,5 +72,5 @@ export const useSummaryActions = (setSelectedId: (id: number | null) => void) =>
         setSelectedId(null);
     };
 
-    return { handleDesactiveSummary, handleReportSummary, handleBadge };
+    return { handleDesactiveSummary, handleReportSummary, handleBadge, handleLikeSummary };
 };

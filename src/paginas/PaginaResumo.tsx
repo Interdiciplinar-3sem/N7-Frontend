@@ -19,6 +19,7 @@ import { UserPreviewDrawer } from "../componentes/previwer/UserPreviewerDrawer";
 import { useReportSummary } from "../http/summary/update/useUpdateSummary";
 import { useAssignProfessorBadge, useRemoveProfessorBadge } from "../http/professor/useProfessor";
 import { useSummaryActions } from "../hooks/useSummaryActionBar";
+import { useLikeSummary } from "../http/likes/useLikeSummary";
 
 const formSchema = z.object({
     titulo: z.string().min(3, "O título deve ter ao menos 3 letras"),
@@ -44,7 +45,8 @@ export function PaginaResumo() {
     const { mutateAsync: reportSummary } = useReportSummary();
     const { mutateAsync: assignBadge } = useAssignProfessorBadge();
     const { mutateAsync: removeBadge } = useRemoveProfessorBadge();
-    const { handleDesactiveSummary, handleReportSummary, handleBadge } = useSummaryActions(() => navigate("/feed"));
+    const { handleDesactiveSummary, handleReportSummary, handleBadge, handleLikeSummary } = useSummaryActions(() => navigate("/feed"));
+    const { mutateAsync: toggleLike } = useLikeSummary();
 
     if (!isCreating && ((resumo?.publico === false && resumo.studentId !== parentContext.studentId) || error?.message === "400")) {
         navigate("/feed");
@@ -170,6 +172,7 @@ export function PaginaResumo() {
     const role = parentContext.role;
     const isAdm = role === "ADM";
     const isProfessor = role === "PROFESSOR";
+    const isAluno = role === "ALUNO";
 
     const hasBadge = !!resumo?.badge;
     const isProfessorBadge = resumo?.badge?.name?.toLowerCase().includes("professor");
@@ -256,12 +259,13 @@ export function PaginaResumo() {
                             {!isCreating && !isOwner && !isPendingSummary && !isError && (
                                 <SummaryActionBar
                                     id={summaryId}
+                                    isOwner={isOwner}
                                     role={role}
                                     isActive={resumo?.ativo}
                                     hasBadge={hasBadge}
                                     isProfessorBadge={isProfessorBadge}
                                     onReport={(id) => handleReportSummary(id, reportSummary)}
-                                    onToggleLike={undefined}
+                                    onToggleLike={isAluno && !isOwner ? (id, hasLiked) => handleLikeSummary(id, hasLiked, toggleLike) : undefined}
                                     onDesactive={isAdm ? (id) => handleDesactiveSummary(id, deleteSummary) : undefined}
                                     onAssignBadge={isProfessor
                                         ? (id, hasBadge) => handleBadge(id, hasBadge, assignBadge, removeBadge)

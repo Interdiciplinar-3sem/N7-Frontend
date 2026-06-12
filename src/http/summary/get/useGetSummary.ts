@@ -1,7 +1,14 @@
-import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import { request } from "../../httpClient";
 import { API_URL } from "../../api"; 
 import type { ResponseGetSummaryType } from "../types/ResponseGetSummaryType";
+
+type PagedResponse = {
+    data: ResponseGetSummaryType[]
+    page: number
+    size: number
+    total: number 
+}
 
 export const useGetAllSummary = () => {
     return useQuery({
@@ -89,3 +96,34 @@ export const useGetSummarySubjectId = (
         enabled: !!subjectId,
     });
 };
+
+
+export const useGetLikedSummaries = () => {
+    return useInfiniteQuery({
+        queryKey: ["get-liked-summaries"],
+        queryFn: async ({ pageParam = 0 }): Promise<PagedResponse> => {
+            return await request(`${API_URL}/resumos/curtidos/me?page=${pageParam}&size=20`)
+        },
+
+        initialPageParam: 0,
+        getNextPageParam: (lastPage, allPages) => {
+            const totalCarregado = allPages.reduce((acc, p) => acc + p.data.length, 0);
+            if (totalCarregado >= lastPage.total) return undefined;
+            return lastPage.page + 1;
+        },
+        staleTime: 1000 * 60 * 5,
+        retry: false
+    })
+}
+
+export const useGetLikedSummaryIds = () => {
+    return useQuery({
+        queryKey: ["get-liked-summary-ids"],
+        queryFn: async (): Promise<Set<number>> => {
+            const res = await request<PagedResponse>(`${API_URL}/resumos/curtidos/me?page=0&size=100`)
+            return new Set(res.data.map(s => s.summaryId))
+        },
+        staleTime: 1000 * 60 * 5,
+        retry: false,
+    })
+}

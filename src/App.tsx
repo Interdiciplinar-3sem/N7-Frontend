@@ -9,7 +9,7 @@ import { PaginaFeed } from './paginas/PaginaFeed'
 import { LayoutNetwork } from './layout/layoutNetwork'
 import { ProtectedRoute } from './guards/protecRoute'
 import { ToastProvider } from './contexto/toastContext'
-import { PaginaBuscaMobile } from './paginas/PaginaBuscaMobile'
+import { PaginaBusca } from './paginas/PaginaBusca'
 import { LayoutAdmin } from './layout/layoutAdmin'
 import { PaginaUserPainel } from './paginas/admin/PaginaUserPainel'
 import { PaginaResumos } from './paginas/admin/PaginaResumos'
@@ -31,6 +31,7 @@ const queryClient = new QueryClient({
     },
   },
 })
+
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -41,25 +42,25 @@ export function App() {
             <Route element={<PaginaCadastro />} path='/cadastro' />
             <Route path="/confirm-email/:type" element={<PaginaConfirmacaoEmail />} />
             <Route element={<PaginaLogin />} path='/login' />
-              <Route element={<ProtectedRoute />}>
-                <Route element={<LayoutNetwork />}>
-                  <Route element={<PaginaCriacaoResumoWrapper />} path='/resumo' />
-                  <Route element={<PaginaCriacaoResumoWrapper />} path='/resumo/:id' /> 
-                  <Route element={<PaginaPerfil />} path='/perfil' />
-                  <Route element={<PaginaPerfil />} path='/perfil/:studentId' />
-                  <Route element={<PaginaFeed />} path='/feed' />
-                  <Route element={<PaginaTurmas />} path='/turmas' />
-                </Route>
-                <Route element={<PaginaBuscaMobile />} path='/busca' />
-                <Route element={<LayoutAdmin />} path='/painel'>
-                  <Route element={<PaginaPainel />} index/>
-                  <Route element={<PaginaUserPainel />} path='/painel/user' />
-                  <Route element={<PaginaResumos />} path='/painel/resumos' />
-                  <Route element={<PaginaCursos />} path='/painel/cursos' />
-                  <Route element={<PaginaMaterias />} path='/painel/materias' />
-                  <Route element={<PaginaTags />} path='/painel/tags' />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<LayoutNetwork />}>
+                <Route element={<PaginaCriacaoResumoWrapper />} path='/resumo' />
+                <Route element={<PaginaCriacaoResumoWrapper />} path='/resumo/:id' />
+                <Route element={<PaginaPerfil />} path='/perfil' />
+                <Route element={<PaginaPerfil />} path='/perfil/:studentId' />
+                <Route element={<PaginaFeed />} path='/feed' />
+                <Route element={<PaginaTurmas />} path='/turmas' />
+                <Route element={<PaginaBusca />} path='/busca' />
               </Route>
+              <Route element={<LayoutAdmin />} path='/painel'>
+                <Route element={<PaginaPainel />} index />
+                <Route element={<PaginaUserPainel />} path='/painel/user' />
+                <Route element={<PaginaResumos />} path='/painel/resumos' />
+                <Route element={<PaginaCursos />} path='/painel/cursos' />
+                <Route element={<PaginaMaterias />} path='/painel/materias' />
+                <Route element={<PaginaTags />} path='/painel/tags' />
               </Route>
+            </Route>
           </Routes>
         </BrowserRouter>
       </ToastProvider>

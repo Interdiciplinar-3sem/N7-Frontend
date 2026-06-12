@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 type UserPreviewDrawerProps = {
     studentId: number;
     onClose: () => void;
-    /** Callback chamado ao clicar em um resumo. Pode navegar, abrir modal ou qualquer outra ação. */
     onOpenSummary: (summaryId: number) => void;
 }
 
