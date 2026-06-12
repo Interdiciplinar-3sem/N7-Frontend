@@ -29,7 +29,7 @@ export function useAdminPreviewer() {
     if (!ctx) throw new Error("useAdminPreviewer deve ser usado dentro de LayoutAdmin");
     return ctx;
 }
-
+    
 export function LayoutAdmin() {
     const {role} = useOutletContext<ContextPropsType>()
     const [summaryId, setSummaryId] = useState<number | null>(null);

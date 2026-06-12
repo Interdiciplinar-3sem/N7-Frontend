@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ConfirmEmailError, useConfirmEmail } from "../../http/auth/useCreateStudentValited";
 import { FeedbackCard, type EstadoFeedback } from "../../componentes/ui/FeedBackCard";
 

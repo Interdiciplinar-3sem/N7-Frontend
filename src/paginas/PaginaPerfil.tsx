@@ -149,10 +149,12 @@ export function PaginaPerfil() {
 
                     <PerfilTurmasSection turmas={subjects ?? []} />
 
-                    <PerfilResumosLikesSection
-                        isOwnProfile={isOwnProfile}
-                        onOpenResumo={(summaryId) => setSelectedResumoId(summaryId)}
-                    />
+                    {isOwnProfile && (
+                        <PerfilResumosLikesSection
+                            isOwnProfile={isOwnProfile}
+                            onOpenResumo={(summaryId) => setSelectedResumoId(summaryId)}
+                        />
+                    )}
 
                     {isProfessor && professorData?.subject && (
                         <div className="max-w-225 mx-auto mt-6 bg-white rounded-xl p-6 shadow-sm">
@@ -172,7 +174,7 @@ export function PaginaPerfil() {
                     {selectedResumoId !== null && (
                         <ViewSummary
                             id={selectedResumoId}
-                            studentId={parentContext.studentId}
+                            studentId={parentContext.studentId ?? 0}
                             role={role}
                             onClose={() => setSelectedResumoId(null)}
                             isActive={selectedResumo?.ativo}
