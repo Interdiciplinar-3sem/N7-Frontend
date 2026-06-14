@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
 import { PaginaInicial } from './paginas/static/PaginaInicial'
 import { PaginaCadastro } from './paginas/auth/PaginaCadastro'
 import { PaginaLogin } from './paginas/auth/PaginaLogin'
@@ -21,6 +22,8 @@ import { PaginaConfirmacaoEmail } from './paginas/auth/PaginaConfirmacaoEmail'
 import { PaginaCriacaoResumoWrapper } from './paginas/PaginaCriacaoResumoWrapper'
 import { PaginaEsqueciSenha } from './paginas/auth/PaginaEsqueciSenha'
 import { PaginaRedefinirSenha } from './paginas/auth/PaginaRedefinirSenha'
+import { PaginaTermos } from './paginas/PaginaTermos' 
+import { initAnalytics, trackPageView } from './hooks/useAnalytcs' 
 
 export default App;
 
@@ -34,11 +37,32 @@ const queryClient = new QueryClient({
   },
 })
 
+const consent = localStorage.getItem("resumify_cookie_consent");
+if (consent === "accepted") {
+  initAnalytics();
+}
+
+function AnalyticsRouteTracker() {
+    const location = useLocation();
+    const isFirst = useRef(true);
+
+    useEffect(() => {
+        if (isFirst.current) {
+            isFirst.current = false;
+            return;
+        }
+        trackPageView(location.pathname);
+    }, [location.pathname]);
+
+    return null;
+}
+
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <BrowserRouter>
+          <AnalyticsRouteTracker />
           <Routes>
             <Route element={<PaginaInicial />} path='/' />
             <Route element={<PaginaCadastro />} path='/cadastro' />
@@ -46,6 +70,7 @@ export function App() {
             <Route element={<PaginaEsqueciSenha />} path='/esqueci-senha' />
             <Route element={<PaginaRedefinirSenha />} path='/redefinir-senha' />
             <Route element={<PaginaLogin />} path='/login' />
+            <Route element={<PaginaTermos />} path='/termos' />
             <Route element={<ProtectedRoute />}>
               <Route element={<LayoutNetwork />}>
                 <Route element={<PaginaCriacaoResumoWrapper />} path='/resumo' />
