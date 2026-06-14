@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FormSignUp } from "../../componentes/forms/formUserStudent";
-import { useNavigate } from "react-router-dom";
-import { HomeIcon } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { HomeIcon, } from "lucide-react";
 import { EmailConfirmationState } from "../../componentes/forms/EmailConfirmationState";
 
 export function PaginaCadastro() {
@@ -85,7 +85,14 @@ export function PaginaCadastro() {
                                 <p className="font-bold mt-3 text-[11px] text-yellow-300/60">
                                     O link de confirmação expira em até <span className="font-semibold text-yellow-300/80">2 dias</span>.
                                 </p>
-                            </div>
+                            </div> 
+
+                            <Link
+                                to="/termos"
+                                className="inline-block text-white text-[11px] sm:text-xs underline underline-offset-2 hover:text-gray-200 transition-colors mt-0.5"
+                                >
+                                Termos de Uso & Política de Privacidade
+                            </Link>
 
                         </div>
                         <div className="flex-1 w-full">

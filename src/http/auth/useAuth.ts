@@ -5,7 +5,6 @@ import type { ResponseLogutType } from "./types/ResponseLogutType"
 import { useNavigate } from "react-router-dom"
 import type { RequestLoginType } from "./types/requestLoginType"
 import type { ResponseLoginType } from "./types/ResponseLoginType"
-import { checkCookies } from "../../hooks/useCheckCookies"
 import { request } from "../httpClient"
 import { ApiError } from "../apiError"
 
@@ -87,9 +86,8 @@ export const useLogin = () => {
             );
         },
         onSuccess: async (data) => {
-            const cookiesWork = checkCookies();
 
-            if (!cookiesWork && data.token) {
+            if (data.token) {
                 localStorage.setItem("accessToken", data.token);
             }
 

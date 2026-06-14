@@ -5,11 +5,10 @@ import z from "zod";
 import { useLogin } from "../../http/auth/useAuth";
 import { HomeIcon } from "lucide-react";
 import type { ApiError } from "../../http/apiError";
+import { CookieBanner } from "../banner/cookieBanner"; 
 
 export function FormLogin() {
     const navigate = useNavigate()
-    
-
 
     const handdleNavigate = (path: string) => {
         navigate(path);
@@ -37,7 +36,6 @@ export function FormLogin() {
                 senha: data.senha
             })
         } catch (error: ApiError | any) {
-            
             form.setError("root", {
                 type: "manual",
                 message: error.message
@@ -84,7 +82,6 @@ export function FormLogin() {
                             />
                         </div>
                         {form.formState.errors.email && (
-                            
                             <p className="text-red-300 text-xs mt-1.5 pl-1">
                                 {form.formState.errors.email.message}
                             </p>
@@ -119,13 +116,12 @@ export function FormLogin() {
                         </div>
                     )}
 
-                  
                     <button
                         type="submit"
                         disabled={form.formState.isSubmitting}
                         className="w-full bg-white text-[#2d5be3] font-bold text-sm py-3.5 rounded-xl mt-2
                        hover:bg-white/90 active:scale-[0.98] transition-all duration-200
-                       disabled:opa city-60 disabled:cursor-not-allowed shadow-lg"
+                       disabled:opacity-60 disabled:cursor-not-allowed shadow-lg"
                     >
                         {form.formState.isSubmitting ? "Entrando..." : "Entrar"}
                     </button>
@@ -144,6 +140,8 @@ export function FormLogin() {
                     </p>
                 </form>
             </div>
+
+            <CookieBanner />
         </main>
     );
 }
